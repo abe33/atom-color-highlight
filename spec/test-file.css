@@ -1,0 +1,20 @@
+/* RGB model */
+ p { color: #F00 } /* #rgb */
+ p { color: #FF0000 } /* #rrggbb */
+ p { color: rgb(255, 0, 0) } /* integer range 0 - 255 */
+ p { color: rgb(100%, 0%, 0%) } /* float range 0.0% - 100.0% */
+
+ /* RGB with alpha channel, added to CSS3 */
+ p { color: rgba(255, 0, 0, 0.5) } /* 0.5 opacity, semi-transparent */
+
+ /* HSL model, added to CSS3 */
+ p { color: hsl(0, 100%, 50%) } /* red */
+ p { color: hsl(120, 100%, 50%) } /* green */
+ p { color: hsl(120, 100%, 25%) } /* dark green */
+ p { color: hsl(120, 100%, 75%) } /* light green */
+ p { color: hsl(120, 50%, 50%) } /* pastel green */
+
+ /* HSL model with alpha channel */
+ p { color: hsla(120, 100%, 50%, 1) } /* green */
+ p { color: hsla(120, 100%, 50%, 0.5) } /* semi-transparent green */
+ p { color: hsla(120, 100%, 50%, 0.1) } /* very transparent green */

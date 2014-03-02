@@ -35,10 +35,53 @@ class AtomColorHighlightModel
       @editor.scanInBufferRange @getColorRegexp(), @constructor.bufferRange, block
 
   getColorRegexp: ->
-    hexLengths = [6,3]
-    regex = hexLengths.map((l) -> "#[\\da-fA-F]{#{l}}(?!\\d)").join('|')
+    int = '\\d+'
+    float = '\\d+(\\.\\d+)?'
+    percent = "#{float}%"
+    intOrPercent = "(#{int}|#{percent})"
+    comma = '\\s*,\\s*'
 
-    new RegExp regex, 'g'
+    ///
+      (\#[\da-fA-F]{6}(?!\d))
+      |
+      (\#[\da-fA-F]{3}(?!\d))
+      |
+      (rgb\(\s*
+        #{intOrPercent}
+        #{comma}
+        #{intOrPercent}
+        #{comma}
+        #{intOrPercent}
+      \))
+      |
+      (rgba\(\s*
+        #{intOrPercent}
+        #{comma}
+        #{intOrPercent}
+        #{comma}
+        #{intOrPercent}
+        #{comma}
+        #{float}
+      \))
+      |
+      (hsl\(\s*
+        #{int}
+        #{comma}
+        #{percent}
+        #{comma}
+        #{percent}
+      \))
+      |
+      (hsla\(\s*
+        #{int}
+        #{comma}
+        #{percent}
+        #{comma}
+        #{percent}
+        #{comma}
+        #{float}
+      \))
+    ///g
 
   updateMarkers: ->
     if not @buffer?
