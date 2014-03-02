@@ -1,0 +1,17 @@
+{
+  "name": "atom-color-highlight",
+  "main": "./lib/atom-color-highlight",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A short description of your package",
+  "activationEvents": ["atom-color-highlight:toggle"],
+  "repository": "https://github.com/atom/atom-color-highlight",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+    "emissary": "1.x",
+    "underscore-plus": "1.x"
+  }
+}

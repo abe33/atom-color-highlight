@@ -1,0 +1,16 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  '.overlayer':
+      'Enable atom-color-highlight': 'atom-color-highlight:toggle'
+
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'atom-color-highlight'
+      'submenu': [
+        { 'label': 'Toggle', 'command': 'atom-color-highlight:toggle' }
+      ]
+    ]
+  }
+]
