@@ -1,6 +1,8 @@
+_ = require 'underscore-plus'
 {View, $} = require 'atom'
 {Subscriber} = require 'emissary'
 
+MarkerView = require './marker-view'
 
 module.exports =
 class AtomColorHighlightView extends View
@@ -11,35 +13,31 @@ class AtomColorHighlightView extends View
 
   constructor: (@model, @editorView) ->
     super
-    @markers = []
-    @subscribe @model, 'updated', (markers) =>
-      @removeMarkers()
-      @renderMarkers(markers)
+    @markerViews = {}
+    @subscribe @model, 'updated', @markersUpdated
 
   # Tear down any state and detach
   destroy: ->
+    @destroyAllViews()
     @detach()
 
-  renderMarkers: (markers) ->
-    markers.forEach (marker) =>
-      color = marker.bufferMarker.properties.color
+  markersUpdated: (markers) =>
+    markerViewsToRemoveById = _.clone(@markerViews)
 
-      m = $("<span>#{color}</span>")
-      m.addClass marker.bufferMarker.properties.class
+    for marker in markers
+      if @markerViews[marker.id]?
+        delete markerViewsToRemoveById[marker.id]
+      else
+        markerView = new MarkerView({@editorView, marker})
+        @append(markerView)
+        @markerViews[marker.id] = markerView
 
-      {start, end} = marker.getScreenRange()
-      {top, left} = @editorView.pixelPositionForScreenPosition(start)
-      width = @editorView.pixelPositionForScreenPosition(end).left - left
+    for id, markerView of markerViewsToRemoveById
+      delete @markerViews[id]
+      markerView.remove()
 
-      m.css
-        top: top + 'px'
-        left: left + 'px'
-        background: color
-        color: color
-        width: width + 'px'
+    @editorView.requestDisplayUpdate()
 
-      @markers.push m
-      @append m
-
-  removeMarkers: ->
-    @markers.forEach (marker) -> marker.remove()
+  destroyAllViews: ->
+    @empty()
+    @markerViews = {}

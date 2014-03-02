@@ -13,7 +13,6 @@ class AtomColorHighlightModel
   update: =>
     @updateMarkers()
 
-
   subscribeToBuffer: ->
     @buffer.on 'contents-modified', @update
 
