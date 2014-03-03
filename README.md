@@ -1,3 +1,5 @@
-# atom-color-highlight package
+# Atom Color Highlight
 
-A short description of your package.
+Highlights color in files.
+
+![AtomColorHighlight Screenshot](https://raw.github.com/abe33/atom-color-highlight/master/screenshot.png)
