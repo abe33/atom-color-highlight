@@ -41,10 +41,10 @@ class AtomColorHighlightEditor
 
   removeView: ->
     path = @buffer.getPath()
-    @views[path].destroy()
+    @views[path]?.destroy()
     delete @views[path]
 
   removeModel: ->
     path = @buffer.getPath()
-    @models[path].dispose()
+    @models[path]?.dispose()
     delete @models[path]

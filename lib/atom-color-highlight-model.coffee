@@ -1,6 +1,10 @@
 _ = require 'underscore-plus'
 {Emitter} = require 'emissary'
 
+Color = require './color-model'
+
+require './color-expressions'
+
 module.exports =
 class AtomColorHighlightModel
   Emitter.includeInto(this)
@@ -32,56 +36,7 @@ class AtomColorHighlightModel
 
   eachColor: (block) ->
     if @buffer?
-      @editor.scanInBufferRange @getColorRegexp(), @constructor.bufferRange, block
-
-  getColorRegexp: ->
-    int = '\\d+'
-    float = '\\d+(\\.\\d+)?'
-    percent = "#{float}%"
-    intOrPercent = "(#{int}|#{percent})"
-    comma = '\\s*,\\s*'
-
-    ///
-      (\#[\da-fA-F]{6}(?!\d))
-      |
-      (\#[\da-fA-F]{3}(?!\d))
-      |
-      (rgb\(\s*
-        #{intOrPercent}
-        #{comma}
-        #{intOrPercent}
-        #{comma}
-        #{intOrPercent}
-      \))
-      |
-      (rgba\(\s*
-        #{intOrPercent}
-        #{comma}
-        #{intOrPercent}
-        #{comma}
-        #{intOrPercent}
-        #{comma}
-        #{float}
-      \))
-      |
-      (hsl\(\s*
-        #{int}
-        #{comma}
-        #{percent}
-        #{comma}
-        #{percent}
-      \))
-      |
-      (hsla\(\s*
-        #{int}
-        #{comma}
-        #{percent}
-        #{comma}
-        #{percent}
-        #{comma}
-        #{float}
-      \))
-    ///g
+      @editor.scanInBufferRange Color.colorRegexp(), @constructor.bufferRange, block
 
   updateMarkers: ->
     if not @buffer?

@@ -1,0 +1,25 @@
+/* RGB model */
+red = #F00
+red = #FF0000
+red = rgb(255, 0, 0)
+red = rgb(100%, 0%, 0%)
+
+/* RGB with alpha channel, added to CSS3 */
+transparent_red = rgba(255, 0, 0, 0.5)
+
+/* HSL model, added to CSS3 */
+red = hsl(0, 100%, 50%)
+green = hsl(120, 100%, 50%)
+dark_green =  hsl(120, 100%, 25%)
+light_green = hsl(120, 100%, 75%)
+paster_green = hsl(120, 50%, 50%)
+
+/* HSL model with alpha channel */
+green = hsla(120, 100%, 50%, 1)
+transparent_green = hsla(120, 100%, 50%, 0.5)
+very_transparent_treen = hsla(120, 100%, 50%, 0.1)
+
+/* Basic Sass/Stylus color functions */
+dark_green = darken(#00ff00, 10%)
+light_green = lighten(#00ff00, 10%)
+transparent_dark_green = transparentize(darken(#00ff00, 10%), 0.5)
