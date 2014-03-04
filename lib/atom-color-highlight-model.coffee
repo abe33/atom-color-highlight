@@ -51,11 +51,12 @@ class AtomColorHighlightModel
     try
       @eachColor (res) =>
         {range, matchText: color} = res
+        colorObject = new Color color
 
         if marker = @findMarker(color, range)
           delete markersToRemoveById[marker.id]
         else
-          marker = @createMarker(color, range)
+          marker = @createMarker(color, colorObject, range)
 
         updatedMarkers.push marker
 
@@ -81,10 +82,11 @@ class AtomColorHighlightModel
     @markers = []
     @emit 'updated', _.clone(@markers)
 
-  createMarker: (color, range) ->
+  createMarker: (color, colorObject, range) ->
     markerAttributes =
       class: @constructor.markerClass
       color: color
+      colorObject: colorObject
       invalidation: 'inside'
       replicate: false
       persist: false

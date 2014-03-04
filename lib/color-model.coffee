@@ -79,7 +79,7 @@ class Color
     # Short circuit when saturation is `0`, all other channels
     # will end up to `0` as well.
     if s is 0
-      return [rnd v * 255, rnd v * 255, rnd v * 255]
+      return [rnd(v * 255), rnd(v * 255), rnd(v * 255)]
     else
       # By rounding the hue we obtain the dominant
       # color such as :
@@ -131,5 +131,7 @@ class Color
   }
 
   constructor: (colorExpression) ->
-    @constructor.colorExpressions.forEach (expr) =>
+    @constructor.colorExpressions.some (expr) =>
       expr.handle(this, colorExpression) if expr.canHandle(colorExpression)
+
+  toCSS: -> "rgba(#{Math.round @red}, #{Math.round @green}, #{Math.round @blue}, #{@alpha})"

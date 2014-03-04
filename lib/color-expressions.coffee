@@ -68,7 +68,7 @@ Color.addExpression ///
   color.red = parseIntOrPercent(r)
   color.green = parseIntOrPercent(g)
   color.blue = parseIntOrPercent(b)
-  color.alpha = parseFloat(b)
+  color.alpha = parseFloat(a)
 
 # hsl(0,0%,0%)
 Color.addExpression ///
@@ -87,6 +87,7 @@ Color.addExpression ///
     parseFloat(s)
     parseFloat(l)
   ]
+  color.alpha = 1
 
 # hsla(0,0%,0%,1)
 Color.addExpression ///
