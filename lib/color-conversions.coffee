@@ -1,0 +1,140 @@
+Mixin = require 'mixto'
+
+module.exports =
+class ColorConversions extends Mixin
+
+  # Converts a color defined with its red, green and blue components into
+  # an hexadecimal string.
+  rgb2hex: (r, g, b) ->
+    rnd = Math.round
+    value = ((rnd(r) << 16) + (rnd(g) << 8) + rnd(b)).toString 16
+
+    # The value is filled with `0` to match a length of 6.
+    value = "0#{value}" while value.length < 6
+
+    value
+
+  # Converts an hexadecimal string such as `rrggbb` into an array
+  # with the red, green and blue components.
+  hex2rgb: (hex) ->
+    color = parseInt hex, 16
+
+    r = (color >> 16) & 0xff
+    g = (color >> 8) & 0xff
+    b = color & 0xff
+
+    [r, g, b]
+
+  # Converts a color defined with its red, green, blue and alpha components
+  # an hexadecimal string.
+  rgb2hexARGB: (r, g, b, a) ->
+    rnd = Math.round
+    value = ((rnd(a * 255) << 24) + (rnd(r) << 16) + (rnd(g) << 8) + rnd(b)).toString 16
+
+    # The value is filled with `0` to match a length of 8.
+    value = "0#{value}" while value.length < 8
+
+    value
+
+  # Converts an hexadecimal string such as `aarrggbb` into an array
+  # with the red, green, blue and alpha components values.
+  hexARGB2rgb: (hex) ->
+    color = parseInt hex, 16
+
+    a = ((color >> 24) & 0xff) / 255
+    r = (color >> 16) & 0xff
+    g = (color >> 8) & 0xff
+    b = color & 0xff
+
+    [r, g, b, a]
+
+  # Converts a color in the `rgb` color space in an
+  # array with the color in the `hsv` color space.
+  rgb2hsv: (r, g, b) ->
+
+    r = r / 255
+    g = g / 255
+    b = b / 255
+    rnd = Math.round
+
+    minVal = Math.min r, g, b
+    maxVal = Math.max r, g, b
+    delta = maxVal - minVal
+
+    # Value is always the maximal component's value.
+    v = maxVal
+
+    # The color is a gray, there's no need to proceed further.
+    # Both saturation and hue equals to `0`.
+    if delta is 0
+      h = 0
+      s = 0
+    else
+      # The lower the delta is in comparison with the value
+      # the higher the saturation will be.
+      s = delta / v
+      deltaR = (((v - r) / 6) + (delta / 2)) / delta
+      deltaG = (((v - g) / 6) + (delta / 2)) / delta
+      deltaB = (((v - b) / 6) + (delta / 2)) / delta
+
+      # In a range from `0` to `1`, full red is at `0` and `1`,
+      # full green is at `1/3` and full blue at `2/3`.
+      #
+      # From the point in the range corresponding to the dominant
+      # component, the delta of the other components are both added
+      # in order to move the hue around this point.
+      if r is v      then h = deltaB - deltaG
+      else if g is v then h = (1 / 3) + deltaR - deltaB
+      else if b == v then h = (2 / 3) + deltaG - deltaR
+
+      # Hue is then reduced to fit in the `0-1` range.
+      h += 1 if h < 0
+      h -= 1 if h > 1
+
+    # And, finally, hue, saturation and value are normalized
+    # to their corresponding range.
+    [h * 360, s * 100, v * 100]
+
+  # Converts a color defined in the `hsv` color space into
+  # an array containing the color in the `rgb` color space.
+  hsv2rgb: (h, s, v) ->
+    # Hue is reduced to the `0-6` range when both saturation
+    # and value are reduced to the `0-1`
+    h = h / 60
+    s = s / 100
+    v = v / 100
+    rnd = Math.round
+
+    # Short circuit when saturation is `0`, all other components
+    # will end up to `0` as well.
+    if s is 0
+      return [rnd(v * 255), rnd(v * 255), rnd(v * 255)]
+    else
+      # By rounding the hue we obtain the dominant
+      # color such as :
+      #
+      #  * 0 = Red
+      #  * 1 = Yellow
+      #  * 2 = Green
+      #  * 3 = Cyan
+      #  * 4 = Blue
+      #  * 5 = Fuschia
+      dominant = Math.floor h
+
+      comp1 = v * (1 - s)
+      comp2 = v * (1 - s * (h - dominant))
+      comp3 = v * (1 - s * (1 - (h - dominant)))
+
+      # According to the dominant color we affect
+      # the values to each component.
+      switch dominant
+        when 0 then [r, g, b] = [v, comp3, comp1]
+        when 1 then [r, g, b] = [comp2, v, comp1]
+        when 2 then [r, g, b] = [comp1, v, comp3]
+        when 3 then [r, g, b] = [comp1, comp2, v]
+        when 4 then [r, g, b] = [comp3, comp1, v]
+        else        [r, g, b] = [v, comp1, comp2]
+
+      # And each component is normalized to fit
+      # in `0-255` range.
+      return [r * 255, g * 255, b * 255]
