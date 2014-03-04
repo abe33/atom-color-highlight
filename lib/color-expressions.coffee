@@ -116,3 +116,25 @@ Color.addExpression ///
     parseFloat(l)
   ]
   color.alpha = parseFloat(a)
+
+# vec4(0,0,0,1)
+
+Color.addExpression ///
+  vec4\(\s*
+    (#{float})
+    #{comma}
+    (#{float})
+    #{comma}
+    (#{float})
+    #{comma}
+    (#{float})
+  \)
+///, (color, expression) ->
+  [m,h,s,l,a] = @regexp.exec(expression)
+
+  color.rgba = [
+    parseFloat(h * 255)
+    parseFloat(s * 255)
+    parseFloat(l * 255)
+    parseFloat(a)
+  ]
