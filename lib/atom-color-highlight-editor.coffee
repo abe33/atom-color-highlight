@@ -25,8 +25,11 @@ class AtomColorHighlightEditor
     @unsubscribeFromBuffer()
 
     if @buffer = @editor.getBuffer()
-      model = @models[@buffer.getPath()] = new AtomColorHighlightModel(@editor, @buffer)
-      view = @views[@buffer.getPath()] = new AtomColorHighlightView(model, @editorView)
+      model = @models[@buffer.getPath()] =
+        new AtomColorHighlightModel(@editor, @buffer)
+
+      view = @views[@buffer.getPath()] =
+        new AtomColorHighlightView(model, @editorView)
 
       @editorView.underlayer.append view
 

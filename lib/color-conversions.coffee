@@ -1,11 +1,28 @@
 Mixin = require 'mixto'
 
+# Public: The {ColorConversions} mixin provides methods to convert
+# a colors from/into various formats.
+#
+# The mixin currently offer the following conversions:
+#
+# * RGB > HSV
+# * HSV > RGB
+# * RGB > Hexadecimal
+# * Hexadecimal > RGB
+# * RGBA > ARGB Hexadecimal
+# * ARGB Hexadecimal > RGBA
 module.exports =
 class ColorConversions extends Mixin
 
-  # Converts a color defined with its red, green and blue components into
-  # an hexadecimal string.
-  rgb2hex: (r, g, b) ->
+  # Public: Converts a color defined with its red, green and blue
+  # components into an hexadecimal {String}.
+  #
+  # r - An integer in the range [O-255] for the red component
+  # g - An integer in the range [O-255] for the green component
+  # b - An integer in the range [O-255] for the blue component
+  #
+  # Returns an hexadecimal {String} as `RRGGBB`
+  rgbToHex: (r, g, b) ->
     rnd = Math.round
     value = ((rnd(r) << 16) + (rnd(g) << 8) + rnd(b)).toString 16
 
@@ -14,9 +31,14 @@ class ColorConversions extends Mixin
 
     value
 
-  # Converts an hexadecimal string such as `rrggbb` into an array
+  # Public: Converts an hexadecimal {String} such as `RRGGBB` into an array
   # with the red, green and blue components.
-  hex2rgb: (hex) ->
+  #
+  # hex - A {String} such as `RRGGBB`
+  #
+  # Returns an {Array} containing the red, green and blue components
+  # of the color
+  hexToRGB: (hex) ->
     color = parseInt hex, 16
 
     r = (color >> 16) & 0xff
@@ -25,20 +47,37 @@ class ColorConversions extends Mixin
 
     [r, g, b]
 
-  # Converts a color defined with its red, green, blue and alpha components
-  # an hexadecimal string.
-  rgb2hexARGB: (r, g, b, a) ->
+  # Public: Converts a color defined with its red, green,
+  # blue and alpha components into an hexadecimal {String}.
+  #
+  # r - An integer in the range [O-255] for the red component
+  # g - An integer in the range [O-255] for the green component
+  # b - An integer in the range [O-255] for the blue component
+  # a - A float in the range [O-1] for the alpha component
+  #
+  # Returns an hexadecimal {String} as `AARRGGBB`
+  rgbToHexARGB: (r, g, b, a) ->
     rnd = Math.round
-    value = ((rnd(a * 255) << 24) + (rnd(r) << 16) + (rnd(g) << 8) + rnd(b)).toString 16
+    value = (
+      (rnd(a * 255) << 24) +
+      (rnd(r) << 16) +
+      (rnd(g) << 8) +
+      rnd(b)
+    ).toString 16
 
     # The value is filled with `0` to match a length of 8.
     value = "0#{value}" while value.length < 8
 
     value
 
-  # Converts an hexadecimal string such as `aarrggbb` into an array
+  # Public: Converts an hexadecimal {String} such as `aarrggbb` into an array
   # with the red, green, blue and alpha components values.
-  hexARGB2rgb: (hex) ->
+  #
+  # hex - A {String} such as `AARRGGBB`
+  #
+  # Returns an {Array} containing the red, green, blue and alpha components
+  # of the color
+  hexARGBToRGB: (hex) ->
     color = parseInt hex, 16
 
     a = ((color >> 24) & 0xff) / 255
@@ -48,9 +87,15 @@ class ColorConversions extends Mixin
 
     [r, g, b, a]
 
-  # Converts a color in the `rgb` color space in an
-  # array with the color in the `hsv` color space.
-  rgb2hsv: (r, g, b) ->
+  # Public: Converts a color in the `rgb` color space in an
+  # {Array} with the color in the `hsv` color space.
+  #
+  # r - An integer in the range [O-255] for the red component
+  # g - An integer in the range [O-255] for the green component
+  # b - An integer in the range [O-255] for the blue component
+  #
+  # Returns an {Array} containing the hue, saturation and value of the color
+  rgbToHSV: (r, g, b) ->
 
     r = r / 255
     g = g / 255
@@ -95,9 +140,16 @@ class ColorConversions extends Mixin
     # to their corresponding range.
     [h * 360, s * 100, v * 100]
 
-  # Converts a color defined in the `hsv` color space into
-  # an array containing the color in the `rgb` color space.
-  hsv2rgb: (h, s, v) ->
+  # Public: Converts a color defined in the `hsv` color space into
+  # an {Array} containing the color in the `rgb` color space.
+  #
+  # h - An integer in the range [O-360] for the hue component
+  # s - A float in the range [O-100] for the saturation component
+  # s - A float in the range [O-100] for the value component
+  #
+  # Returns an {Array} containing the red, green and blue components
+  # of the color
+  hsvToRGB: (h, s, v) ->
     # Hue is reduced to the `0-6` range when both saturation
     # and value are reduced to the `0-1`
     h = h / 60

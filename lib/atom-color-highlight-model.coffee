@@ -36,7 +36,11 @@ class AtomColorHighlightModel
 
   eachColor: (block) ->
     if @buffer?
-      @editor.scanInBufferRange Color.colorRegexp(), @constructor.bufferRange, block
+      @editor.scanInBufferRange(
+        Color.colorRegexp(),
+        @constructor.bufferRange,
+        block
+      )
 
   updateMarkers: ->
     if not @buffer?
@@ -51,7 +55,7 @@ class AtomColorHighlightModel
     try
       @eachColor (res) =>
         {range, matchText: color} = res
-        colorObject = new Color color
+        colorObject = new Color(color)
 
         if marker = @findMarker(color, range)
           delete markersToRemoveById[marker.id]
