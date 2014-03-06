@@ -21,7 +21,7 @@
 
   * green: `hsla(120, 100%, 50%, 1)`
   * transparent green: `hsla(120, 100%, 50%, 0.5)`
-  * very transparent treen: `hsla(120, 100%, 50%, 0.1)`
+  * very transparent green: `hsla(120, 100%, 50%, 0.1)`
 
 ### Basic Sass/Stylus color functions
 
