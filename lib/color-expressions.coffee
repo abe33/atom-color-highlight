@@ -15,13 +15,13 @@ parseIntOrPercent = (value) ->
     value = parseInt(value)
 
 # #000000
-Color.addExpression ///\#(#{hexa}{6})(?!\d)///, (color, expression) ->
+Color.addExpression ///\#(#{hexa}{6})(?!#{hexa})///, (color, expression) ->
   [m, hexa] = @regexp.exec(expression)
 
   color.hex = hexa.replace('#', '')
 
 # #000
-Color.addExpression ///\#(#{hexa}{3})(?!\d)///, (color, expression) ->
+Color.addExpression ///\#(#{hexa}{3})(?!#{hexa})///, (color, expression) ->
   [m, hexa] = @regexp.exec(expression)
   colorAsInt = parseInt(hexa.replace('#', ''), 16)
 
@@ -30,13 +30,13 @@ Color.addExpression ///\#(#{hexa}{3})(?!\d)///, (color, expression) ->
   color.blue = (colorAsInt & 0xf) * 17
 
 # 0xFF000000
-Color.addExpression ///0x(#{hexa}{8})(?!\d)///, (color, expression) ->
+Color.addExpression ///0x(#{hexa}{8})(?!#{hexa})///, (color, expression) ->
   [m, hexa] = @regexp.exec(expression)
 
   color.hexARGB = hexa.replace('0x', '')
 
 # 0x000000
-Color.addExpression ///0x(#{hexa}{6})(?!\d)///, (color, expression) ->
+Color.addExpression ///0x(#{hexa}{6})(?!#{hexa})///, (color, expression) ->
   [m, hexa] = @regexp.exec(expression)
 
   color.hex = hexa.replace('0x', '')

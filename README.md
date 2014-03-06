@@ -48,7 +48,7 @@ to modify and the matching expression.
 For instance, the CSS hexadecimal RGB notation is defined as follow:
 
 ```coffeescript
-Color.addExpression /#([\da-fA-F]{6})(?!\d)/, (color, expression) ->
+Color.addExpression /#([\da-fA-F]{6})(?![\da-fA-F])/, (color, expression) ->
   [m, hexa] = @regexp.exec(expression)
 
   color.hex = hexa.replace('#', '')
