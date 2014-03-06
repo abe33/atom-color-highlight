@@ -13,13 +13,51 @@ class AtomColorHighlightView extends View
 
   constructor: (@model, @editorView) ->
     super
+    {@editor} = @editorView
+    @cursors = []
     @markerViews = {}
     @subscribe @model, 'updated', @markersUpdated
+    @subscribe @editor, 'cursor-added', @updateCursors
+    @updateCursors()
+
+  updateCursors: =>
+    cursors = @editor.getCursors()
+    cursorsToBeRemoved = @cursors.concat()
+
+    for cursor in cursors
+      if cursor in @cursors
+        _.remove cursorsToBeRemoved, cursor
+      else
+        @subscribeToCursor cursor
+
+    @unsubscribeFromCursor cursor for cursor in cursorsToBeRemoved
+    @cursors = cursors
+
+  subscribeToCursor: (cursor) ->
+    @subscribe cursor, 'moved', @cursorMoved
+    @subscribe cursor, 'destroyed', @updateCursors
+
+  unsubscribeFromCursor: (cursor) ->
+    @unsubscribe cursor, 'moved', @cursorMoved
+    @unsubscribe cursor, 'destroyed'
 
   # Tear down any state and detach
   destroy: ->
+    @unsubscribe @editor, 'cursor-added'
+    @unsubscribeFromCursor(cursor) for cursor in @editor.getCursors()
     @destroyAllViews()
     @detach()
+
+  getMarkerAt: (position) ->
+    for id, view of @markerViews
+      return view if view.marker.bufferMarker.containsPoint(position)
+
+  cursorMoved: ({oldBufferPosition, newBufferPosition}) =>
+    oldMarker = @getMarkerAt oldBufferPosition
+    newMarker = @getMarkerAt newBufferPosition
+
+    oldMarker?.show()
+    newMarker?.hide()
 
   markersUpdated: (markers) =>
     markerViewsToRemoveById = _.clone(@markerViews)
