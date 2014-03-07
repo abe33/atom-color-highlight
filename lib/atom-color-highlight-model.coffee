@@ -13,6 +13,9 @@ class AtomColorHighlightModel
   @bufferRange: [[0,0], [Infinity,Infinity]]
 
   constructor: (@editor, @buffer) ->
+    customProperties = @buffer.getMarkers().map (m) -> m.properties.color
+    console.log customProperties
+    console.log customProperties.length
 
   update: =>
     @updateMarkers()
@@ -58,14 +61,9 @@ class AtomColorHighlightModel
         colorObject = new Color(color)
 
         if marker = @findMarker(color, range)
-          marker.bufferMarker.properties.color = color
-          marker.bufferMarker.properties.cssColor = colorObject.toCSS()
-          console.log Object.isFrozen(marker.bufferMarker.properties)
-          console.log marker.bufferMarker.properties
           delete markersToRemoveById[marker.id]
         else
           marker = @createMarker(color, colorObject, range)
-          console.log(marker)
 
         updatedMarkers.push marker
 
@@ -79,7 +77,7 @@ class AtomColorHighlightModel
 
   findMarker: (color, range) ->
     attributes =
-      class: @constructor.markerClass
+      type: @constructor.markerClass
       color: color
       startPosition: range.start
       endPosition: range.end
@@ -93,11 +91,9 @@ class AtomColorHighlightModel
 
   createMarker: (color, colorObject, range) ->
     markerAttributes =
-      class: @constructor.markerClass
+      type: @constructor.markerClass
       color: color
       cssColor: colorObject.toCSS()
       invalidation: 'inside'
-      replicate: false
-      persist: false
-      isCurrent: false
+      persistent: false
     @editor.markBufferRange(range, markerAttributes)

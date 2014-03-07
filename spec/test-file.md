@@ -33,7 +33,7 @@
 
   * integer color: `0xabcdef`
   * integer transparent color: ` 0x66abcdef`
-  * integer very transparent color: ` 0x11abcdef`
+  * integer very transparent color: `0x11abcdef`
 
 ### GLSL Colors
 
