@@ -58,9 +58,14 @@ class AtomColorHighlightModel
         colorObject = new Color(color)
 
         if marker = @findMarker(color, range)
+          marker.bufferMarker.properties.color = color
+          marker.bufferMarker.properties.cssColor = colorObject.toCSS()
+          console.log Object.isFrozen(marker.bufferMarker.properties)
+          console.log marker.bufferMarker.properties
           delete markersToRemoveById[marker.id]
         else
           marker = @createMarker(color, colorObject, range)
+          console.log(marker)
 
         updatedMarkers.push marker
 
@@ -90,7 +95,7 @@ class AtomColorHighlightModel
     markerAttributes =
       class: @constructor.markerClass
       color: color
-      colorObject: colorObject
+      cssColor: colorObject.toCSS()
       invalidation: 'inside'
       replicate: false
       persist: false

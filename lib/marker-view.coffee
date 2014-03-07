@@ -37,5 +37,5 @@ class MarkerView extends View
       color: color
       width: width + 'px'
 
-  getColor: -> @marker.bufferMarker.properties.colorObject.toCSS()
+  getColor: -> @marker.bufferMarker.properties.cssColor
   getScreenRange: -> @marker.getScreenRange()

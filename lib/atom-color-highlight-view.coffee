@@ -29,8 +29,13 @@ class AtomColorHighlightView extends View
         _.remove cursorsToBeRemoved, cursor
       else
         @subscribeToCursor cursor
+        marker = @getMarkerAt(cursor.getBufferPosition())
+        marker?.hide()
 
-    @unsubscribeFromCursor cursor for cursor in cursorsToBeRemoved
+    for cursor in cursorsToBeRemoved
+      @unsubscribeFromCursor cursor
+      marker = @getMarkerAt(cursor.getBufferPosition())
+      marker?.show()
     @cursors = cursors
 
   subscribeToCursor: (cursor) ->
