@@ -62,7 +62,7 @@ class Color
   @::accessor 'name', {
     get: -> @_name
     set: (@_name) ->
-      if color = Color.namedColors[@_name.toLowerCase()]
+      if color = Color.namedColors[@_name.toLowerCase()].replace('#', '')
         @hex = color
   }
 
