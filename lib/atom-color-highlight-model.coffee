@@ -13,9 +13,9 @@ class AtomColorHighlightModel
   @bufferRange: [[0,0], [Infinity,Infinity]]
 
   constructor: (@editor, @buffer) ->
-    customProperties = @buffer.getMarkers().map (m) -> m.properties.color
-    console.log customProperties
-    console.log customProperties.length
+    # customProperties = @buffer.getMarkers().map (m) -> m.properties.color
+    # console.log customProperties
+    # console.log customProperties.length
 
   update: =>
     @updateMarkers()
@@ -24,7 +24,7 @@ class AtomColorHighlightModel
     @buffer.on 'contents-modified', @update
 
   unsubscribeFromBuffer: ->
-    @buffer.off 'contents-modified', @updateModel
+    @buffer.off 'contents-modified', @update
     @buffer = null
 
   init: ->
@@ -90,10 +90,20 @@ class AtomColorHighlightModel
     @emit 'updated', _.clone(@markers)
 
   createMarker: (color, colorObject, range) ->
+    [h,s,l] = colorObject.hsl
+    textColor = if l > 50
+      'black'
+    else
+      'white'
+
+    console.log textColor
+
     markerAttributes =
       type: @constructor.markerClass
       color: color
       cssColor: colorObject.toCSS()
+      textColor: textColor
       invalidation: 'inside'
       persistent: false
+
     @editor.markBufferRange(range, markerAttributes)

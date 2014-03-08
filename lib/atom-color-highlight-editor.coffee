@@ -31,7 +31,7 @@ class AtomColorHighlightEditor
       view = @views[@buffer.getPath()] =
         new AtomColorHighlightView(model, @editorView)
 
-      @editorView.underlayer.append view
+      @editorView.overlayer.append view
 
       model.init()
 

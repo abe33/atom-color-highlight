@@ -12,7 +12,6 @@ class MarkerView extends View
     super
 
     @subscribeToMarker()
-
     @updateDisplay()
 
   subscribeToMarker: ->
@@ -25,17 +24,22 @@ class MarkerView extends View
 
   updateDisplay: =>
     color = @getColor()
+    colorText = @getColorText()
 
     {start, end} = @getScreenRange()
     {top, left} = @editorView.pixelPositionForScreenPosition(start)
     width = @editorView.pixelPositionForScreenPosition(end).left - left
 
+    @text colorText
     @css
       top: top + 'px'
       left: left + 'px'
       background: color
-      color: color
+      borderColor: color
+      color: @getColorTextColor()
       width: width + 'px'
 
   getColor: -> @marker.bufferMarker.properties.cssColor
+  getColorText: -> @marker.bufferMarker.properties.color
+  getColorTextColor: -> @marker.bufferMarker.properties.textColor
   getScreenRange: -> @marker.getScreenRange()

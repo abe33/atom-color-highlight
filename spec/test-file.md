@@ -13,7 +13,7 @@
 
   * red: `hsl(0, 100%, 50%)`
   * green: `hsl(120, 100%, 50%)`
-  * dark green: ` hsl(120, 100%, 25%)`
+  * dark green: `hsl(120, 100%, 25%)`
   * light green: `hsl(120, 100%, 75%)`
   * paster green: `hsl(120, 50%, 50%)`
 
@@ -32,7 +32,7 @@
 ### Hexadecimal integer colors
 
   * integer color: `0xabcdef`
-  * integer transparent color: ` 0x66abcdef`
+  * integer transparent color: `0x66abcdef`
   * integer very transparent color: `0x11abcdef`
 
 ### GLSL Colors
