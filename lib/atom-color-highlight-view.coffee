@@ -14,37 +14,43 @@ class AtomColorHighlightView extends View
   constructor: (@model, @editorView) ->
     super
     {@editor} = @editorView
-    @cursors = []
+    @selections = []
     @markerViews = {}
     @subscribe @model, 'updated', @markersUpdated
-    @subscribe @editor, 'cursor-added', @updateCursors
-    @updateCursors()
+    @subscribe @editor, 'selection-added', @updateSelections
+    @updateSelections()
 
-  updateCursors: =>
-    cursors = @editor.getCursors()
-    cursorsToBeRemoved = @cursors.concat()
+  updateSelections: =>
+    selections = @editor.getSelections()
+    selectionsToBeRemoved = @selections.concat()
 
-    for cursor in cursors
-      if cursor in @cursors
-        _.remove cursorsToBeRemoved, cursor
+    for selection in selections
+      if selection in @selections
+        _.remove selectionsToBeRemoved, selection
       else
-        @subscribeToCursor cursor
+        @subscribeToSelection selection
+        # marker = @getMarkerAt(selection.getBufferPosition())
+        # marker?.hide()
 
-    @unsubscribeFromCursor cursor for cursor in cursorsToBeRemoved
-    @cursors = cursors
+    for selection in selectionsToBeRemoved
+      @unsubscribeFromSelection selection
+      # marker = @getMarkerAt(selection.getBufferPosition())
+      # marker?.show()
+    @selections = selections
 
-  subscribeToCursor: (cursor) ->
-    @subscribe cursor, 'moved', @cursorMoved
-    @subscribe cursor, 'destroyed', @updateCursors
+  subscribeToSelection: (selection) ->
+    @subscribe selection, 'screen-range-changed', @selectionChanged
+    @subscribe selection, 'destroyed', @updateSelections
 
-  unsubscribeFromCursor: (cursor) ->
-    @unsubscribe cursor, 'moved', @cursorMoved
-    @unsubscribe cursor, 'destroyed'
+  unsubscribeFromSelection: (selection) ->
+    @unsubscribe selection, 'screen-range-changed', @selectionChanged
+    @unsubscribe selection, 'destroyed'
 
   # Tear down any state and detach
   destroy: ->
-    @unsubscribe @editor, 'cursor-added'
-    @unsubscribeFromCursor(cursor) for cursor in @editor.getCursors()
+    @unsubscribe @editor, 'selection-added'
+    for selection in @editor.getSelections()
+      @unsubscribeFromSelection(selection)
     @destroyAllViews()
     @detach()
 
@@ -52,12 +58,20 @@ class AtomColorHighlightView extends View
     for id, view of @markerViews
       return view if view.marker.bufferMarker.containsPoint(position)
 
-  cursorMoved: ({oldBufferPosition, newBufferPosition}) =>
-    oldMarker = @getMarkerAt oldBufferPosition
-    newMarker = @getMarkerAt newBufferPosition
+  selectionChanged: =>
+    range = @editor.getSelectedScreenRange()
+    for id,view of @markerViews
+      viewRange = view.getScreenRange()
+      if viewRange.intersectsWith(range)
+        view.hide()
+      else
+        view.show()
 
-    oldMarker?.show()
-    newMarker?.hide()
+    # oldMarker = @getMarkerAt oldBufferPosition
+    # newMarker = @getMarkerAt newBufferPosition
+    #
+    # oldMarker?.show()
+    # newMarker?.hide()
 
   markersUpdated: (markers) =>
     markerViewsToRemoveById = _.clone(@markerViews)
