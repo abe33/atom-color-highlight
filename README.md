@@ -29,16 +29,17 @@ You can register a new color expression using the `Color.addExpression` method.
 atomColorHighlightPath = atom.packages.resolvePackagePath 'atom-color-highlight'
 Color = require(atomColorHighlightPath + '/lib/color-model')
 
-Color.addExpression /regexp/, (color, expression) ->
+Color.addExpression 'oniguruma regexp', (color, expression) ->
   # modify color using data extracted from expression
 ```
 
-The first argument is a regular expression that match the new expression.
-This `RegExp` will be used to match the expression both when scanning the
+The first argument is a string that match the new expression using
+[Oniguruma](https://github.com/atom/node-oniguruma) regular expressions.
+This string will be used to match the expression both when scanning the
 buffer and when creating a `Color` object for the various matches.
 
 Note that the regular expression source will be concatened with the other
-expressions to create the `RegExp` used on the buffer.
+expressions to create the `OnigRegExp` used on the buffer.
 In that regards, selectors such `^` and `$` should be avoided at all cost.
 
 The second argument is the function called by the `Color` class when the
@@ -48,8 +49,8 @@ to modify and the matching expression.
 For instance, the CSS hexadecimal RGB notation is defined as follow:
 
 ```coffeescript
-Color.addExpression /#([\da-fA-F]{6})(?![\da-fA-F])/, (color, expression) ->
-  [m, hexa] = @regexp.exec(expression)
+Color.addExpression "#([\\da-fA-F]{6})(?![\\da-fA-F])", (color, expression) ->
+  [m, hexa] = @onigRegExp.search(expression)
 
-  color.hex = hexa.replace('#', '')
+  color.hex = hexa.match
 ```
