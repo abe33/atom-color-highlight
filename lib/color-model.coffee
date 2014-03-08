@@ -2,6 +2,7 @@ _ = require 'underscore-plus'
 PropertyAccessors = require 'property-accessors'
 ColorConversions = require './color-conversions'
 NamedColors = require './named-colors'
+{OnigRegExp} = require 'oniguruma'
 
 # Public: The {Color} class represent a RGBA color with its four components
 # `red`, `green`, `blue` and `alpha`. Internally the color components are
@@ -28,15 +29,15 @@ class Color
   @addExpression: (regexp, handle) ->
     @colorExpressions.push
       regexp: regexp
+      onigRegExp: new OnigRegExp(regexp)
       handle: handle
-      canHandle: (expression) -> @regexp.test expression
+      canHandle: (expression) -> @onigRegExp.test expression
 
   # Public: Returns a {RegExp} that contains all the registered expressions
   # separated with `|`. This is this regexp that will be used to scan buffers
   # and find color expressions.
-  @colorRegexp: ->
-    src = @colorExpressions.map((expr) -> "(#{expr.regexp.source})" ).join('|')
-    new RegExp(src, 'gi')
+  @colorRegExp: ->
+    @colorExpressions.map((expr) -> "(#{expr.regexp})" ).join('|')
 
   # A two dimensional {Array} storing the name of a component with its index.
   @colorComponents: [
@@ -61,7 +62,7 @@ class Color
   @::accessor 'name', {
     get: -> @_name
     set: (@_name) ->
-      if color = Color.namedColors[@_name]
+      if color = Color.namedColors[@_name.toLowerCase()]
         @hex = color
   }
 

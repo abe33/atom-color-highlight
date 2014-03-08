@@ -1,3 +1,9 @@
+### SVG Colors (case insensitive)
+
+  * orangeRed
+  * YellowGreen
+  * GOLD
+
 ### RGB model
 
   * red: `#F00`

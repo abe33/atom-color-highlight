@@ -1,6 +1,6 @@
 _ = require 'underscore-plus'
 {Emitter} = require 'emissary'
-
+{OnigRegExp} = require 'oniguruma'
 Color = require './color-model'
 
 require './color-expressions'
@@ -13,9 +13,6 @@ class AtomColorHighlightModel
   @bufferRange: [[0,0], [Infinity,Infinity]]
 
   constructor: (@editor, @buffer) ->
-    # customProperties = @buffer.getMarkers().map (m) -> m.properties.color
-    # console.log customProperties
-    # console.log customProperties.length
 
   update: =>
     @updateMarkers()
@@ -38,12 +35,22 @@ class AtomColorHighlightModel
       @unsubscribeFromBuffer()
 
   eachColor: (block) ->
-    if @buffer?
-      @editor.scanInBufferRange(
-        Color.colorRegexp(),
-        @constructor.bufferRange,
-        block
-      )
+    @onigScanInBuffer(Color.colorRegExp(), block) if @buffer?
+
+  onigScanInBuffer: (regexp, iterator) ->
+    ore = new OnigRegExp(regexp)
+    text = @buffer.getText()
+    searchOffset = 0
+    while (matches = ore.search(text, searchOffset))?
+      [match] = matches
+      matchText = match.match
+      searchOffset = match.end
+
+      startPosition = @buffer.positionForCharacterIndex(match.start)
+      endPosition = @buffer.positionForCharacterIndex(match.end)
+      range = new @buffer.constructor.Range(startPosition, endPosition)
+      iterator({ match, matchText, range })
+
 
   updateMarkers: ->
     if not @buffer?
@@ -91,7 +98,7 @@ class AtomColorHighlightModel
 
   createMarker: (color, colorObject, range) ->
     [h,s,l] = colorObject.hsl
-    textColor = if l > 60
+    textColor = if l > 50
       'black'
     else
       'white'
