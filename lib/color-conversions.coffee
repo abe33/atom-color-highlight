@@ -170,7 +170,7 @@ class ColorConversions extends Mixin
       #  * 2 = Green
       #  * 3 = Cyan
       #  * 4 = Blue
-      #  * 5 = Fuschia
+      #  * 5 = Magenta
       dominant = Math.floor h
 
       comp1 = v * (1 - s)

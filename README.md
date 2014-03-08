@@ -38,11 +38,11 @@ This `RegExp` will be used to match the expression both when scanning the
 buffer and when creating a `Color` object for the various matches.
 
 Note that the regular expression source will be concatened with the other
-expressions to create the `RegExp` used the buffer. In that regards, selectors
-such `^` and `$` should be avoided at all cost.
+expressions to create the `RegExp` used on the buffer.
+In that regards, selectors such `^` and `$` should be avoided at all cost.
 
 The second argument is the function called by the `Color` class when the
-current expression match your regexp. It'll be called with the `Color' instance
+current expression match your regexp. It'll be called with the `Color` instance
 to modify and the matching expression.
 
 For instance, the CSS hexadecimal RGB notation is defined as follow:
