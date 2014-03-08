@@ -29,14 +29,11 @@ class AtomColorHighlightView extends View
         _.remove selectionsToBeRemoved, selection
       else
         @subscribeToSelection selection
-        # marker = @getMarkerAt(selection.getBufferPosition())
-        # marker?.hide()
 
     for selection in selectionsToBeRemoved
       @unsubscribeFromSelection selection
-      # marker = @getMarkerAt(selection.getBufferPosition())
-      # marker?.show()
     @selections = selections
+    @selectionChanged()
 
   subscribeToSelection: (selection) ->
     @subscribe selection, 'screen-range-changed', @selectionChanged
@@ -59,19 +56,18 @@ class AtomColorHighlightView extends View
       return view if view.marker.bufferMarker.containsPoint(position)
 
   selectionChanged: =>
-    range = @editor.getSelectedScreenRange()
-    for id,view of @markerViews
-      viewRange = view.getScreenRange()
-      if viewRange.intersectsWith(range)
-        view.hide()
-      else
-        view.show()
+    viewsToBeDisplayed = _.clone(@markerViews)
 
-    # oldMarker = @getMarkerAt oldBufferPosition
-    # newMarker = @getMarkerAt newBufferPosition
-    #
-    # oldMarker?.show()
-    # newMarker?.hide()
+    for id,view of @markerViews
+      for selection in @selections
+        range = selection.getScreenRange()
+        viewRange = view.getScreenRange()
+        if viewRange.intersectsWith(range)
+          view.hide()
+          delete viewsToBeDisplayed[id]
+
+    for id,view of viewsToBeDisplayed
+      view.show()
 
   markersUpdated: (markers) =>
     markerViewsToRemoveById = _.clone(@markerViews)
