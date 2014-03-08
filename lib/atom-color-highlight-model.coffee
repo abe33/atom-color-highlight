@@ -96,8 +96,6 @@ class AtomColorHighlightModel
     else
       'white'
 
-    console.log textColor
-
     markerAttributes =
       type: @constructor.markerClass
       color: color
