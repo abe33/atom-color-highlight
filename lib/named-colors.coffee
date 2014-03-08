@@ -2,7 +2,6 @@
 module.exports =
 class NamedColors
   @extend: (Color) ->
-    console.log Color
     Color.namedColors = {}
 
     Color.namedColors.aliceblue = 'f0f8ff'
