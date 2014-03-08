@@ -37,7 +37,6 @@ class MarkerView extends View
       background: color
       borderColor: color
       color: @getColorTextColor()
-      width: width + 'px'
 
   getColor: -> @marker.bufferMarker.properties.cssColor
   getColorText: -> @marker.bufferMarker.properties.color
