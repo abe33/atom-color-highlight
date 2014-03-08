@@ -1,6 +1,7 @@
 _ = require 'underscore-plus'
 PropertyAccessors = require 'property-accessors'
 ColorConversions = require './color-conversions'
+NamedColors = require './named-colors'
 
 # Public: The {Color} class represent a RGBA color with its four components
 # `red`, `green`, `blue` and `alpha`. Internally the color components are
@@ -10,6 +11,7 @@ module.exports =
 class Color
   PropertyAccessors.includeInto(this)
   ColorConversions.extend(this)
+  NamedColors.extend(this)
 
   # The {Array} where color expression handlers are stored
   @colorExpressions: []
@@ -34,7 +36,7 @@ class Color
   # and find color expressions.
   @colorRegexp: ->
     src = @colorExpressions.map((expr) -> "(#{expr.regexp.source})" ).join('|')
-    new RegExp(src, 'g')
+    new RegExp(src, 'gi')
 
   # A two dimensional {Array} storing the name of a component with its index.
   @colorComponents: [
@@ -51,6 +53,17 @@ class Color
       get: -> @[index]
       set: (component) -> @[index] = component
     }
+
+  # Public: The `name` accessor gives access to the color's name.
+  # When setting the name of a color, if the name is referenced in the
+  # `Color.namedColors` object, the color object is automatically modified
+  # to match the specified color name.
+  @::accessor 'name', {
+    get: -> @_name
+    set: (@_name) ->
+      if color = Color.namedColors[@_name]
+        @hex = color
+  }
 
   # Public: The `rgb` accessor gives access to the color as an {Array}
   # of its components. This array takes the form `[red, green, blue]`.
@@ -110,6 +123,7 @@ class Color
   # Public: Returns a {String} reprensenting the color with the CSS `rgba`
   # notation.
   toCSS: ->
+    @name or
     "rgba(#{Math.round @red},
           #{Math.round @green},
           #{Math.round @blue},

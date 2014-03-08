@@ -138,3 +138,14 @@ Color.addExpression ///
     parseFloat(l * 255)
     parseFloat(a)
   ]
+
+# black
+
+colors = Object.keys(Color.namedColors)
+
+colorRegexp = ///\b(#{colors.join('|')})\b///i
+
+Color.addExpression colorRegexp, (color, expression) ->
+  [m,name] = @regexp.exec(expression)
+
+  color.name = name
