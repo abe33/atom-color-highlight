@@ -23,20 +23,24 @@ class MarkerView extends View
     @unsubscribe @marker, 'destroyed', @unsubscribeFromMarker
 
   updateDisplay: =>
-    color = @getColor()
-    colorText = @getColorText()
+    setImmediate =>
+      color = @getColor()
+      colorText = @getColorText()
 
-    {start, end} = @getScreenRange()
-    {top, left} = @editorView.pixelPositionForScreenPosition(start)
-    width = @editorView.pixelPositionForScreenPosition(end).left - left
 
-    @text colorText
-    @css
-      top: top + 'px'
-      left: left + 'px'
-      background: color
-      borderColor: color
-      color: @getColorTextColor()
+      {start, end} = @getScreenRange()
+      console.log start, end
+      {top, left} = @editorView.pixelPositionForScreenPosition(start)
+      console.log top, left
+      width = @editorView.pixelPositionForScreenPosition(end).left - left
+
+      @text colorText
+      @css
+        top: top + 'px'
+        left: left + 'px'
+        background: color
+        borderColor: color
+        color: @getColorTextColor()
 
   getColor: -> @marker.bufferMarker.properties.cssColor
   getColorText: -> @marker.bufferMarker.properties.color
