@@ -1,7 +1,7 @@
 {
   "name": "atom-color-highlight",
   "main": "./lib/atom-color-highlight",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "private": true,
   "description": "Highlights color in files",
   "repository": "https://github.com/abe33/atom-color-highlight",
@@ -9,11 +9,14 @@
   "engines": {
     "atom": ">0.50.0"
   },
+  "devDependencies": {
+    "qq": "*"
+  },
   "dependencies": {
     "emissary": "1.x",
     "underscore-plus": "1.x",
     "property-accessors": "1.x",
     "mixto": "1.x",
-    "oniguruma": "1.0.4"
+    "oniguruma": "~> 1.0.4"
   }
 }
