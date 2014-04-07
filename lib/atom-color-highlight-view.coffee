@@ -11,14 +11,42 @@ class AtomColorHighlightView extends View
   @content: ->
     @div class: 'atom-color-highlight'
 
-  constructor: (@model, @editorView) ->
+  constructor: (model, editorView) ->
     super
-    {@editor} = @editorView
     @selections = []
     @markerViews = {}
-    @subscribe @model, 'updated', @markersUpdated
-    @subscribe @editor, 'selection-added', @updateSelections
+
+    @setEditorView(editorView)
+    @setModel(model)
+
     @updateSelections()
+
+  setModel: (model) ->
+    @unsubscribeFromModel()
+    @model = model
+    @subscribeToModel()
+
+  setEditorView: (editorView) ->
+    @unsubscribeFromEditor()
+    @editorView = editorView
+    {@editor} = @editorView
+    @subscribeToEditor()
+
+  subscribeToModel: ->
+    return unless @model?
+    @subscribe @model, 'updated', @markersUpdated
+
+  unsubscribeFromModel: ->
+    return unless @model?
+    @unsubscribe @model, 'updated'
+
+  subscribeToEditor: ->
+    return unless @editor?
+    @subscribe @editor, 'selection-added', @updateSelections
+
+  unsubscribeFromEditor: ->
+    return unless @editor?
+    @unsubscribe @editor, 'selection-added'
 
   updateSelections: =>
     selections = @editor.getSelections()
@@ -66,8 +94,11 @@ class AtomColorHighlightView extends View
           view.hide()
           delete viewsToBeDisplayed[id]
 
-    for id,view of viewsToBeDisplayed
-      view.show()
+    view.show() for id,view of viewsToBeDisplayed
+
+  removeMarkers: ->
+    markerView.remove() for id, markerView of @markerViews
+    @markerViews = {}
 
   markersUpdated: (markers) =>
     markerViewsToRemoveById = _.clone(@markerViews)
@@ -83,8 +114,6 @@ class AtomColorHighlightView extends View
     for id, markerView of markerViewsToRemoveById
       delete @markerViews[id]
       markerView.remove()
-
-    @editorView.requestDisplayUpdate()
 
   destroyAllViews: ->
     @empty()

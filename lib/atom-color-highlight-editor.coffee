@@ -17,9 +17,19 @@ class AtomColorHighlightEditor
 
     @subscribeToBuffer()
 
-    @subscribe @editorView, 'editor:will-be-removed', =>
-      @unsubscribe()
-      @unsubscribeFromBuffer()
+    @subscribe @editorView, 'editor:will-be-removed', @destroy
+
+  getActiveModel: ->
+    path = @buffer.getPath()
+    @models[path]
+    
+  getActiveView: ->
+    path = @buffer.getPath()
+    @views[path]
+
+  destroy: =>
+    @unsubscribe()
+    @unsubscribeFromBuffer()
 
   subscribeToBuffer: =>
     @unsubscribeFromBuffer()
@@ -34,7 +44,6 @@ class AtomColorHighlightEditor
       @editorView.overlayer.append view
 
       model.init()
-
 
   unsubscribeFromBuffer: ->
     if @buffer?
