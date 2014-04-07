@@ -1,8 +1,8 @@
-{Emmiter} = require 'emissary'
+{Emitter} = require 'emissary'
 AtomColorHighlightEditor = require './atom-color-highlight-editor'
 
 class AtomColorHighlight
-  Emmiter.includeInto(this)
+  Emitter.includeInto(this)
 
   editors: {}
   activate: (state) ->
@@ -26,4 +26,4 @@ class AtomColorHighlight
       @emit 'color-highlight:editor-will-be-destroyed', editor
       editor.destroy()
 
-module.exports =
+module.exports = new AtomColorHighlight
