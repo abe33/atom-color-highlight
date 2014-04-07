@@ -1,4 +1,6 @@
+{EditorView} = require 'atom'
 {Emitter} = require 'emissary'
+
 AtomColorHighlightEditor = require './atom-color-highlight-editor'
 
 class AtomColorHighlight
@@ -17,10 +19,10 @@ class AtomColorHighlight
     @on 'color-highlight:editor-created', callback
 
   viewForEditorView: (editorView) ->
-    @viewForEditor(editorView.getEditor()) if editorView?
+    @viewForEditor(editorView.getEditor()) if editorView instanceof EditorView
 
   modelForEditorView: (editorView) ->
-    @modelForEditor(editorView.getEditor()) if editorView?
+    @modelForEditor(editorView.getEditor()) if editorView instanceof EditorView
 
   modelForEditor: (editor) -> @editors[editor.id]?.getActiveModel()
   viewForEditor: (editor) -> @editors[editor.id]?.getactiveView()
