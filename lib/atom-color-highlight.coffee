@@ -12,11 +12,15 @@ class AtomColorHighlight
       @editors[editor.editor.id] = colorEditor
       @emit 'color-highlight:editor-created', colorEditor
 
+  eachColorHighlightEditor: (callback) ->
+    callback?(editor) for id,editor of @editors if callback?
+    @on 'color-highlight:editor-created', callback
+
   viewForEditorView: (editorView) ->
-    @viewForEditor(editorView.getEditor())
+    @viewForEditor(editorView.getEditor()) if editorView?
 
   modelForEditorView: (editorView) ->
-    @modelForEditor(editorView.getEditor())
+    @modelForEditor(editorView.getEditor()) if editorView?
 
   modelForEditor: (editor) -> @editors[editor.id]?.getActiveModel()
   viewForEditor: (editor) -> @editors[editor.id]?.getactiveView()
