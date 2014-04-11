@@ -17,8 +17,8 @@ Knowing that, you can, either in a package on in your atom init script,
 require the package using:
 
 ```coffeescript
-atomColorHighlightPath = atom.packages.resolvePackagePath 'atom-color-highlight'
-atomColorHighlight = require(atomColorHighlightPath)
+atomColorHighlight = atom.packages.getLoadedPackage 'atom-color-highlight'
+atomColorHighlight = require(atomColorHighlight.path)
 ```
 
 #### Adding new color
@@ -26,8 +26,8 @@ atomColorHighlight = require(atomColorHighlightPath)
 You can register a new color expression using the `Color.addExpression` method.
 
 ```coffeescript
-atomColorHighlightPath = atom.packages.resolvePackagePath 'atom-color-highlight'
-Color = require(atomColorHighlightPath + '/lib/color-model')
+atomColorHighlight = atom.packages.getLoadedPackage 'atom-color-highlight'
+Color = require(atomColorHighlight.path + '/lib/color-model')
 
 Color.addExpression 'oniguruma regexp', (color, expression) ->
   # modify color using data extracted from expression
