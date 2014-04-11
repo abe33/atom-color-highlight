@@ -1,5 +1,8 @@
 Mixin = require 'mixto'
 
+clamp = (val) ->
+  Math.min 1, Math.max(0, val)
+
 # Public: The {ColorConversions} mixin provides methods to convert
 # a colors from/into various formats.
 #
@@ -145,7 +148,7 @@ class ColorConversions extends Mixin
   #
   # h - An integer in the range [O-360] for the hue component
   # s - A float in the range [O-100] for the saturation component
-  # s - A float in the range [O-100] for the value component
+  # v - A float in the range [O-100] for the value component
   #
   # Returns an {Array} containing the red, green and blue components
   # of the color
@@ -190,3 +193,71 @@ class ColorConversions extends Mixin
       # And each component is normalized to fit
       # in `0-255` range.
       return [r * 255, g * 255, b * 255]
+
+  # Public: Converts a color in the `rgb` color space in an
+  # {Array} with the color in the `hsl` color space.
+  #
+  # r - An integer in the range [O-255] for the red component
+  # g - An integer in the range [O-255] for the green component
+  # b - An integer in the range [O-255] for the blue component
+  #
+  # Returns an {Array} containing the hue, saturation and luminance of the color
+  rgbToHSL: (r, g, b) ->
+    [r,g,b] = [
+      r / 255
+      g / 255
+      b / 255
+    ]
+    max = Math.max(r, g, b)
+    min = Math.min(r, g, b)
+    h = undefined
+    s = undefined
+    l = (max + min) / 2
+    d = max - min
+    if max is min
+      h = s = 0
+    else
+      s = (if l > 0.5 then d / (2 - max - min) else d / (max + min))
+      switch max
+        when r
+          h = (g - b) / d + ((if g < b then 6 else 0))
+        when g
+          h = (b - r) / d + 2
+        when b
+          h = (r - g) / d + 4
+      h /= 6
+
+    [h * 360, s * 100, l * 100]
+
+  # Public: Converts a color defined in the `hsl` color space into
+  # an {Array} containing the color in the `rgb` color space.
+  #
+  # h - An integer in the range [O-360] for the hue component
+  # s - A float in the range [O-100] for the saturation component
+  # l - A float in the range [O-100] for the luminance component
+  #
+  # Returns an {Array} containing the red, green and blue components
+  # of the color
+  hslToRGB: (h, s, l) ->
+    hue = (h) ->
+      h = (if h < 0 then h + 1 else ((if h > 1 then h - 1 else h)))
+      if h * 6 < 1
+        m1 + (m2 - m1) * h * 6
+      else if h * 2 < 1
+        m2
+      else if h * 3 < 2
+        m1 + (m2 - m1) * (2 / 3 - h) * 6
+      else
+        m1
+
+    h = (h % 360) / 360
+    s = clamp(s / 100)
+    l = clamp(l / 100)
+    m2 = (if l <= 0.5 then l * (s + 1) else l + s - l * s)
+    m1 = l * 2 - m2
+
+    return [
+      hue(h + 1 / 3) * 255
+      hue(h) * 255
+      hue(h - 1 / 3) * 255
+    ]

@@ -26,10 +26,10 @@ class Color
   #          color parsing phase
   # handle - A {Function} that takes a {Color} to modify and the {String}
   #          that matched during the lookup phase
-  @addExpression: (regexp, handle) ->
+  @addExpression: (regexp, handle=->) ->
     @colorExpressions.push
       regexp: regexp
-      onigRegExp: new OnigRegExp(regexp)
+      onigRegExp: new OnigRegExp("^#{regexp}$")
       handle: handle
       canHandle: (expression) -> @onigRegExp.test expression
 
@@ -38,6 +38,9 @@ class Color
   # and find color expressions.
   @colorRegExp: ->
     @colorExpressions.map((expr) -> "(#{expr.regexp})" ).join('|')
+
+  @canHandle: (colorExpression) ->
+    @colorExpressions.some (expr) => expr.canHandle(colorExpression)
 
   # A two dimensional {Array} storing the name of a component with its index.
   @colorComponents: [
@@ -81,14 +84,24 @@ class Color
     set: ([@red, @green, @blue, @alpha]) ->
   }
 
-  # Public: The `hsl` accessor gives access to the color in the
+  # Public: The `hsv` accessor gives access to the color in the
   # HSV color space. This color space is reprensented as an {Array}
   # such as `[hue, saturation, value]`.
+  # Using the `hsv` setter doesn't modify the alpha component of the color.
+  @::accessor 'hsv', {
+    get: -> @constructor.rgbToHSV(@red, @green, @blue)
+    set: (hsv) ->
+      [@red, @green, @blue] = @constructor.hsvToRGB.apply(@constructor, hsv)
+  }
+
+  # Public: The `hsl` accessor gives access to the color in the
+  # HSL color space. This color space is reprensented as an {Array}
+  # such as `[hue, saturation, luminance]`.
   # Using the `hsl` setter doesn't modify the alpha component of the color.
   @::accessor 'hsl', {
-    get: -> @constructor.rgbToHSV(@red, @green, @blue)
+    get: -> @constructor.rgbToHSL(@red, @green, @blue)
     set: (hsl) ->
-      [@red, @green, @blue] = @constructor.hsvToRGB.apply(@constructor, hsl)
+      [@red, @green, @blue] = @constructor.hslToRGB.apply(@constructor, hsl)
   }
 
   # Public: The `hex` accessor gives access to the color in hexadecimal

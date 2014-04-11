@@ -6,6 +6,7 @@ float = "#{int}(?:\\.#{int})?"
 percent = "#{float}%"
 intOrPercent = "(#{int}|#{percent})"
 comma = '\\s*,\\s*'
+notQuote = "[^\"'\n]*"
 hexa = '[\\da-fA-F]'
 
 strip = (str) -> str.replace(/\s+/g, '')
@@ -15,6 +16,49 @@ parseIntOrPercent = (value) ->
     value = Math.round(parseFloat(value) * 2.55)
   else
     value = parseInt(value)
+
+# darken(#666666, 20%)
+Color.addExpression "darken\\((#{notQuote}),\\s*(#{percent})\\)", (color, expression) ->
+  [m, subexpr, amount] = @onigRegExp.search(expression)
+
+  subexpr = subexpr.match
+  amount = parseFloat(amount.match)
+
+  if Color.canHandle(subexpr) and not isNaN(amount)
+    baseColor = new Color(subexpr)
+    [h,s,l] = baseColor.hsl
+
+    console.log h, s, l
+
+    color.hsl = [h, s, l - l * (amount / 100)]
+    color.alpha = baseColor.alpha
+
+# lighten(#666666, 20%)
+Color.addExpression "lighten\\((#{notQuote}),\\s*(#{percent})\\)", (color, expression) ->
+  [m, subexpr, amount] = @onigRegExp.search(expression)
+
+  subexpr = subexpr.match
+  amount = parseFloat(amount.match)
+
+  if Color.canHandle(subexpr) and not isNaN(amount)
+    baseColor = new Color(subexpr)
+    [h,s,l] = baseColor.hsl
+
+    color.hsl = [h, s, l + l * (amount / 100)]
+    color.alpha = baseColor.alpha
+
+# transparentize(#ffffff, 0.5)
+Color.addExpression "transparentize\\((#{notQuote}),\\s*(#{float})\\)", (color, expression) ->
+  [m, subexpr, amount] = @onigRegExp.search(expression)
+
+  subexpr = subexpr.match
+  amount = parseFloat(amount.match)
+
+  if Color.canHandle(subexpr) and not isNaN(amount)
+    baseColor = new Color(subexpr)
+    color.rgb = baseColor.rgb
+    color.alpha = Math.max(0, baseColor.alpha - amount)
+
 
 # #000000
 Color.addExpression "#(#{hexa}{6})(?!#{hexa})", (color, expression) ->
@@ -118,6 +162,47 @@ Color.addExpression strip("
     parseFloat(l.match)
   ]
   color.alpha = parseFloat(a.match)
+
+# hsv(0,0%,0%)
+Color.addExpression strip("
+  hsv\\(\\s*
+    (#{int})
+    #{comma}
+    (#{percent})
+    #{comma}
+    (#{percent})
+  \\)
+"), (color, expression) ->
+  [m,h,s,v] = @onigRegExp.search(expression)
+
+  color.hsv = [
+    parseInt(h.match)
+    parseFloat(s.match)
+    parseFloat(v.match)
+  ]
+  color.alpha = 1
+
+# hsva(0,0%,0%,1)
+Color.addExpression strip("
+  hsva\\(\\s*
+    (#{int})
+    #{comma}
+    (#{percent})
+    #{comma}
+    (#{percent})
+    #{comma}
+    (#{float})
+  \\)
+"), (color, expression) ->
+  [m,h,s,v,a] = @onigRegExp.search(expression)
+
+  color.hsv = [
+    parseInt(h.match)
+    parseFloat(s.match)
+    parseFloat(v.match)
+  ]
+  color.alpha = parseFloat(a.match)
+
 
 # vec4(0,0,0,1)
 Color.addExpression strip("
