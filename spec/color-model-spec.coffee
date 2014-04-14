@@ -38,7 +38,6 @@ describe 'Color', ->
 
   itShouldParseTheColor('cyan', 0, 255, 255)
 
-  c = Math.round(255 * 0.8)
-  itShouldParseTheColor('darken(cyan, 20%)', 0, c, c)
+  itShouldParseTheColor('darken(cyan, 20%)', 0, 204, 204)
   itShouldParseTheColor('lighten(cyan, 20%)', 51, 255, 255)
   itShouldParseTheColor('transparentize(cyan, 0.5)', 0, 255, 255, 0.5)
