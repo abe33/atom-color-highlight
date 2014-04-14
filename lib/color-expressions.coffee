@@ -19,6 +19,12 @@ parseIntOrPercent = (value) ->
   else
     value = parseInt(value)
 
+parseFloatOrPercent = (amount) ->
+  if amount.indexOf('%') isnt -1
+    parseFloat(amount) / 100
+  else
+    parseFloat(amount)
+
 # darken(#666666, 20%)
 Color.addExpression "darken\\((#{notQuote}),\\s*(#{percent})\\)", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
@@ -55,12 +61,7 @@ Color.addExpression "transparentize\\((#{notQuote}),\\s*(#{floatOrPercent})\\)",
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
   subexpr = subexpr.match
-
-  amount = amount.match
-  amount = if /%/.test amount
-    parseFloat(amount) / 100
-  else
-    parseFloat(amount)
+  amount = parseFloatOrPercent amount.match
 
   if Color.canHandle(subexpr) and not isNaN(amount)
     baseColor = new Color(subexpr)
@@ -74,16 +75,43 @@ Color.addExpression "opacify\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color
 
   subexpr = subexpr.match
 
-  amount = amount.match
-  amount = if /%/.test amount
-    parseFloat(amount) / 100
-  else
-    parseFloat(amount)
+  amount = parseFloatOrPercent amount.match
 
   if Color.canHandle(subexpr) and not isNaN(amount)
     baseColor = new Color(subexpr)
     color.rgb = baseColor.rgb
     color.alpha = clamp(baseColor.alpha + amount)
+
+
+# desaturate(#855, 20%)
+Color.addExpression "desaturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color, expression) ->
+  [m, subexpr, amount] = @onigRegExp.search(expression)
+
+  subexpr = subexpr.match
+
+  amount = parseFloatOrPercent amount.match
+
+  if Color.canHandle(subexpr) and not isNaN(amount)
+    baseColor = new Color(subexpr)
+    [h,s,l] = baseColor.hsl
+
+    color.hsl = [h, s - amount * 100, l]
+    color.alpha = baseColor.alpha
+
+# saturate(#855, 20%)
+Color.addExpression "saturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color, expression) ->
+  [m, subexpr, amount] = @onigRegExp.search(expression)
+
+  subexpr = subexpr.match
+
+  amount = parseFloatOrPercent amount.match
+
+  if Color.canHandle(subexpr) and not isNaN(amount)
+    baseColor = new Color(subexpr)
+    [h,s,l] = baseColor.hsl
+
+    color.hsl = [h, s + amount * 100, l]
+    color.alpha = baseColor.alpha
 
 # #000000
 Color.addExpression "#(#{hexa}{6})(?!#{hexa})", (color, expression) ->
