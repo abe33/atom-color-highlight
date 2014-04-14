@@ -55,3 +55,5 @@ describe 'Color', ->
 
   itShouldParseTheColor('grayscale(#9e3f3f)', 111, 111, 111)
   itShouldParseTheColor('greyscale(#9e3f3f)', 111, 111, 111)
+
+  itShouldParseTheColor('invert(#9e3f3f)', 97, 192, 192)

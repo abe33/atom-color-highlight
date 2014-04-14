@@ -124,6 +124,17 @@ Color.addExpression "gr(a|e)yscale\\((#{notQuote})\\)", (color, expression) ->
     color.hsl = [h, 0, l]
     color.alpha = baseColor.alpha
 
+Color.addExpression "invert\\((#{notQuote})\\)", (color, expression) ->
+  [m, subexpr] = @onigRegExp.search(expression)
+  subexpr = subexpr.match
+
+  if Color.canHandle(subexpr)
+    baseColor = new Color(subexpr)
+    [r,g,b] = baseColor.rgb
+
+    console.log r, g, b
+
+    color.rgb = [255 - r, 255 - g, 255 - b]
     color.alpha = baseColor.alpha
 
 # #000000
