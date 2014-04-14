@@ -29,6 +29,18 @@
   * transparent green: `hsla(120, 100%, 50%, 0.5)`
   * very transparent green: `hsla(120, 100%, 50%, 0.1)`
 
+### HSV model
+
+  * red: `hsv(0, 100%, 100%)`
+  * green: `hsv(120, 100%, 100%)`
+  * dark green: `hsv(120, 100%, 50%)`
+
+### HSV model with alpha channel
+
+  * green: `hsva(120, 100%, 100%, 1)`
+  * transparent green: `hsva(120, 100%, 100%, 0.5)`
+  * very transparent green: `hsva(120, 100%, 100%, 0.1)`
+
 ### Basic Sass/Stylus color functions
 
   * dark green: `darken(#00ff00, 50%)`
