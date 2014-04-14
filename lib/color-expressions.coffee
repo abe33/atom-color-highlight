@@ -113,6 +113,19 @@ Color.addExpression "saturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (colo
     color.hsl = [h, s + amount * 100, l]
     color.alpha = baseColor.alpha
 
+Color.addExpression "gr(a|e)yscale\\((#{notQuote})\\)", (color, expression) ->
+  [m, _, subexpr] = @onigRegExp.search(expression)
+  subexpr = subexpr.match
+
+  if Color.canHandle(subexpr)
+    baseColor = new Color(subexpr)
+    [h,s,l] = baseColor.hsl
+
+    color.hsl = [h, 0, l]
+    color.alpha = baseColor.alpha
+
+    color.alpha = baseColor.alpha
+
 # #000000
 Color.addExpression "#(#{hexa}{6})(?!#{hexa})", (color, expression) ->
   [m, hexa] = @onigRegExp.search(expression)

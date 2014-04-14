@@ -52,3 +52,6 @@ describe 'Color', ->
   
   itShouldParseTheColor('desaturate(#9e3f3f, 20%)', 136, 85, 85)
   itShouldParseTheColor('desaturate(#9e3f3f, 0.2)', 136, 85, 85)
+
+  itShouldParseTheColor('grayscale(#9e3f3f)', 111, 111, 111)
+  itShouldParseTheColor('greyscale(#9e3f3f)', 111, 111, 111)
