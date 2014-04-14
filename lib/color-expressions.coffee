@@ -9,6 +9,8 @@ floatOrPercent = "(#{float}|#{percent})"
 comma = '\\s*,\\s*'
 notQuote = "[^\"'\n]*"
 hexa = '[\\da-fA-F]'
+ps = '\\(\\s*'
+pe = '\\s*\\)'
 
 strip = (str) -> str.replace(/\s+/g, '')
 clamp = (n) -> Math.min(1, Math.max(0, n))
@@ -27,7 +29,7 @@ parseFloatOrPercent = (amount) ->
     parseFloat(amount)
 
 # darken(#666666, 20%)
-Color.addExpression "darken\\((#{notQuote}),\\s*(#{percent})\\)", (color, expression) ->
+Color.addExpression "darken#{ps}(#{notQuote})#{comma}(#{percent})#{pe}", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
   subexpr = subexpr.match
@@ -41,7 +43,7 @@ Color.addExpression "darken\\((#{notQuote}),\\s*(#{percent})\\)", (color, expres
     color.alpha = baseColor.alpha
 
 # lighten(#666666, 20%)
-Color.addExpression "lighten\\((#{notQuote}),\\s*(#{percent})\\)", (color, expression) ->
+Color.addExpression "lighten#{ps}(#{notQuote})#{comma}(#{percent})#{pe}", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
   subexpr = subexpr.match
@@ -56,7 +58,7 @@ Color.addExpression "lighten\\((#{notQuote}),\\s*(#{percent})\\)", (color, expre
 
 # transparentize(#ffffff, 0.5)
 # transparentize(#ffffff, 50%)
-Color.addExpression "transparentize\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color, expression) ->
+Color.addExpression "transparentize#{ps}(#{notQuote})#{comma}(#{floatOrPercent})#{pe}", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
   subexpr = subexpr.match
@@ -69,7 +71,7 @@ Color.addExpression "transparentize\\((#{notQuote}),\\s*(#{floatOrPercent})\\)",
 
 # opacify(0x78ffffff, 0.5)
 # opacify(0x78ffffff, 50%)
-Color.addExpression "opacify\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color, expression) ->
+Color.addExpression "opacify#{ps}(#{notQuote})#{comma}(#{floatOrPercent})#{pe}", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
   subexpr = subexpr.match
@@ -82,7 +84,7 @@ Color.addExpression "opacify\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color
     color.alpha = clamp(baseColor.alpha + amount)
 
 # adjust-hue(#855, 60deg)
-Color.addExpression "adjust-hue\\((#{notQuote}),\\s*(-?#{int})deg\\)", (color, expression) ->
+Color.addExpression "adjust-hue#{ps}(#{notQuote})#{comma}(-?#{int})deg#{pe}", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
   subexpr = subexpr.match
@@ -96,9 +98,36 @@ Color.addExpression "adjust-hue\\((#{notQuote}),\\s*(-?#{int})deg\\)", (color, e
     color.hsl = [(h + amount) % 360, s, l]
     color.alpha = baseColor.alpha
 
+# mix(#f00, #00F, 25%)
+
+Color.addExpression "mix#{ps}((#{notQuote})#{comma} (#{notQuote})#{comma}(#{floatOrPercent})|(#{notQuote})#{comma}(#{notQuote}))#{pe}", (color, expression) ->
+  [_, _, color1A, color2A, amount, _, color1B, color2B] = @onigRegExp.search(expression)
+
+  if color1A.match.length > 0
+    color1 = color1A.match
+    color2 = color2A.match
+    amount = parseFloatOrPercent amount?.match
+  else
+    color1 = color1B.match
+    color2 = color2B.match
+    amount = 0.5
+
+  inverse = 1 - amount
+
+  console.log color1, color2, amount, inverse
+
+  if Color.canHandle(color1) and Color.canHandle(color2) and not isNaN(amount)
+    baseColor1 = new Color(color1)
+    baseColor2 = new Color(color2)
+
+    color.red = Math.floor(baseColor1.red * amount) + Math.floor(baseColor2.red * inverse)
+    color.green = Math.floor(baseColor1.green * amount) + Math.floor(baseColor2.green * inverse)
+    color.blue = Math.floor(baseColor1.blue * amount) + Math.floor(baseColor2.blue * inverse)
+    color.alpha = baseColor1.alpha * amount + baseColor2.alpha * inverse
+
 # desaturate(#855, 20%)
 # desaturate(#855, 0.2)
-Color.addExpression "desaturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color, expression) ->
+Color.addExpression "desaturate#{ps}(#{notQuote})#{comma}(#{floatOrPercent})#{pe}", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
   subexpr = subexpr.match
@@ -114,7 +143,7 @@ Color.addExpression "desaturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (co
 
 # saturate(#855, 20%)
 # saturate(#855, 0.2)
-Color.addExpression "saturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color, expression) ->
+Color.addExpression "saturate#{ps}(#{notQuote})#{comma}(#{floatOrPercent})#{pe}", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
   subexpr = subexpr.match
@@ -128,7 +157,7 @@ Color.addExpression "saturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (colo
     color.hsl = [h, clampInt(s + amount * 100), l]
     color.alpha = baseColor.alpha
 
-Color.addExpression "gr(a|e)yscale\\((#{notQuote})\\)", (color, expression) ->
+Color.addExpression "gr(a|e)yscale#{ps}(#{notQuote})#{pe}", (color, expression) ->
   [m, _, subexpr] = @onigRegExp.search(expression)
   subexpr = subexpr.match
 
@@ -139,15 +168,13 @@ Color.addExpression "gr(a|e)yscale\\((#{notQuote})\\)", (color, expression) ->
     color.hsl = [h, 0, l]
     color.alpha = baseColor.alpha
 
-Color.addExpression "invert\\((#{notQuote})\\)", (color, expression) ->
+Color.addExpression "invert#{ps}(#{notQuote})#{pe}", (color, expression) ->
   [m, subexpr] = @onigRegExp.search(expression)
   subexpr = subexpr.match
 
   if Color.canHandle(subexpr)
     baseColor = new Color(subexpr)
     [r,g,b] = baseColor.rgb
-
-    console.log r, g, b
 
     color.rgb = [255 - r, 255 - g, 255 - b]
     color.alpha = baseColor.alpha
@@ -181,13 +208,13 @@ Color.addExpression "0x(#{hexa}{6})(?!#{hexa})", (color, expression) ->
 
 # rgb(0,0,0)
 Color.addExpression strip("
-  rgb\\(\\s*
+  rgb#{ps}\\s*
     #{intOrPercent}
     #{comma}
     #{intOrPercent}
     #{comma}
     #{intOrPercent}
-  \\)
+  #{pe}
 "), (color, expression) ->
   [m,r,g,b] = @onigRegExp.search(expression)
 
@@ -198,7 +225,7 @@ Color.addExpression strip("
 
 # rgba(0,0,0,1)
 Color.addExpression strip("
-  rgba\\(\\s*
+  rgba#{ps}\\s*
     #{intOrPercent}
     #{comma}
     #{intOrPercent}
@@ -206,7 +233,7 @@ Color.addExpression strip("
     #{intOrPercent}
     #{comma}
     (#{float})
-  \\)
+  #{pe}
 "), (color, expression) ->
   [m,r,g,b,a] = @onigRegExp.search(expression)
 
@@ -217,13 +244,13 @@ Color.addExpression strip("
 
 # hsl(0,0%,0%)
 Color.addExpression strip("
-  hsl\\(\\s*
+  hsl#{ps}\\s*
     (#{int})
     #{comma}
     (#{percent})
     #{comma}
     (#{percent})
-  \\)
+  #{pe}
 "), (color, expression) ->
   [m,h,s,l] = @onigRegExp.search(expression)
 
@@ -236,7 +263,7 @@ Color.addExpression strip("
 
 # hsla(0,0%,0%,1)
 Color.addExpression strip("
-  hsla\\(\\s*
+  hsla#{ps}\\s*
     (#{int})
     #{comma}
     (#{percent})
@@ -244,7 +271,7 @@ Color.addExpression strip("
     (#{percent})
     #{comma}
     (#{float})
-  \\)
+  #{pe}
 "), (color, expression) ->
   [m,h,s,l,a] = @onigRegExp.search(expression)
 
@@ -257,13 +284,13 @@ Color.addExpression strip("
 
 # hsv(0,0%,0%)
 Color.addExpression strip("
-  hsv\\(\\s*
+  hsv#{ps}\\s*
     (#{int})
     #{comma}
     (#{percent})
     #{comma}
     (#{percent})
-  \\)
+  #{pe}
 "), (color, expression) ->
   [m,h,s,v] = @onigRegExp.search(expression)
 
@@ -276,7 +303,7 @@ Color.addExpression strip("
 
 # hsva(0,0%,0%,1)
 Color.addExpression strip("
-  hsva\\(\\s*
+  hsva#{ps}\\s*
     (#{int})
     #{comma}
     (#{percent})
@@ -284,7 +311,7 @@ Color.addExpression strip("
     (#{percent})
     #{comma}
     (#{float})
-  \\)
+  #{pe}
 "), (color, expression) ->
   [m,h,s,v,a] = @onigRegExp.search(expression)
 
@@ -298,7 +325,7 @@ Color.addExpression strip("
 
 # vec4(0,0,0,1)
 Color.addExpression strip("
-  vec4\\(\\s*
+  vec4#{ps}\\s*
     (#{float})
     #{comma}
     (#{float})
@@ -306,7 +333,7 @@ Color.addExpression strip("
     (#{float})
     #{comma}
     (#{float})
-  \\)
+  #{pe}
 "), (color, expression) ->
   [m,h,s,l,a] = @onigRegExp.search(expression)
 

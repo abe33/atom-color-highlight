@@ -42,7 +42,7 @@ class AtomColorHighlightView extends View
 
   subscribeToEditor: ->
     return unless @editor?
-    @subscribe @editor, 'selection-added', @updateSelections
+    @subscribe @editor, 'selection-added', => setImmediate => @updateSelections
 
   unsubscribeFromEditor: ->
     return unless @editor?

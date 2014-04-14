@@ -2,8 +2,6 @@ Color = require '../lib/color-model'
 
 require '../lib/color-expressions'
 
-console.log Color.colorExpressions
-
 itShouldParseTheColor = (expr, red=0, green=0, blue=0, alpha=1) ->
   msg = "should create a color with red=#{red}, green=#{green}, blue=#{blue} and alpha=#{alpha}"
   desc = expr.replace(/#/g, '')
@@ -60,3 +58,6 @@ describe 'Color', ->
 
   itShouldParseTheColor('adjust-hue(#811, 45deg)', 136, 106, 17)
   itShouldParseTheColor('adjust-hue(#811, -45deg)', 136, 17, 106)
+
+  itShouldParseTheColor('mix(#f00, #00f)', 127, 0, 127)
+  itShouldParseTheColor('mix(#f00, #00f, 25%)', 63, 0, 191)
