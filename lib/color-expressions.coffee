@@ -67,6 +67,23 @@ Color.addExpression "transparentize\\((#{notQuote}),\\s*(#{floatOrPercent})\\)",
     color.rgb = baseColor.rgb
     color.alpha = clamp(baseColor.alpha - amount)
 
+# opacify(0x78ffffff, 0.5)
+# opacify(0x78ffffff, 50%)
+Color.addExpression "opacify\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color, expression) ->
+  [m, subexpr, amount] = @onigRegExp.search(expression)
+
+  subexpr = subexpr.match
+
+  amount = amount.match
+  amount = if /%/.test amount
+    parseFloat(amount) / 100
+  else
+    parseFloat(amount)
+
+  if Color.canHandle(subexpr) and not isNaN(amount)
+    baseColor = new Color(subexpr)
+    color.rgb = baseColor.rgb
+    color.alpha = clamp(baseColor.alpha + amount)
 
 # #000000
 Color.addExpression "#(#{hexa}{6})(?!#{hexa})", (color, expression) ->

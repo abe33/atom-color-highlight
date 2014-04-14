@@ -18,7 +18,7 @@ itShouldParseTheColor = (expr, red=0, green=0, blue=0, alpha=1) ->
       expect(Math.round(color.red)).toEqual(red)
       expect(Math.round(color.green)).toEqual(green)
       expect(Math.round(color.blue)).toEqual(blue)
-      expect(color.alpha).toEqual(alpha)
+      expect(color.alpha).toBeCloseTo(alpha, 0.001)
 
 describe 'Color', ->
   itShouldParseTheColor('#ff7f00', 255, 127, 0)
@@ -43,3 +43,6 @@ describe 'Color', ->
   
   itShouldParseTheColor('transparentize(cyan, 0.5)', 0, 255, 255, 0.5)
   itShouldParseTheColor('transparentize(cyan, 50%)', 0, 255, 255, 0.5)
+
+  itShouldParseTheColor('opacify(0x7800FFFF, 0.5)', 0, 255, 255, 1)
+  itShouldParseTheColor('opacify(0x7800FFFF, 50%)', 0, 255, 255, 1)
