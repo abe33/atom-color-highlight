@@ -81,6 +81,20 @@ Color.addExpression "opacify\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color
     color.rgb = baseColor.rgb
     color.alpha = clamp(baseColor.alpha + amount)
 
+# adjust-hue(#855, 60deg)
+Color.addExpression "adjust-hue\\((#{notQuote}),\\s*(-?#{int})deg\\)", (color, expression) ->
+  [m, subexpr, amount] = @onigRegExp.search(expression)
+
+  subexpr = subexpr.match
+
+  amount = parseFloatOrPercent amount.match
+
+  if Color.canHandle(subexpr) and not isNaN(amount)
+    baseColor = new Color(subexpr)
+    [h,s,l] = baseColor.hsl
+
+    color.hsl = [(h + amount) % 360, s, l]
+    color.alpha = baseColor.alpha
 
 # desaturate(#855, 20%)
 # desaturate(#855, 0.2)

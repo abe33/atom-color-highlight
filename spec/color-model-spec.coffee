@@ -57,3 +57,6 @@ describe 'Color', ->
   itShouldParseTheColor('greyscale(#9e3f3f)', 111, 111, 111)
 
   itShouldParseTheColor('invert(#9e3f3f)', 97, 192, 192)
+
+  itShouldParseTheColor('adjust-hue(#811, 45deg)', 136, 106, 17)
+  itShouldParseTheColor('adjust-hue(#811, -45deg)', 136, 17, 106)
