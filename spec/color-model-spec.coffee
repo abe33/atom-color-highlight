@@ -49,7 +49,7 @@ describe 'Color', ->
 
   itShouldParseTheColor('saturate(#855, 20%)', 158, 63, 63)
   itShouldParseTheColor('saturate(#855, 0.2)', 158, 63, 63)
-  
+
   itShouldParseTheColor('desaturate(#9e3f3f, 20%)', 136, 85, 85)
   itShouldParseTheColor('desaturate(#9e3f3f, 0.2)', 136, 85, 85)
 

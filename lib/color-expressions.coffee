@@ -12,6 +12,7 @@ hexa = '[\\da-fA-F]'
 
 strip = (str) -> str.replace(/\s+/g, '')
 clamp = (n) -> Math.min(1, Math.max(0, n))
+clampInt = (n, max=100) -> Math.min(max, Math.max(0, n))
 
 parseIntOrPercent = (value) ->
   if value.indexOf('%') isnt -1
@@ -36,9 +37,7 @@ Color.addExpression "darken\\((#{notQuote}),\\s*(#{percent})\\)", (color, expres
     baseColor = new Color(subexpr)
     [h,s,l] = baseColor.hsl
 
-    console.log h, s, l
-
-    color.hsl = [h, s, l - l * (amount / 100)]
+    color.hsl = [h, s, clampInt(l - l * (amount / 100))]
     color.alpha = baseColor.alpha
 
 # lighten(#666666, 20%)
@@ -52,7 +51,7 @@ Color.addExpression "lighten\\((#{notQuote}),\\s*(#{percent})\\)", (color, expre
     baseColor = new Color(subexpr)
     [h,s,l] = baseColor.hsl
 
-    color.hsl = [h, s, l + l * (amount / 100)]
+    color.hsl = [h, s, clampInt(l + l * (amount / 100))]
     color.alpha = baseColor.alpha
 
 # transparentize(#ffffff, 0.5)
@@ -84,6 +83,7 @@ Color.addExpression "opacify\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color
 
 
 # desaturate(#855, 20%)
+# desaturate(#855, 0.2)
 Color.addExpression "desaturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
@@ -95,10 +95,11 @@ Color.addExpression "desaturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (co
     baseColor = new Color(subexpr)
     [h,s,l] = baseColor.hsl
 
-    color.hsl = [h, s - amount * 100, l]
+    color.hsl = [h, clampInt(s - amount * 100), l]
     color.alpha = baseColor.alpha
 
 # saturate(#855, 20%)
+# saturate(#855, 0.2)
 Color.addExpression "saturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
@@ -110,7 +111,7 @@ Color.addExpression "saturate\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (colo
     baseColor = new Color(subexpr)
     [h,s,l] = baseColor.hsl
 
-    color.hsl = [h, s + amount * 100, l]
+    color.hsl = [h, clampInt(s + amount * 100), l]
     color.alpha = baseColor.alpha
 
 Color.addExpression "gr(a|e)yscale\\((#{notQuote})\\)", (color, expression) ->
