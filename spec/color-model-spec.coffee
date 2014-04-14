@@ -40,4 +40,6 @@ describe 'Color', ->
 
   itShouldParseTheColor('darken(cyan, 20%)', 0, 204, 204)
   itShouldParseTheColor('lighten(cyan, 20%)', 51, 255, 255)
+  
   itShouldParseTheColor('transparentize(cyan, 0.5)', 0, 255, 255, 0.5)
+  itShouldParseTheColor('transparentize(cyan, 50%)', 0, 255, 255, 0.5)

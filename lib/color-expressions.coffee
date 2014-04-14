@@ -5,11 +5,13 @@ int = '\\d+'
 float = "#{int}(?:\\.#{int})?"
 percent = "#{float}%"
 intOrPercent = "(#{int}|#{percent})"
+floatOrPercent = "(#{float}|#{percent})"
 comma = '\\s*,\\s*'
 notQuote = "[^\"'\n]*"
 hexa = '[\\da-fA-F]'
 
 strip = (str) -> str.replace(/\s+/g, '')
+clamp = (n) -> Math.min(1, Math.max(0, n))
 
 parseIntOrPercent = (value) ->
   if value.indexOf('%') isnt -1
@@ -48,16 +50,22 @@ Color.addExpression "lighten\\((#{notQuote}),\\s*(#{percent})\\)", (color, expre
     color.alpha = baseColor.alpha
 
 # transparentize(#ffffff, 0.5)
-Color.addExpression "transparentize\\((#{notQuote}),\\s*(#{float})\\)", (color, expression) ->
+# transparentize(#ffffff, 50%)
+Color.addExpression "transparentize\\((#{notQuote}),\\s*(#{floatOrPercent})\\)", (color, expression) ->
   [m, subexpr, amount] = @onigRegExp.search(expression)
 
   subexpr = subexpr.match
-  amount = parseFloat(amount.match)
+
+  amount = amount.match
+  amount = if /%/.test amount
+    parseFloat(amount) / 100
+  else
+    parseFloat(amount)
 
   if Color.canHandle(subexpr) and not isNaN(amount)
     baseColor = new Color(subexpr)
     color.rgb = baseColor.rgb
-    color.alpha = Math.max(0, baseColor.alpha - amount)
+    color.alpha = clamp(baseColor.alpha - amount)
 
 
 # #000000
