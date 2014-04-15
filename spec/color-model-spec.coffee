@@ -61,3 +61,6 @@ describe 'Color', ->
 
   itShouldParseTheColor('mix(#f00, #00f)', 127, 0, 127)
   itShouldParseTheColor('mix(#f00, #00f, 25%)', 63, 0, 191)
+
+  itShouldParseTheColor('tint(#fd0cc7,66%)', 254, 172, 235)
+  

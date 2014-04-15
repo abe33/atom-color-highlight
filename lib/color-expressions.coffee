@@ -117,6 +117,18 @@ Color.addExpression "mix#{ps}((#{notQuote})#{comma} (#{notQuote})#{comma}(#{floa
 
     color.rgba = Color.mixColors(baseColor1, baseColor2, amount).rgba
 
+# tint(red, 50%)
+Color.addExpression "tint#{ps}(#{notQuote})#{comma}(#{floatOrPercent})#{pe}", (color, expression) ->
+  [_, subexpr, amount] = @onigRegExp.search(expression)
+
+  subexpr = subexpr.match
+  amount = parseFloatOrPercent(amount.match)
+
+  if Color.canHandle(subexpr) and not isNaN(amount)
+    baseColor = new Color(subexpr)
+    white = new Color('white')
+
+    color.rgba = Color.mixColors(white, baseColor, amount).rgba
 
 # desaturate(#855, 20%)
 # desaturate(#855, 0.2)
