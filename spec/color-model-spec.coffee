@@ -41,9 +41,11 @@ describe 'Color', ->
 
   itShouldParseTheColor('transparentize(cyan, 0.5)', 0, 255, 255, 0.5)
   itShouldParseTheColor('transparentize(cyan, 50%)', 0, 255, 255, 0.5)
+  itShouldParseTheColor('fadein(cyan, 0.5)', 0, 255, 255, 0.5)
 
   itShouldParseTheColor('opacify(0x7800FFFF, 0.5)', 0, 255, 255, 1)
   itShouldParseTheColor('opacify(0x7800FFFF, 50%)', 0, 255, 255, 1)
+  itShouldParseTheColor('fadeout(0x7800FFFF, 0.5)', 0, 255, 255, 1)
 
   itShouldParseTheColor('saturate(#855, 20%)', 158, 63, 63)
   itShouldParseTheColor('saturate(#855, 0.2)', 158, 63, 63)
