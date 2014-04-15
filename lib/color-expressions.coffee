@@ -99,7 +99,6 @@ Color.addExpression "adjust-hue#{ps}(#{notQuote})#{comma}(-?#{int})deg#{pe}", (c
     color.alpha = baseColor.alpha
 
 # mix(#f00, #00F, 25%)
-
 Color.addExpression "mix#{ps}((#{notQuote})#{comma} (#{notQuote})#{comma}(#{floatOrPercent})|(#{notQuote})#{comma}(#{notQuote}))#{pe}", (color, expression) ->
   [_, _, color1A, color2A, amount, _, color1B, color2B] = @onigRegExp.search(expression)
 
@@ -112,18 +111,12 @@ Color.addExpression "mix#{ps}((#{notQuote})#{comma} (#{notQuote})#{comma}(#{floa
     color2 = color2B.match
     amount = 0.5
 
-  inverse = 1 - amount
-
-  console.log color1, color2, amount, inverse
-
   if Color.canHandle(color1) and Color.canHandle(color2) and not isNaN(amount)
     baseColor1 = new Color(color1)
     baseColor2 = new Color(color2)
 
-    color.red = Math.floor(baseColor1.red * amount) + Math.floor(baseColor2.red * inverse)
-    color.green = Math.floor(baseColor1.green * amount) + Math.floor(baseColor2.green * inverse)
-    color.blue = Math.floor(baseColor1.blue * amount) + Math.floor(baseColor2.blue * inverse)
-    color.alpha = baseColor1.alpha * amount + baseColor2.alpha * inverse
+    color.rgba = Color.mixColors(baseColor1, baseColor2, amount).rgba
+
 
 # desaturate(#855, 20%)
 # desaturate(#855, 0.2)

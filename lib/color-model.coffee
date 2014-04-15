@@ -42,6 +42,19 @@ class Color
   @canHandle: (colorExpression) ->
     @colorExpressions.some (expr) => expr.canHandle(colorExpression)
 
+  @mixColors: (color1, color2, amount=0.5) ->
+    inverse = 1 - amount
+    color = new Color
+
+    color.rgba = [
+      Math.floor(color1.red * amount) + Math.floor(color2.red * inverse)
+      Math.floor(color1.green * amount) + Math.floor(color2.green * inverse)
+      Math.floor(color1.blue * amount) + Math.floor(color2.blue * inverse)
+      color1.alpha * amount + color2.alpha * inverse
+    ]
+
+    color
+
   # A two dimensional {Array} storing the name of a component with its index.
   @colorComponents: [
     [ 'red',   0 ]
