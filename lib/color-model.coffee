@@ -31,7 +31,7 @@ class Color
       regexp: regexp
       onigRegExp: new OnigRegExp("^#{regexp}$")
       handle: handle
-      canHandle: (expression) -> @onigRegExp.test expression
+      canHandle: (expression) -> @onigRegExp.testSync expression
 
   # Public: Returns a {RegExp} that contains all the registered expressions
   # separated with `|`. This is this regexp that will be used to scan buffers

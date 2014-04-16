@@ -17,6 +17,6 @@
     "underscore-plus": "1.x",
     "property-accessors": "1.x",
     "mixto": "1.x",
-    "oniguruma": "~> 1.0.4"
+    "oniguruma": "2.x"
   }
 }

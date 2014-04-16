@@ -41,7 +41,8 @@ class AtomColorHighlightModel
     ore = new OnigRegExp(regexp)
     text = @buffer.getText()
     searchOffset = 0
-    while (matches = ore.search(text, searchOffset))?
+    # ore.search text, searchOffset, (err, matches) ->
+    while (matches = ore.searchSync(text, searchOffset))?
       [match] = matches
       matchText = match.match
       searchOffset = match.end
