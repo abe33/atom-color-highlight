@@ -1,3 +1,23 @@
+<a name="0.10.0"></a>
+# 0.10.0 (2014-04-16)
+
+- **functions**: adds support for the following color functions:
+  - tint (stylus)
+  - shade (stylus)
+  - lighten
+  - darken
+  - transparentize
+  - opacify
+  - grayscale
+  - saturate
+  - desaturate
+  - adjust-hue
+  - invert
+  - mix (sass/less)
+  - fadein (less)
+  - fadeout (less)
+  - greyscale (less)
+
 <a name="0.9.0"></a>
 # 0.9.0 (2014-04-11)
 
