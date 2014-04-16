@@ -2,6 +2,8 @@
 
 Highlights colors in files.
 
+**IMPORTANT: If you encouter an update issue within atom when updating from `0.8.x` or `0.9.x` version to `0.10.x` or `0.11.x`, try uninstalling the package through the Atom Settings Panel and reinstalling again. **
+
 ![AtomColorHighlight Screenshot](https://raw.github.com/abe33/atom-color-highlight/master/atom-color-highlight.jpg)
 
 ### Extending AtomColorHighlight

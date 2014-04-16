@@ -1,5 +1,21 @@
+<a name="0.11.1"></a>
+# 0.11.1 (2014-04-16)
+
+## Features
+
+- **docs**: updates the changelog
+
+<a name="0.11.0"></a>
+# 0.11.0 (2014-04-16)
+
+## Features
+
+- **dependencies**: updates oniguruma version from `1.x` to `2.x`
+
 <a name="0.10.0"></a>
 # 0.10.0 (2014-04-16)
+
+## Features
 
 - **functions**: adds support for the following color functions:
   - tint (stylus)
