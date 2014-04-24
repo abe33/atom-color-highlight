@@ -45,22 +45,6 @@ class AtomColorHighlightModel
   eachColor: (block) ->
     return Color.scanBufferForColors(@buffer, block) if @buffer?
 
-  onigScanInBuffer: (regexp, iterator) ->
-    ore = new OnigRegExp(regexp)
-    text = @buffer.getText()
-    searchOffset = 0
-    # ore.search text, searchOffset, (err, matches) ->
-    while (matches = ore.searchSync(text, searchOffset))?
-      [match] = matches
-      matchText = match.match
-      searchOffset = match.end
-
-      startPosition = @buffer.positionForCharacterIndex(match.start)
-      endPosition = @buffer.positionForCharacterIndex(match.end)
-      range = new @buffer.constructor.Range(startPosition, endPosition)
-      iterator({ match, matchText, range })
-
-
   updateMarkers: ->
     return @destroyAllMarkers() unless @buffer?
     return if @updating
@@ -76,7 +60,7 @@ class AtomColorHighlightModel
 
       promise.then (results) =>
         @updating = false
-        return unless results?
+        results = [] unless results?
 
         for res in results
           {bufferRange: range, match: color} = res
@@ -126,7 +110,7 @@ class AtomColorHighlightModel
       color: color
       cssColor: colorObject.toCSS()
       textColor: textColor
-      invalidation: 'inside'
+      invalidation: 'touch'
       persistent: false
 
     @editor.markBufferRange(range, markerAttributes)

@@ -21,19 +21,18 @@ class MarkerView extends View
   unsubscribeFromMarker: =>
     @unsubscribe @marker, 'changed', @updateDisplay
     @unsubscribe @marker, 'destroyed', @unsubscribeFromMarker
+    @remove()
 
   updateDisplay: =>
     setImmediate =>
       color = @getColor()
       colorText = @getColorText()
 
-
       {start, end} = @getScreenRange()
       if end.row is start.row
         {top, left} = @editorView.pixelPositionForScreenPosition(start)
       else
         {top, left} = @editorView.pixelPositionForScreenPosition([end.row, 0])
-
 
       @text colorText
       @css
