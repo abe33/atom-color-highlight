@@ -6,6 +6,12 @@ Highlights colors in files.
 
 ![AtomColorHighlight Screenshot](https://raw.github.com/abe33/atom-color-highlight/master/atom-color-highlight.jpg)
 
+### Project Palette Support
+
+If you have the [project-palette-finder package](https://atom.io/packages/project-palette-finder) installed, the package will automatically benefit from the palette definitions:
+
+![AtomColorHighlight And Project Palette Screenshot](https://raw.github.com/abe33/atom-color-highlight/master/atom-color-highlight-palette.jpg)
+
 ### Extending AtomColorHighlight
 
 #### Accessing the package
@@ -29,9 +35,9 @@ You can register a new color expression using the `Color.addExpression` method.
 
 ```coffeescript
 atomColorHighlight = atom.packages.getLoadedPackage 'atom-color-highlight'
-Color = require(atomColorHighlight.path + '/lib/color-model')
+Color = require(atomColorHighlight.path + '/lib/atom-color-highlight-model').Color
 
-Color.addExpression 'oniguruma regexp', (color, expression) ->
+Color.addExpression 'name', 'oniguruma regexp', (color, expression) ->
   # modify color using data extracted from expression
 ```
 
@@ -51,7 +57,7 @@ to modify and the matching expression.
 For instance, the CSS hexadecimal RGB notation is defined as follow:
 
 ```coffeescript
-Color.addExpression "#([\\da-fA-F]{6})(?![\\da-fA-F])", (color, expression) ->
+Color.addExpression 'css_hexa_6', "#([\\da-fA-F]{6})(?![\\da-fA-F])", (color, expression) ->
   [m, hexa] = @onigRegExp.search(expression)
 
   color.hex = hexa.match

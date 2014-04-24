@@ -7,12 +7,15 @@ module.exports =
 class AtomColorHighlightModel
   Emitter.includeInto(this)
 
+  @Color: Color
+
   @markerClass: 'color-highlight'
   @bufferRange: [[0,0], [Infinity,Infinity]]
 
   constructor: (@editor, @buffer) ->
     finder = atom.packages.getLoadedPackage('project-palette-finder')
     Color = require(finder.path).constructor.Color if finder?
+    @constructor.Color = Color
 
   update: =>
     return if @frameRequested
