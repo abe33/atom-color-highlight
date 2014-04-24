@@ -1,9 +1,7 @@
 _ = require 'underscore-plus'
 {Emitter} = require 'emissary'
 {OnigRegExp} = require 'oniguruma'
-Color = require './color-model'
-
-require './color-expressions'
+Color = require 'pigments'
 
 module.exports =
 class AtomColorHighlightModel
@@ -13,9 +11,17 @@ class AtomColorHighlightModel
   @bufferRange: [[0,0], [Infinity,Infinity]]
 
   constructor: (@editor, @buffer) ->
+    finder = atom.packages.getLoadedPackage('project-palette-finder')
+    Color = require(finder.path).constructor.Color if finder?
 
   update: =>
-    @updateMarkers()
+    return if @frameRequested
+
+    @frameRequested = true
+    webkitRequestAnimationFrame =>
+      console.log 'update start'
+      @frameRequested = false
+      @updateMarkers()
 
   subscribeToBuffer: ->
     @buffer.on 'contents-modified', @update
@@ -35,7 +41,7 @@ class AtomColorHighlightModel
       @unsubscribeFromBuffer()
 
   eachColor: (block) ->
-    @onigScanInBuffer(Color.colorRegExp(), block) if @buffer?
+    return Color.scanBufferForColors(@buffer, block) if @buffer?
 
   onigScanInBuffer: (regexp, iterator) ->
     ore = new OnigRegExp(regexp)
@@ -54,31 +60,40 @@ class AtomColorHighlightModel
 
 
   updateMarkers: ->
-    if not @buffer?
-      @destroyAllMarkers()
-      return
+    return @destroyAllMarkers() unless @buffer?
+    return if @updating
 
+    @updating = true
     updatedMarkers = []
     markersToRemoveById = {}
 
     markersToRemoveById[marker.id] = marker for marker in @markers
 
     try
-      @eachColor (res) =>
-        {range, matchText: color} = res
-        colorObject = new Color(color)
+      promise = @eachColor()
 
-        if marker = @findMarker(color, range)
-          delete markersToRemoveById[marker.id]
-        else
-          marker = @createMarker(color, colorObject, range)
+      promise.then (results) =>
+        @updating = false
+        return unless results?
 
-        updatedMarkers.push marker
+        for res in results
+          {bufferRange: range, match: color} = res
+          colorObject = new Color(color)
 
-      marker.destroy() for id, marker of markersToRemoveById
+          if marker = @findMarker(color, range)
+            delete markersToRemoveById[marker.id]
+          else
+            marker = @createMarker(color, colorObject, range)
 
-      @markers = updatedMarkers
-      @emit 'updated', _.clone(@markers)
+          updatedMarkers.push marker
+
+        marker.destroy() for id, marker of markersToRemoveById
+
+        @markers = updatedMarkers
+        @emit 'updated', _.clone(@markers)
+      .fail (e) ->
+        console.log e
+
     catch e
       @destroyAllMarkers()
       throw e

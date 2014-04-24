@@ -9,6 +9,7 @@ class AtomColorHighlight
   editors: {}
   activate: (state) ->
     atom.workspaceView.eachEditorView (editor) =>
+      return if editor.hasClass 'mini'
       colorEditor = new AtomColorHighlightEditor(editor)
 
       @editors[editor.editor.id] = colorEditor

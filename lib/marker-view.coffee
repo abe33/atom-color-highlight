@@ -29,8 +29,12 @@ class MarkerView extends View
 
 
       {start, end} = @getScreenRange()
-      {top, left} = @editorView.pixelPositionForScreenPosition(start)
-      width = @editorView.pixelPositionForScreenPosition(end).left - left
+      console.log start, end
+      if end.row is start.row
+        {top, left} = @editorView.pixelPositionForScreenPosition(start)
+      else
+        {top, left} = @editorView.pixelPositionForScreenPosition([end.row, 0])
+
 
       @text colorText
       @css
