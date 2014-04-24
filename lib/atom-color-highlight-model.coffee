@@ -22,7 +22,6 @@ class AtomColorHighlightModel
 
     @frameRequested = true
     webkitRequestAnimationFrame =>
-      console.log 'update start'
       @frameRequested = false
       @updateMarkers()
 

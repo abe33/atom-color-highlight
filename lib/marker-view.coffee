@@ -29,7 +29,6 @@ class MarkerView extends View
 
 
       {start, end} = @getScreenRange()
-      console.log start, end
       if end.row is start.row
         {top, left} = @editorView.pixelPositionForScreenPosition(start)
       else
