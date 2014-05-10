@@ -100,7 +100,8 @@ class AtomColorHighlightModel
 
   createMarker: (color, colorObject, range) ->
     [h,s,v] = colorObject.hsv
-    textColor = if v > 50
+
+    textColor = if v > 70
       'black'
     else
       'white'
