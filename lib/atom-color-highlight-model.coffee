@@ -99,9 +99,9 @@ class AtomColorHighlightModel
     @emit 'updated', _.clone(@markers)
 
   createMarker: (color, colorObject, range) ->
-    [h,s,v] = colorObject.hsv
+    l = colorObject.luma()
 
-    textColor = if v > 70
+    textColor = if l > 0.43
       'black'
     else
       'white'
