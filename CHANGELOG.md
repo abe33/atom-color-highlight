@@ -10,9 +10,7 @@
 
 ## Bug Fixes
 
-- **markers**: handles properly declarations that spans on several lines.
-
-([349ada974e](https://github.com/abe33/atom-color-highlight/commit/349ada974e45919ec7426daa7f8940acc486961b), [#8](https://github.com/abe33/atom-color-highlight/issues/8))
+- **markers**: handles properly declarations that spans on several lines ([349ada974e](https://github.com/abe33/atom-color-highlight/commit/349ada974e45919ec7426daa7f8940acc486961b), [#8](https://github.com/abe33/atom-color-highlight/issues/8))
 
 <a name="0.12.0"></a>
 # 0.12.0 (2014-04-25)
