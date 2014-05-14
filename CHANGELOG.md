@@ -1,3 +1,28 @@
+<a name="0.13.1"></a>
+# 0.13.1 (2014-05-14)
+
+## Bug Fixes
+
+- **meta:** updates CHANGELOG with latest changes
+
+<a name="0.13.0"></a>
+# 0.13.0 (2014-05-14)
+
+## Bug Fixes
+
+- **markers**: handles properly declarations that spans on several lines.
+
+([349ada974e](https://github.com/abe33/atom-color-highlight/commit/349ada974e45919ec7426daa7f8940acc486961b), [#8](https://github.com/abe33/atom-color-highlight/issues/8))
+
+<a name="0.12.0"></a>
+# 0.12.0 (2014-04-25)
+
+## Features
+
+- **expressions**:
+  - uses [pigments](https://github.com/abe33/pigments) module and removes previous color model
+  - uses [project-palette-finder](https://atom.io/packages/project-palette-finder) color model if available
+
 <a name="0.11.1"></a>
 # 0.11.1 (2014-04-16)
 
