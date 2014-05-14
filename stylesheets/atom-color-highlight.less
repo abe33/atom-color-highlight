@@ -2,7 +2,7 @@
 @import "ui-variables";
 
 .atom-color-highlight {
-  .color-highlight {
+  .region {
     -webkit-font-smoothing: antialiased;
     position: absolute;
     padding: 0px 2px;
@@ -12,9 +12,10 @@
     box-sizing: content-box;
     border-radius: 2px;
     z-index: -2;
+    white-space: pre;
   }
 
-  .color-highlight:before {
+  .region:before {
     content: '';
     display: block;
     position: absolute;
@@ -27,7 +28,7 @@
     border-radius: 2px;
   }
 
-  .color-highlight:after {
+  .region:after {
     content: '';
     display: block;
     position: absolute;

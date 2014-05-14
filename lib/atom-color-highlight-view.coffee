@@ -108,7 +108,7 @@ class AtomColorHighlightView extends View
         delete markerViewsToRemoveById[marker.id]
       else
         markerView = new MarkerView({@editorView, marker})
-        @append(markerView)
+        @append(markerView.element)
         @markerViews[marker.id] = markerView
 
     for id, markerView of markerViewsToRemoveById
