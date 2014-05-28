@@ -22,7 +22,7 @@ class AtomColorHighlightEditor
   getActiveModel: ->
     path = @buffer.getPath()
     @models[path]
-    
+
   getActiveView: ->
     path = @buffer.getPath()
     @views[path]
@@ -41,7 +41,10 @@ class AtomColorHighlightEditor
       view = @views[@buffer.getPath()] =
         new AtomColorHighlightView(model, @editorView)
 
-      @editorView.overlayer.append view
+      if atom.config.get('core.useReactEditor')
+        @editorView.find('.lines').append view
+      else
+        @editorView.overlayer.append view
 
       model.init()
 
