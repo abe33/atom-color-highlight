@@ -1,3 +1,10 @@
+<a name="0.13.2"></a>
+# 0.13.2 (2014-05-29)
+
+## Bug Fixes
+
+- Fix broken view when react editor is enabled ([4be2c7b3](https://github.com/abe33/atom-color-highlight/commit/4be2c7b352005966f94f9be9410571d0958788c3))
+
 <a name="0.13.1"></a>
 # 0.13.1 (2014-05-14)
 
