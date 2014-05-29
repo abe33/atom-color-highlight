@@ -1,5 +1,12 @@
-<a name="0.13.2"></a>
-# 0.13.2 (2014-05-29)
+<a name="0.13.4"></a>
+# 0.13.4 (2014-05-29)
+
+## :bug: Bug Fixes
+
+- Force new pigments version ([57e187e2](https://github.com/abe33/atom-color-highlight/commit/57e187e2228f55160a46d5f982ddf1d1d276b6d8), Closes [#12](https://github.com/abe33/atom-color-highlight/issues/12))
+
+<a name="0.13.3"></a>
+# 0.13.3 (2014-05-29)
 
 ## Bug Fixes
 
