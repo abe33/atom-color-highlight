@@ -18,6 +18,6 @@
     "property-accessors": "1.x",
     "mixto": "1.x",
     "oniguruma": "2.x",
-    "pigments": ">= 1.4.0"
+    "pigments": ">= 1.4.1"
   }
 }
