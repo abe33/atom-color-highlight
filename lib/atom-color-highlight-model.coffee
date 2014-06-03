@@ -1,11 +1,12 @@
 _ = require 'underscore-plus'
-{Emitter} = require 'emissary'
+{Emitter, Subscriber} = require 'emissary'
 {OnigRegExp} = require 'oniguruma'
 Color = require 'pigments'
 
 module.exports =
 class AtomColorHighlightModel
   Emitter.includeInto(this)
+  Subscriber.includeInto(this)
 
   @Color: Color
 
@@ -14,7 +15,11 @@ class AtomColorHighlightModel
 
   constructor: (@editor, @buffer) ->
     finder = atom.packages.getLoadedPackage('project-palette-finder')
-    Color = require(finder.path).constructor.Color if finder?
+    if finder?
+      module = require(finder.path)
+      Color = module.constructor.Color
+      @subscribe module, 'palette:ready', @update
+
     @constructor.Color = Color
 
   update: =>
@@ -26,10 +31,10 @@ class AtomColorHighlightModel
       @updateMarkers()
 
   subscribeToBuffer: ->
-    @buffer.on 'contents-modified', @update
+    @subscribe @buffer, 'contents-modified', @update
 
   unsubscribeFromBuffer: ->
-    @buffer.off 'contents-modified', @update
+    @unsubscribe @buffer, 'contents-modified', @update
     @buffer = null
 
   init: ->
@@ -39,8 +44,8 @@ class AtomColorHighlightModel
       @update()
 
   dispose: ->
-    if @buffer?
-      @unsubscribeFromBuffer()
+    @unsubscribe()
+    @unsubscribeFromBuffer() if @buffer?
 
   eachColor: (block) ->
     return Color.scanBufferForColors(@buffer, block) if @buffer?
