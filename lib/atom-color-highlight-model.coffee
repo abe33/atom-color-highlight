@@ -66,7 +66,10 @@ class AtomColorHighlightModel
           {bufferRange: range, match, color} = res
 
           if marker = @findMarker(match, range)
-            delete markersToRemoveById[marker.id]
+            if marker.bufferMarker.properties.cssColor isnt color.toCSS()
+              marker = @createMarker(match, color, range)
+            else
+              delete markersToRemoveById[marker.id]
           else
             marker = @createMarker(match, color, range)
 
