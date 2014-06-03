@@ -8,28 +8,28 @@
 <a name="0.13.3"></a>
 # 0.13.3 (2014-05-29)
 
-## Bug Fixes
+## :bug: Bug Fixes
 
 - Fix broken view when react editor is enabled ([4be2c7b3](https://github.com/abe33/atom-color-highlight/commit/4be2c7b352005966f94f9be9410571d0958788c3))
 
 <a name="0.13.1"></a>
 # 0.13.1 (2014-05-14)
 
-## Bug Fixes
+## :bug: Bug Fixes
 
 - **meta:** updates CHANGELOG with latest changes
 
 <a name="0.13.0"></a>
 # 0.13.0 (2014-05-14)
 
-## Bug Fixes
+## :bug: Bug Fixes
 
 - **markers**: handles properly declarations that spans on several lines ([349ada974e](https://github.com/abe33/atom-color-highlight/commit/349ada974e45919ec7426daa7f8940acc486961b), [#8](https://github.com/abe33/atom-color-highlight/issues/8))
 
 <a name="0.12.0"></a>
 # 0.12.0 (2014-04-25)
 
-## Features
+## :sparkles: Features
 
 - **expressions**:
   - uses [pigments](https://github.com/abe33/pigments) module and removes previous color model
@@ -38,21 +38,21 @@
 <a name="0.11.1"></a>
 # 0.11.1 (2014-04-16)
 
-## Features
+## :sparkles: Features
 
 - **docs**: updates the changelog
 
 <a name="0.11.0"></a>
 # 0.11.0 (2014-04-16)
 
-## Features
+## :sparkles: Features
 
 - **dependencies**: updates oniguruma version from `1.x` to `2.x`
 
 <a name="0.10.0"></a>
 # 0.10.0 (2014-04-16)
 
-## Features
+## :sparkles: Features
 
 - **functions**: adds support for the following color functions:
   - tint (stylus)
@@ -74,20 +74,20 @@
 <a name="0.9.0"></a>
 # 0.9.0 (2014-04-11)
 
-## Features
+## :sparkles: Features
 
 - **expressions:**
   - adds support for hsv and hsva expression
   - adds support for `darken`, `lighten` and `transparentize` functions
 
-## Bug Fixes
+## :bug: Bug Fixes
 
 - **expressions:** previously hsl expressions was treated as in hsv color space
 
 <a name="0.8.0"></a>
 # 0.8.0 (2014-03-14)
 
-## Bug Fixes
+## :bug: Bug Fixes
 
 - **markers:** fixes invalid marker position on update after grammar change
   ([4f11759b](https://github.com/abe33/atom-color-highlight/commit/4f11759bad8e9bfa2a4b956ec56ab53928f802ee),
