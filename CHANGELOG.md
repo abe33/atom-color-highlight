@@ -1,3 +1,13 @@
+<a name="v0.14.0"></a>
+# v0.14.0 (2014-06-03)
+
+## :sparkles: Features
+
+- Add screenshot for live update feature ([259574ea](https://github.com/abe33/atom-color-highlight/commit/259574ea9866999719a79cc5ea97b678ae472df2))
+- Add live update of colors derived of a variable from same file ([6ab0d54a](https://github.com/abe33/atom-color-highlight/commit/6ab0d54af430cb9fb7b16000d262fb86d2f3bfc2))
+- Implement support for color provided by pigments during scan ([dedf26ff](https://github.com/abe33/atom-color-highlight/commit/dedf26ffcae5bec74e66cbe0583e6fbabd7ad33a))  <br>It enables parsing of colors using variables defined in the
+  same file.
+
 <a name="0.13.4"></a>
 # 0.13.4 (2014-05-29)
 
