@@ -63,13 +63,12 @@ class AtomColorHighlightModel
         results = [] unless results?
 
         for res in results
-          {bufferRange: range, match: color} = res
-          colorObject = new Color(color)
+          {bufferRange: range, match, color} = res
 
-          if marker = @findMarker(color, range)
+          if marker = @findMarker(match, range)
             delete markersToRemoveById[marker.id]
           else
-            marker = @createMarker(color, colorObject, range)
+            marker = @createMarker(match, color, range)
 
           updatedMarkers.push marker
 
