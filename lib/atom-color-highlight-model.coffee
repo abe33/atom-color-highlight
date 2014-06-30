@@ -14,6 +14,8 @@ class AtomColorHighlightModel
   @bufferRange: [[0,0], [Infinity,Infinity]]
 
   constructor: (@editor, @buffer) ->
+    @changes = []
+
     finder = atom.packages.getLoadedPackage('project-palette-finder')
     if finder?
       module = require(finder.path)
@@ -29,13 +31,19 @@ class AtomColorHighlightModel
     webkitRequestAnimationFrame =>
       @frameRequested = false
       @updateMarkers()
+      @changes = []
 
   subscribeToBuffer: ->
     @subscribe @buffer, 'contents-modified', @update
+    @subscribe @buffer, 'changed', @registerChanges
 
   unsubscribeFromBuffer: ->
     @unsubscribe @buffer, 'contents-modified', @update
+    @unsubscribe @buffer, 'changed', @registerChanges
     @buffer = null
+
+  registerChanges: (changes) =>
+    @changes.push changes
 
   init: ->
     if @buffer?
