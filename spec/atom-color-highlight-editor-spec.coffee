@@ -23,10 +23,10 @@ describe "AtomColorHighlightEditor", ->
       atom.packages.activatePackage('atom-color-highlight')
 
   describe 'once the package is toggled', ->
-    it 'should have retrieved the editor content', ->
-      container = null
+    it 'retrieves the editor content', ->
+      markers = null
       waitsFor ->
-        (container = atom.workspaceView.find('.marker')).length > 0
+        (markers = atom.workspaceView.find('.marker')).length > 0
 
       runs ->
-        expect(container.length).toEqual(4)
+        expect(markers.length).toEqual(4)
