@@ -118,7 +118,7 @@ class AtomColorHighlightModel
       color: color
       cssColor: colorObject.toCSS()
       textColor: textColor
-      invalidation: 'touch'
+      invalidate: 'touch'
       persistent: false
 
     @editor.markBufferRange(range, markerAttributes)
