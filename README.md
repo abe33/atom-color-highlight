@@ -1,5 +1,7 @@
 # Atom Color Highlight
 
+[![Build Status](https://travis-ci.org/abe33/atom-color-highlight.svg?branch=master)](https://travis-ci.org/abe33/atom-color-highlight)
+
 Highlights colors in files.
 
 ![AtomColorHighlight Screenshot](https://raw.github.com/abe33/atom-color-highlight/master/atom-color-highlight-variables.gif)
