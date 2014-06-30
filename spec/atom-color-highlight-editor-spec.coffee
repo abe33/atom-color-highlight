@@ -1,7 +1,8 @@
 {WorkspaceView} = require 'atom'
 
 editorView = null
-
+editor = null
+buffer = null
 describe "AtomColorHighlightEditor", ->
   beforeEach ->
     waitsForPromise ->
@@ -11,6 +12,9 @@ describe "AtomColorHighlightEditor", ->
     runs ->
       atom.workspaceView.attachToDom()
       editorView = atom.workspaceView.getActiveView()
+      editor = editorView.getEditor()
+      buffer = editor.getBuffer()
+
       editorView.setText("""
       color = #f0f
 
@@ -30,3 +34,10 @@ describe "AtomColorHighlightEditor", ->
 
       runs ->
         expect(markers.length).toEqual(4)
+
+    describe 'modifying the buffer', ->
+      beforeEach ->
+        editor.setTextInBufferRange [[0,9], [0,12]], '0ff'
+
+      it 'updates only the concerned markers', ->
+        console.log buffer.getText()
