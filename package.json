@@ -15,9 +15,6 @@
   "dependencies": {
     "emissary": "1.x",
     "underscore-plus": "1.x",
-    "property-accessors": "1.x",
-    "mixto": "1.x",
-    "oniguruma": "2.x",
     "pigments": ">= 1.6.0"
   }
 }
