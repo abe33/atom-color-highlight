@@ -1,6 +1,5 @@
 _ = require 'underscore-plus'
 {Emitter, Subscriber} = require 'emissary'
-{OnigRegExp} = require 'oniguruma'
 Color = require 'pigments'
 
 module.exports =
