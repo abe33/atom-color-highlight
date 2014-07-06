@@ -34,11 +34,12 @@ class AtomColorHighlightView extends View
 
   subscribeToModel: ->
     return unless @model?
-    @subscribe @model, 'updated', @markersUpdated
+    @subscribe @model, 'markers:created', @markersCreated
+    @subscribe @model, 'markers:destroyed', @markersDestroyed
 
   unsubscribeFromModel: ->
     return unless @model?
-    @unsubscribe @model, 'updated'
+    @unsubscribe @model
 
   subscribeToEditor: ->
     return unless @editor?
@@ -82,6 +83,19 @@ class AtomColorHighlightView extends View
   getMarkerAt: (position) ->
     for id, view of @markerViews
       return view if view.marker.bufferMarker.containsPoint(position)
+
+  markersCreated: (createdMarkers) =>
+    for marker in createdMarkers
+      continue unless marker?
+      markerView = new MarkerView({@editorView, marker})
+      @append(markerView.element)
+      @markerViews[marker.id] = markerView
+
+  markersDestroyed: (destroyedMarkers) =>
+    for marker in destroyedMarkers
+      if @markerViews[marker.id]?
+        @markerViews[marker.id].remove()
+        delete @markerViews[marker.id]
 
   selectionChanged: =>
     viewsToBeDisplayed = _.clone(@markerViews)

@@ -13,8 +13,9 @@
     "qq": "*"
   },
   "dependencies": {
+    "q": "1.x",
     "emissary": "1.x",
     "underscore-plus": "1.x",
-    "pigments": ">= 1.6.0"
+    "pigments": ">= 1.7.0"
   }
 }

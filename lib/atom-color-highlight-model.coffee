@@ -1,6 +1,19 @@
 _ = require 'underscore-plus'
+Q = require 'q'
 {Emitter, Subscriber} = require 'emissary'
 Color = require 'pigments'
+Range = null
+
+flatten = (array) ->
+  b = []
+  b = b.concat a for a in array
+  b.filter (e) -> e?
+
+merge = (array) ->
+  o = {}
+  for obj in array
+    o[k] = v for k,v of obj
+  o
 
 module.exports =
 class AtomColorHighlightModel
@@ -14,6 +27,9 @@ class AtomColorHighlightModel
 
   constructor: (@editor, @buffer) ->
     @changes = []
+    @markers = []
+
+    Range = @buffer.constructor.Range
 
     finder = atom.packages.getLoadedPackage('project-palette-finder')
     if finder?
@@ -23,14 +39,99 @@ class AtomColorHighlightModel
 
     @constructor.Color = Color
 
-  update: =>
-    return if @frameRequested
+  init: ->
+    return unless @buffer?
 
-    @frameRequested = true
-    webkitRequestAnimationFrame =>
-      @frameRequested = false
-      @updateMarkers()
+    @subscribeToBuffer()
+    @updateAll()
+
+  dispose: ->
+    @unsubscribe()
+    @unsubscribeFromBuffer() if @buffer?
+
+  update: =>
+    promise = Q.fcall ->
+
+    allDestroyedMarkers = []
+    allCreatedMarkers = []
+
+    if @changes.length
+      {oldRanges, newRanges} = @packChanges(@changes)
       @changes = []
+
+      promise = promise.then =>
+        @destroyVariablesInRanges(oldRanges)
+      .then (destroyedVariables) =>
+        re = ///\b#{Object.keys(destroyedVariables).join('|')}\b///
+        @destroyMarkersWithRegExp(re)
+
+      .then (destroyedMarkers) =>
+        newRanges.push marker.bufferMarker.range for marker in destroyedMarkers
+        newRanges = newRanges.map (range) => @expandRangeToCompleteLines(range)
+
+        allDestroyedMarkers = allDestroyedMarkers.concat(destroyedMarkers)
+        @destroyMarkersInRanges(oldRanges)
+
+      .then (destroyedMarkers) =>
+        allDestroyedMarkers = allDestroyedMarkers.concat(destroyedMarkers)
+        @emit('markers:destroyed', allDestroyedMarkers)
+        @findVariablesInRanges(newRanges)
+
+      .then =>
+        @createMarkersInRanges(newRanges)
+
+      .then (createdMarkers) =>
+        @emit('markers:created', createdMarkers)
+
+      .fail (reason) ->
+        console.log reason
+    else
+      promise = promise.then => @updateAll()
+
+    promise.fail (reason) ->
+      console.log reason
+
+    promise
+
+  updateAll: ->
+    @destroyVariables()
+    .then(@findVariables)
+    .then(@destroyMarkers)
+    .then (destroyedMarkers) =>
+      @emit('markers:destroyed', destroyedMarkers) if destroyedMarkers.length
+    .then(@createMarkers)
+    .then (createdMarkers) =>
+      @emit('markers:created', createdMarkers) if createdMarkers?
+
+  packChanges: (changes) ->
+    oldRanges = []
+    newRanges = []
+
+    for change in changes
+      {oldRange: changeOldRange, newRange: changeNewRange} = change
+
+      if oldRanges.length
+        for oldRange, i in oldRanges
+          if oldRange.containsRange changeOldRange
+            continue
+          else if oldRange.intersectsWith changeOldRange
+            oldRanges[i] = oldRange.union(changeOldRange)
+          else
+            oldRanges.push changeOldRange
+
+        for newRange, i in newRanges
+          if newRange.containsRange changeOldRange
+            continue
+          else if newRange.intersectsWith changeNewRange
+            newRanges[i] = newRange.union(changeNewRange)
+          else
+            newRanges.push changeNewRange
+
+      else
+        oldRanges.push change.oldRange
+        newRanges.push change.newRange
+
+    {oldRanges, newRanges}
 
   subscribeToBuffer: ->
     @subscribe @buffer, 'contents-modified', @update
@@ -44,75 +145,101 @@ class AtomColorHighlightModel
   registerChanges: (changes) =>
     @changes.push changes
 
-  init: ->
-    if @buffer?
-      @subscribeToBuffer()
-      @destroyAllMarkers()
-      @update()
+  destroyVariables: => @destroyVariablesInRange()
+  destroyVariablesInRange: (range=@constructor.bufferRange) =>
+    range = Range.fromObject(range)
+    destroyedVariables = {}
+    remainingVariables = {}
 
-  dispose: ->
-    @unsubscribe()
-    @unsubscribeFromBuffer() if @buffer?
+    for variable, props of @variables
+      {range: variableRange} = props
+      variableRange = Range.fromObject variableRange
 
-  eachColor: (block) ->
-    return Color.scanBufferForColors(@buffer, block) if @buffer?
+      if range.containsRange(variableRange) or range.intersectsWith(variableRange)
+        destroyedVariables[variable] = props
+      else
+        remainingVariables[variable] = props
 
-  updateMarkers: ->
-    return @destroyAllMarkers() unless @buffer?
-    return if @updating
+    @variables = remainingVariables
 
-    @updating = true
-    updatedMarkers = []
-    markersToRemoveById = {}
+    Q.fcall -> destroyedVariables
 
-    markersToRemoveById[marker.id] = marker for marker in @markers
+  destroyVariablesInRanges: (ranges) ->
+    Q.all(ranges.map (range) => @destroyVariablesInRange(range)).then (results) ->
+      merge results
 
-    try
-      promise = @eachColor()
+  findVariables: => @findVariablesInRange()
+  findVariablesInRange: (range=@constructor.bufferRange) =>
+    range = Range.fromObject(range)
 
-      promise.then (results) =>
-        @updating = false
-        results = [] unless results?
+    Color.scanBufferForColorVariablesInRange(@buffer, range)
+    .then (variables) =>
+      @variables[k] = v for k,v of variables
+      @variables
 
-        for res in results
-          {bufferRange: range, match, color} = res
+  findVariablesInRanges: (ranges) ->
+    Q.all(ranges.map (range) => @findVariablesInRange(range)).then (results) ->
+      merge results
 
-          if marker = @findMarker(match, range)
-            if marker.bufferMarker.properties.cssColor isnt color.toCSS()
-              marker = @createMarker(match, color, range)
-            else
-              delete markersToRemoveById[marker.id]
-          else
-            marker = @createMarker(match, color, range)
+  destroyMarkers: => @destroyMarkersInRange()
+  destroyMarkersInRange: (range=@constructor.bufferRange) =>
+    range = Range.fromObject(range)
 
-          updatedMarkers.push marker
+    destroyedMarkers = []
+    @markers = @markers.filter (marker) ->
+      markerRange = marker.getScreenRange()
 
-        marker.destroy() for id, marker of markersToRemoveById
+      if range.containsRange(markerRange) or range.intersectsWith(markerRange)
+        marker.destroy()
+        destroyedMarkers.push marker
+        return false
 
-        @markers = updatedMarkers
-        @emit 'updated', _.clone(@markers)
-      .fail (e) ->
-        console.log e
+      true
 
-    catch e
-      @destroyAllMarkers()
-      throw e
+    Q.fcall -> destroyedMarkers
 
-  findMarker: (color, range) ->
-    attributes =
-      type: @constructor.markerClass
-      color: color
-      startPosition: range.start
-      endPosition: range.end
+  destroyMarkersInRanges: (ranges) ->
+    Q.all(ranges.map (range) => @destroyMarkersInRange(range)).then (results) ->
+      flatten results
 
-    _.find @editor.findMarkers(attributes), (marker) -> marker.isValid()
+  destroyMarkersWithRegExp: (re) ->
+    Q.fcall =>
+      destroyedMarkers = []
 
-  destroyAllMarkers: ->
-    marker.destroy() for marker in @markers ? []
-    @markers = []
-    @emit 'updated', _.clone(@markers)
+      @markers = @markers.filter (marker) =>
+        if re.test marker.bufferMarker.properties.color
+          marker.destroy()
+          destroyedMarkers.push marker
+          return false
+
+        true
+
+      destroyedMarkers
+
+  createMarkers: => @createMarkersInRange()
+  createMarkersInRange: (range=@constructor.bufferRange) =>
+    range = Range.fromObject(range)
+
+    Color.scanBufferForColorsInRange(@buffer, range, @variables)
+    .then (results) =>
+      return [] unless results
+
+      createdMarkers = []
+
+      for res in results
+        {bufferRange: range, match, color} = res
+        marker = @createMarker(match, color, range)
+        @markers.push marker
+        createdMarkers.push marker
+
+      createdMarkers
+
+  createMarkersInRanges: (ranges) ->
+    Q.all(ranges.map (range) => @createMarkersInRange(range)).then (results) ->
+      flatten results
 
   createMarker: (color, colorObject, range) ->
+    return if marker = @findMarker(color, range)
     l = colorObject.luma()
 
     textColor = if l > 0.43
@@ -129,3 +256,20 @@ class AtomColorHighlightModel
       persistent: false
 
     @editor.markBufferRange(range, markerAttributes)
+
+  findMarker: (color, range) ->
+    attributes =
+      type: @constructor.markerClass
+      color: color
+      startPosition: range.start
+      endPosition: range.end
+
+    _.find @editor.findMarkers(attributes), (marker) -> marker.isValid()
+
+  expandRangeToCompleteLines: (range) ->
+    array = if range.push?
+      [[range[0][0], 0], [range[1][0], Infinity]]
+    else
+      [[range.start.row, 0], [range.end.row, Infinity]]
+
+    @buffer.constructor.Range.fromObject array

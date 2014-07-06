@@ -3,7 +3,9 @@
 editorView = null
 editor = null
 buffer = null
-describe "AtomColorHighlightEditor", ->
+highlight = null
+atomPackage = null
+xdescribe "AtomColorHighlightEditor", ->
   beforeEach ->
     waitsForPromise ->
       atom.workspaceView = new WorkspaceView
@@ -17,14 +19,19 @@ describe "AtomColorHighlightEditor", ->
 
       editorView.setText("""
       color = #f0f
+      other_color = #ff0
 
       light_color = lighten(color, 50%)
 
-      other_color = color - rgba(0,0,0,0.5)
+      transparent_color = color - rgba(0,0,0,0.5)
       """)
 
     waitsForPromise ->
       atom.packages.activatePackage('atom-color-highlight')
+
+    runs ->
+      atomPackage = require atom.packages.getLoadedPackage('atom-color-highlight').path
+      highlight = atomPackage.editors[editor.id]
 
   describe 'once the package is toggled', ->
     it 'retrieves the editor content', ->
@@ -33,11 +40,38 @@ describe "AtomColorHighlightEditor", ->
         (markers = atom.workspaceView.find('.marker')).length > 0
 
       runs ->
-        expect(markers.length).toEqual(4)
+        expect(markers.length).toEqual(5)
 
-    describe 'modifying the buffer', ->
-      beforeEach ->
-        editor.setTextInBufferRange [[0,9], [0,12]], '0ff'
+    xdescribe 'modifying in the buffer', ->
 
-      it 'updates only the concerned markers', ->
-        console.log buffer.getText()
+      describe 'a color that is reused elsewhere', ->
+        spy = null
+        beforeEach ->
+          model = highlight.models[buffer.getPath()]
+          spy = jasmine.createSpy('spy')
+
+          model.on 'updated', spy
+
+        it 'updates only the concerned markers', ->
+          editor.setTextInBufferRange [[0,9], [0,12]], '0ff'
+
+          waitsFor -> spy.callCount is 1
+
+          runs ->
+            expect(spy.argsForCall[0][0].length).toEqual(3)
+
+      describe 'a color that is not reused', ->
+        spy = null
+        beforeEach ->
+          model = highlight.models[buffer.getPath()]
+          spy = jasmine.createSpy('spy')
+
+          model.on 'updated', spy
+
+        it 'updates only the concerned marker', ->
+          editor.setTextInBufferRange [[1,15], [1,18]], '0ff'
+
+          waitsFor -> spy.callCount is 1
+
+          runs ->
+            expect(spy.argsForCall[0][0].length).toEqual(1)
