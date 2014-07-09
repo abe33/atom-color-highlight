@@ -54,6 +54,7 @@ class AtomColorHighlightModel
 
     allDestroyedMarkers = []
     allCreatedMarkers = []
+    dirtyVariables = []
 
     if @changes.length
       {oldRanges, newRanges} = @packChanges(@changes)
@@ -62,26 +63,47 @@ class AtomColorHighlightModel
       promise = promise.then =>
         @destroyVariablesInRanges(oldRanges)
       .then (destroyedVariables) =>
-        re = ///\b#{Object.keys(destroyedVariables).join('|')}\b///
-        @destroyMarkersWithRegExp(re)
+        dirtyVariables = dirtyVariables.concat Object.keys(destroyedVariables)
+
+        if dirtyVariables.length
+          re = ///\b#{dirtyVariables.join('|')}\b///
+          @destroyMarkersWithRegExp(re)
+        else
+          []
 
       .then (destroyedMarkers) =>
         newRanges.push marker.bufferMarker.range for marker in destroyedMarkers
-        newRanges = newRanges.map (range) => @expandRangeToCompleteLines(range)
+        newRanges = newRanges.map (range) =>
+          @expandRangeToCompleteLines(range)
 
         allDestroyedMarkers = allDestroyedMarkers.concat(destroyedMarkers)
         @destroyMarkersInRanges(oldRanges)
 
       .then (destroyedMarkers) =>
         allDestroyedMarkers = allDestroyedMarkers.concat(destroyedMarkers)
-        @emit('markers:destroyed', allDestroyedMarkers)
         @findVariablesInRanges(newRanges)
 
-      .then =>
+      .then (foundVariables) =>
+        console.log newRanges, foundVariables, @variables
+        @searchForVariablesUsage(foundVariables, newRanges)
+
+      .then (foundRanges) =>
+        newRanges = newRanges.concat foundRanges.map (range) =>
+          @expandRangeToCompleteLines(range)
+
+        @destroyMarkersInRanges(foundRanges)
+
+      .then (destroyedMarkers) =>
+        allDestroyedMarkers = allDestroyedMarkers.concat(destroyedMarkers)
         @createMarkersInRanges(newRanges)
 
       .then (createdMarkers) =>
-        @emit('markers:created', createdMarkers)
+        allCreatedMarkers = allCreatedMarkers.concat createdMarkers
+
+        # console.log allDestroyedMarkers
+        # console.log createdMarkers
+        @emit('markers:destroyed', allDestroyedMarkers) if allDestroyedMarkers.length > 0
+        @emit('markers:created', allCreatedMarkers) if allCreatedMarkers.length > 0
 
       .fail (reason) ->
         console.log reason
@@ -92,6 +114,38 @@ class AtomColorHighlightModel
       console.log reason
 
     promise
+
+  searchForVariablesUsage: (createdVariables, excludedRanges=[]) ->
+    text = @buffer.getText()
+    ranges = []
+    keys = Object.keys(createdVariables)
+
+    return ranges unless keys.length
+
+    re = ///\b#{keys.join('|')}\b///g
+    n = 100
+
+    while (match = re.exec(text)) and n > 0
+      start = match.index
+      end = start + match[0].length
+
+      range = {
+        start: @buffer.positionForCharacterIndex(start)
+        end: @buffer.positionForCharacterIndex(end)
+      }
+
+      ranges.push range unless @rangesContains(excludedRanges, range)
+      n--
+
+    if n <= 0
+      console.warn 'Infinite Loop Detected'
+      console.log re, match
+
+    ranges
+
+  rangesContains: (ranges, tested) ->
+    return true for range in ranges when range.containsRange(tested)
+    false
 
   updateAll: ->
     @destroyVariables()
@@ -207,6 +261,7 @@ class AtomColorHighlightModel
       destroyedMarkers = []
 
       @markers = @markers.filter (marker) =>
+        return false unless marker.bufferMarker?
         if re.test marker.bufferMarker.properties.color
           marker.destroy()
           destroyedMarkers.push marker
@@ -229,6 +284,7 @@ class AtomColorHighlightModel
       for res in results
         {bufferRange: range, match, color} = res
         marker = @createMarker(match, color, range)
+        continue unless marker?
         @markers.push marker
         createdMarkers.push marker
 
@@ -239,7 +295,8 @@ class AtomColorHighlightModel
       flatten results
 
   createMarker: (color, colorObject, range) ->
-    return if marker = @findMarker(color, range)
+    return if @findMarker(color, range)
+
     l = colorObject.luma()
 
     textColor = if l > 0.43

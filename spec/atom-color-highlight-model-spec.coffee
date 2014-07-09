@@ -21,6 +21,7 @@ describe 'AtomColorHighlightModel', ->
       other_color = #ff0
 
       light_color = lighten(color, 50%)
+      other_light_color = lighten(light_color, 20%)
 
       transparent_color = color - rgba(0,0,0,0.5)
       """)
@@ -38,14 +39,15 @@ describe 'AtomColorHighlightModel', ->
       waitsForPromise -> model.init()
 
     it 'has stored variables present in the files', ->
-      expect(Object.keys(model.variables)).toEqual([
+      expect(Object.keys(model.variables).sort()).toEqual([
         'color'
         'other_color'
         'light_color'
-      ])
+        'other_light_color'
+      ].sort())
 
     it 'has stored the markers for colors', ->
-      expect(model.markers.length).toEqual(5)
+      expect(model.markers.length).toEqual(6)
 
     it 'dispatches a markers:created event', ->
       expect(markersCreated).toHaveBeenCalled()
@@ -58,19 +60,78 @@ describe 'AtomColorHighlightModel', ->
         runs ->
           markersCreated = jasmine.createSpy('markersCreated')
           markersDestroyed = jasmine.createSpy('markersDestroyed')
-          model.once 'markers:created', markersCreated
-          model.once 'markers:destroyed', markersDestroyed
+          model.on 'markers:created', markersCreated
+          model.on 'markers:destroyed', markersDestroyed
 
-          editor.setTextInBufferRange [[0,9], [0,12]], '0ff'
-          buffer.emit('contents-modified')
+      afterEach ->
+        model.unsubscribe()
 
-        waitsFor -> markersCreated.callCount > 0
+      describe 'by replacing a color', ->
+        beforeEach ->
+          runs ->
+            editor.setTextInBufferRange [[0,9], [0,12]], '0ff'
+            buffer.emit('contents-modified')
 
-      it 'destroys all markers concerned by the change', ->
-        expect(markersDestroyed.argsForCall[0][0].length).toEqual(3)
+          waitsFor -> markersCreated.callCount > 0
 
-      it 'creates new markers corresponding to the changes', ->
-        expect(markersCreated.argsForCall[0][0].length).toEqual(3)
+        it 'destroys all markers concerned by the change', ->
+          expect(markersDestroyed.argsForCall[0][0].length).toEqual(4)
+
+        it 'creates new markers corresponding to the changes', ->
+          expect(markersCreated.argsForCall[0][0].length).toEqual(4)
+
+        it 'does not touch to the variables', ->
+          expect(Object.keys(model.variables).sort()).toEqual([
+            'color'
+            'other_color'
+            'light_color'
+            'other_light_color'
+          ].sort())
+
+
+      describe 'by deleting the color', ->
+        beforeEach ->
+          runs ->
+            editor.setTextInBufferRange [[0,9], [0,12]], ''
+            buffer.emit('contents-modified')
+
+          waitsFor -> markersCreated.callCount > 0
+
+        it 'destroys all markers concerned by the change', ->
+          runs -> expect(markersDestroyed.argsForCall[0][0].length).toEqual(4)
+
+        it 'creates new markers for concerned colors', ->
+          runs -> expect(markersCreated.argsForCall[0][0].length).toEqual(2)
+
+        it 'removes the affected variables', ->
+          expect(Object.keys(model.variables).sort()).toEqual([
+            'other_color'
+            'light_color'
+            'other_light_color'
+          ].sort())
+
+        describe 'then writing a new color', ->
+          beforeEach ->
+            runs ->
+              editor.setSelectedBufferRange [[0,9],[0,9]]
+              editor.insertText '0ff'
+              buffer.emit('contents-modified')
+
+            waitsFor -> markersCreated.callCount > 1
+
+          it 'destroys all markers concerned by the change', ->
+            expect(markersDestroyed.argsForCall[1][0].length).toEqual(2)
+
+          it 'creates new markers for concerned colors', ->
+            expect(markersCreated.argsForCall[1][0].length).toEqual(4)
+
+          fit 'recreates the variable', ->
+            expect(Object.keys(model.variables).sort()).toEqual([
+              'color'
+              'other_color'
+              'light_color'
+              'other_light_color'
+            ].sort())
 
   describe '::expandRangeToCompleteLines', ->
     it 'expands a given to match full lines', ->

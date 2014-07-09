@@ -101,6 +101,8 @@ class AtomColorHighlightView extends View
     viewsToBeDisplayed = _.clone(@markerViews)
 
     for id,view of @markerViews
+      continue unless view.marker?
+
       for selection in @selections
         range = selection.getScreenRange()
         viewRange = view.getScreenRange()
