@@ -1,3 +1,15 @@
+<a name="v0.15.0"></a>
+# v0.15.0 (2014-07-10)
+
+## :sparkles: Features
+
+- Add Travis CI setup ([38bbaf09](https://github.com/abe33/atom-color-highlight/commit/38bbaf096062558fe6848e945e73fb4c0ecfb5e1))
+- Implement highlight update on palette refresh ([a0aa45f6](https://github.com/abe33/atom-color-highlight/commit/a0aa45f6c2f7ee4220e3dd1e64b3ade40bece018))
+
+## :bug: Bug Fixes
+
+- Fix views and models access by editors on react ([3f0c77eb](https://github.com/abe33/atom-color-highlight/commit/3f0c77eb29e418bf257f257bbab2eb65d3791696))
+
 <a name="v0.14.0"></a>
 # v0.14.0 (2014-06-03)
 
