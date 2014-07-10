@@ -13,11 +13,9 @@
     "qq": "*"
   },
   "dependencies": {
+    "q": "1.x",
     "emissary": "1.x",
     "underscore-plus": "1.x",
-    "property-accessors": "1.x",
-    "mixto": "1.x",
-    "oniguruma": "2.x",
     "pigments": ">= 1.7.0"
   }
 }
