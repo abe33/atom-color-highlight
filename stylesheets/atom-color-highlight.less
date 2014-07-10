@@ -1,9 +1,33 @@
 
 @import "ui-variables";
+@import "syntax-variables";
 
 .atom-color-highlight {
   z-index: 100;
   position: relative;
+
+  .dot-marker {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+
+    &.selected {
+      .selector {
+        position: absolute;
+        height: 0;
+        width: 0;
+        border: 6px solid transparent;
+        border-bottom-color: @background-color-info;
+        left: 50%;
+        margin-left: -6px;
+        top: 100%;
+      }
+    }
+  }
+
+  .marker.selected {
+    display: none;
+  }
 
   .region {
     -webkit-font-smoothing: antialiased;
@@ -18,6 +42,7 @@
     white-space: pre;
   }
 
+  .dot-marker:before,
   .region:before {
     content: '';
     display: block;
@@ -28,9 +53,10 @@
     top: 0;
     left: 0;
     z-index: -1;
-    border-radius: 2px;
+    border-radius: inherit;
   }
 
+  .dot-marker:after,
   .region:after {
     content: '';
     display: block;
@@ -41,6 +67,6 @@
     z-index: -1;
     top: 0;
     left: 0;
-    border-radius: 2px;
+    border-radius: inherit;
   }
 }

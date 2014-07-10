@@ -66,4 +66,3 @@
 ### CSS Color Function
 
   * color tint: `color(red tint(60%))`
-  

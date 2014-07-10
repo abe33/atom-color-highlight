@@ -6,6 +6,11 @@ AtomColorHighlightEditor = require './atom-color-highlight-editor'
 class AtomColorHighlight
   Emitter.includeInto(this)
 
+  configDefaults:
+    markersAtEndOfLine: true
+    dotMarkersSize: 16
+    dotMarkersSpacing: 4
+
   editors: {}
   activate: (state) ->
     atom.workspaceView.eachEditorView (editor) =>

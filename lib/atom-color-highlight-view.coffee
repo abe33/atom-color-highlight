@@ -3,6 +3,7 @@ _ = require 'underscore-plus'
 {Subscriber} = require 'emissary'
 
 MarkerView = require './marker-view'
+DotMarkerView = require './dot-marker-view'
 
 module.exports =
 class AtomColorHighlightView extends View
@@ -87,11 +88,13 @@ class AtomColorHighlightView extends View
     viewsToBeDisplayed = _.clone(@markerViews)
 
     for id,view of @markerViews
+      view.removeClass('selected')
+      
       for selection in @selections
         range = selection.getScreenRange()
         viewRange = view.getScreenRange()
         if viewRange.intersectsWith(range)
-          view.hide()
+          view.addClass('selected')
           delete viewsToBeDisplayed[id]
 
     view.show() for id,view of viewsToBeDisplayed
@@ -102,12 +105,16 @@ class AtomColorHighlightView extends View
 
   markersUpdated: (markers) =>
     markerViewsToRemoveById = _.clone(@markerViews)
+    markersByRows = {}
 
     for marker in markers
       if @markerViews[marker.id]?
         delete markerViewsToRemoveById[marker.id]
       else
-        markerView = new MarkerView({@editorView, marker})
+        if atom.config.get('atom-color-highlight.markersAtEndOfLine')
+          markerView = new DotMarkerView({@editorView, marker, markersByRows})
+        else
+          markerView = new MarkerView({@editorView, marker})
         @append(markerView.element)
         @markerViews[marker.id] = markerView
 
