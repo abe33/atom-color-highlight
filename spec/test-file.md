@@ -62,3 +62,8 @@
 ### Very long color
 
   * very long color declaration that may wrap the line: `lighten( saturate( blue, 40%),  20%)`
+
+### CSS Color Function
+
+  * color tint: `color(red tint(60%))`
+  
