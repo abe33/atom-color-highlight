@@ -1,4 +1,4 @@
-# Atom Color Highlight
+# Atom Color Highlight [![Build Status](https://travis-ci.org/abe33/atom-color-highlight.svg?branch=master)](https://travis-ci.org/abe33/atom-color-highlight)
 
 Highlights colors in files.
 
