@@ -7,7 +7,7 @@ class MarkerView
 
   constructor: ({@editorView, @marker}) ->
     @regions = []
-    @editSession = @editorView.editor
+    @editor = @editorView.editor
     @element = document.createElement('div')
     @element.className = 'marker color-highlight'
     @updateNeeded = @marker.isValid()
@@ -20,11 +20,11 @@ class MarkerView
     @unsubscribe()
     @marker = null
     @editorView = null
-    @editSession = null
+    @editor = null
     @element.remove()
 
   show: ->
-    @element.style.display = ""
+    @element.style.display = "" unless @hiddenDueToComment()
 
   hide: ->
     @element.style.display = "none"
@@ -42,7 +42,7 @@ class MarkerView
     if isValid then @show() else @hide()
 
   isUpdateNeeded: ->
-    return false unless @updateNeeded and @editSession is @editorView.editor
+    return false unless @updateNeeded and @editor is @editorView.editor
 
     oldScreenRange = @oldScreenRange
     newScreenRange = @getScreenRange()
@@ -52,6 +52,12 @@ class MarkerView
   intersectsRenderedScreenRows: (range) ->
     range.intersectsRowRange(@editorView.firstRenderedScreenRow, @editorView.lastRenderedScreenRow)
 
+  hiddenDueToComment: ->
+    bufferRange = @getBufferRange()
+    scope = @editor.displayBuffer.scopesForBufferPosition(bufferRange.start).join(';')
+
+    atom.config.get('atom-color-highlight.hideMarkersInComments') and scope.match(/\bcomment\b/)
+
   updateDisplay: =>
     return unless @isUpdateNeeded()
 
@@ -59,6 +65,8 @@ class MarkerView
     @clearRegions()
     range = @getScreenRange()
     return if range.isEmpty()
+
+    @hide() if @hiddenDueToComment()
 
     rowSpan = range.end.row - range.start.row
 
@@ -74,8 +82,8 @@ class MarkerView
     { lineHeight, charWidth } = @editorView
     color = @getColor()
     colorText = @getColorTextColor()
-    bufferRange = @editSession.bufferRangeForScreenRange({start, end})
-    text = @editSession.getTextInRange(bufferRange)
+    bufferRange = @editor.bufferRangeForScreenRange({start, end})
+    text = @editor.getTextInRange(bufferRange)
 
     css = @editorView.pixelPositionForScreenPosition(start)
     css.height = lineHeight * rows
@@ -104,3 +112,4 @@ class MarkerView
   getColorText: -> @marker.bufferMarker.properties.color
   getColorTextColor: -> @marker.bufferMarker.properties.textColor
   getScreenRange: -> @marker.getScreenRange()
+  getBufferRange: -> @marker.getBufferRange()

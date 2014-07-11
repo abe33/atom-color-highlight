@@ -28,16 +28,22 @@ class DotMarkerView
   removeClass: (cls) -> @element.classList.remove(cls)
 
   show: ->
-    @element.style.display = ""
+    @element.style.display = "" unless @hiddenDueToComment()
 
   hide: ->
     @element.style.display = "none"
+
+  hiddenDueToComment: ->
+    bufferRange = @getBufferRange()
+    scope = @editor.displayBuffer.scopesForBufferPosition(bufferRange.start).join(';')
+
+    atom.config.get('atom-color-highlight.hideMarkersInComments') and scope.match(/\bcomment\b/)
 
   subscribeToMarker: ->
     @subscribe @marker, 'changed', @onMarkerChanged
     @subscribe @marker, 'destroyed', @remove
     @subscribe @editorView, 'editor:display-updated', @updateDisplay
-    
+
   onMarkerChanged: ({isValid}) =>
     @updateNeeded = isValid
     if isValid then @show() else @hide()
@@ -59,6 +65,8 @@ class DotMarkerView
     @updateNeeded = false
     range = @getScreenRange()
     return if range.isEmpty()
+
+    @hide() if @hiddenDueToComment()
 
     size = atom.config.get('atom-color-highlight.dotMarkersSize')
     spacing = atom.config.get('atom-color-highlight.dotMarkersSpacing')
