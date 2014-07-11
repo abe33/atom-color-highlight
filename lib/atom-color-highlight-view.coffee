@@ -133,8 +133,6 @@ class AtomColorHighlightView extends View
     return unless @markers
     markersByRows = {}
 
-    console.log @editorView
-
     for marker in @markers
       @markerViews[marker.id].remove() if @markerViews[marker.id]?
 
