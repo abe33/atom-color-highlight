@@ -17,11 +17,14 @@ class AtomColorHighlightView extends View
     @selections = []
     @markerViews = {}
 
+    @observeConfig()
     @setEditorView(editorView)
     @setModel(model)
 
     @updateSelections()
 
+  observeConfig: ->
+    atom.config.observe 'atom-color-highlight.markersAtEndOfLine', @rebuildMarkers
   setModel: (model) ->
     @unsubscribeFromModel()
     @model = model
@@ -89,7 +92,7 @@ class AtomColorHighlightView extends View
 
     for id,view of @markerViews
       view.removeClass('selected')
-      
+
       for selection in @selections
         range = selection.getScreenRange()
         viewRange = view.getScreenRange()
@@ -103,11 +106,11 @@ class AtomColorHighlightView extends View
     markerView.remove() for id, markerView of @markerViews
     @markerViews = {}
 
-  markersUpdated: (markers) =>
+  markersUpdated: (@markers) =>
     markerViewsToRemoveById = _.clone(@markerViews)
     markersByRows = {}
 
-    for marker in markers
+    for marker in @markers
       if @markerViews[marker.id]?
         delete markerViewsToRemoveById[marker.id]
       else
@@ -121,6 +124,23 @@ class AtomColorHighlightView extends View
     for id, markerView of markerViewsToRemoveById
       delete @markerViews[id]
       markerView.remove()
+
+  rebuildMarkers: =>
+    return unless @markers
+    markersByRows = {}
+
+    console.log @editorView
+
+    for marker in @markers
+      @markerViews[marker.id].remove() if @markerViews[marker.id]?
+
+      if atom.config.get('atom-color-highlight.markersAtEndOfLine')
+        markerView = new DotMarkerView({@editorView, marker, markersByRows})
+      else
+        markerView = new MarkerView({@editorView, marker})
+
+      @append(markerView.element)
+      @markerViews[marker.id] = markerView
 
   destroyAllViews: ->
     @empty()
