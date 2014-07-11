@@ -37,16 +37,13 @@ class DotMarkerView
     @subscribe @marker, 'changed', @onMarkerChanged
     @subscribe @marker, 'destroyed', @remove
     @subscribe @editorView, 'editor:display-updated', @updateDisplay
-
-    atom.config.observe 'atom-color-highlight.dotMarkersSize', @updateDisplay
-    atom.config.observe 'atom-color-highlight.dotMarkersSpading', @updateDisplay
-
+    
   onMarkerChanged: ({isValid}) =>
     @updateNeeded = isValid
     if isValid then @show() else @hide()
 
   isUpdateNeeded: ->
-    return false unless @updateNeeded and @editor is @editorView.editor
+    return false unless @updateNeeded and @editor is @editorView?.editor
 
     oldScreenRange = @oldScreenRange
     newScreenRange = @getScreenRange()
