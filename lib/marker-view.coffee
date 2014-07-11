@@ -29,6 +29,9 @@ class MarkerView
   hide: ->
     @element.style.display = "none"
 
+  addClass: (cls) -> @element.classList.add(cls)
+  removeClass: (cls) -> @element.classList.remove(cls)
+
   subscribeToMarker: ->
     @subscribe @marker, 'changed', @onMarkerChanged
     @subscribe @marker, 'destroyed', @remove
