@@ -1,3 +1,11 @@
+<a name="v1.16.0"></a>
+# v1.16.0 (2014-07-11)
+
+## :sparkles: Features
+
+- Implement masking markers present in comments ([cb4d5529](https://github.com/abe33/atom-color-highlight/commit/cb4d5529231cdfdbb6a4d9645c27b394db111587), [#16](https://github.com/abe33/atom-color-highlight/issues/16))
+- Implement dot markers on end of lines ([98d7e33d](https://github.com/abe33/atom-color-highlight/commit/98d7e33d531b0fc2a6e20bb9f8d54bc1be78d796), [#11](https://github.com/abe33/atom-color-highlight/issues/11))
+
 <a name="v0.15.0"></a>
 # v0.15.0 (2014-07-10)
 
