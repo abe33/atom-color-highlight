@@ -7,7 +7,7 @@ class AtomColorHighlight
   Emitter.includeInto(this)
 
   configDefaults:
-    markersAtEndOfLine: true
+    markersAtEndOfLine: false
     dotMarkersSize: 16
     dotMarkersSpacing: 4
 
