@@ -2,8 +2,12 @@
 @import "ui-variables";
 @import "syntax-variables";
 
+.select-list.popover-list {
+  z-index: 2 !important;
+}
+
 .atom-color-highlight {
-  z-index: 100;
+  z-index: 1;
   position: relative;
 
   .dot-marker {
@@ -11,6 +15,7 @@
     position: absolute;
     border-radius: 50%;
     margin-top: 2px;
+    z-index: -2;
 
     &.selected {
       .selector {
