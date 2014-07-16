@@ -90,3 +90,4 @@ class DotMarkerView
   getColorText: -> @marker.bufferMarker.properties.color
   getColorTextColor: -> @marker.bufferMarker.properties.textColor
   getScreenRange: -> @marker.getScreenRange()
+  getBufferRange: -> @marker.getBufferRange()
