@@ -1,3 +1,16 @@
+<a name="v1.17.0"></a>
+# v1.17.0 (2014-07-16)
+
+## :sparkles: Features
+
+- Add support for css 4 `gray` functional notation. ([abe33/pigments/f8f0d212](https://github.com/abe33/pigments/commit/f8f0d21223c24b4724c8e0638b4f3b52126160b1))
+- Add support for the `hwb` color model the corresponding css4 function. ([abe33/pigments/b64d9574](https://github.com/abe33/pigments/commit/b64d95749a348cb66e9434c5438eac6afbca0693), [abe33/atom-color-highlight#20](https://github.com/abe33/atom-color-highlight/issues/20))  
+
+## :bug: Bug Fixes
+
+- Fix z-index issues with popover lists ([ea13b1d1](https://github.com/abe33/atom-color-highlight/commit/ea13b1d1c473878708746ef020358914f7b5dd50), [#17](https://github.com/abe33/atom-color-highlight/issues/17))
+- Fix missing getBufferRange method on dot markers ([4d25639b](https://github.com/abe33/atom-color-highlight/commit/4d25639b97439ab6ffc54113ab8c89fbb25c967b), [#19](https://github.com/abe33/atom-color-highlight/issues/19))
+
 <a name="v1.16.0"></a>
 # v1.16.0 (2014-07-11)
 
