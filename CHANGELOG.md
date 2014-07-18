@@ -1,3 +1,10 @@
+<a name="v1.18"></a>
+# v1.18 (2014-07-18)
+
+## :bug: Bug Fixes
+
+- Fix sass method parsed as css color function ([eced697f](https://github.com/abe33/atom-color-highlight/commit/eced697f8d3b8d6003e1959b7c306973d161aac7), [#21](https://github.com/abe33/atom-color-highlight/issues/21))
+
 <a name="v1.17.0"></a>
 # v1.17.0 (2014-07-16)
 
