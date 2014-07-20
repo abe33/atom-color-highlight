@@ -19,9 +19,9 @@ class MarkerMixin extends Mixin
     @element.style.display = "none"
 
   subscribeToMarker: ->
-    @subscribe @marker, 'changed', => @onMarkerChanged()
-    @subscribe @marker, 'destroyed', => @remove()
-    @subscribe @editorView, 'editor:display-updated', => @updateDisplay()
+    @subscribe @marker, 'changed', (e) => @onMarkerChanged(e)
+    @subscribe @marker, 'destroyed', (e) => @remove(e)
+    @subscribe @editorView, 'editor:display-updated', (e) => @updateDisplay(e)
 
   onMarkerChanged: ({isValid}) ->
     @updateNeeded = isValid
