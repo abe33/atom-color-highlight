@@ -1,5 +1,16 @@
-<a name="v1.18"></a>
-# v1.18 (2014-07-18)
+<a name="v1.19.0"></a>
+# v1.19.0 (2014-07-20)
+
+## :sparkles: Features
+
+- Implement masking markers present in strings ([7691338b](https://github.com/abe33/atom-color-highlight/commit/7691338bfec09c4887927b0aefd04f4512c22a8c))
+- Add support for variables in color functions ([abe33/pigments/ee67434a](https://github.com/abe33/pigments/commit/ee67434acc0ae8542e8cb02235247216561900fc))  
+  <br>Includes:
+  - Any parameter can now be a variable
+  - Any missing variable will mark the color as invalid
+
+<a name="v1.18.0"></a>
+# v1.18.0 (2014-07-18)
 
 ## :bug: Bug Fixes
 
