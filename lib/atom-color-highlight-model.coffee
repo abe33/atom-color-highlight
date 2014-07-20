@@ -70,6 +70,8 @@ class AtomColorHighlightModel
         for res in results
           {bufferRange: range, match, color} = res
 
+          continue if color.isInvalid
+
           if marker = @findMarker(match, range)
             if marker.bufferMarker.properties.cssColor isnt color.toCSS()
               marker = @createMarker(match, color, range)
