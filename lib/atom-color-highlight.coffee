@@ -9,6 +9,7 @@ class AtomColorHighlight
   configDefaults:
     markersAtEndOfLine: false
     hideMarkersInComments: false
+    hideMarkersInStrings: false
     dotMarkersSize: 16
     dotMarkersSpacing: 4
 

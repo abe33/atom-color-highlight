@@ -1,9 +1,11 @@
 {View, $} = require 'atom'
 {Subscriber} = require 'emissary'
+MarkerMixin = require './marker-mixin'
 
 module.exports =
 class MarkerView
   Subscriber.includeInto(this)
+  MarkerMixin.includeInto(this)
 
   constructor: ({@editorView, @marker}) ->
     @regions = []
@@ -16,48 +18,6 @@ class MarkerView
     @subscribeToMarker()
     @updateDisplay()
 
-  remove: =>
-    @unsubscribe()
-    @marker = null
-    @editorView = null
-    @editor = null
-    @element.remove()
-
-  show: ->
-    @element.style.display = "" unless @hiddenDueToComment()
-
-  hide: ->
-    @element.style.display = "none"
-
-  addClass: (cls) -> @element.classList.add(cls)
-  removeClass: (cls) -> @element.classList.remove(cls)
-
-  subscribeToMarker: ->
-    @subscribe @marker, 'changed', @onMarkerChanged
-    @subscribe @marker, 'destroyed', @remove
-    @subscribe @editorView, 'editor:display-updated', @updateDisplay
-
-  onMarkerChanged: ({isValid}) =>
-    @updateNeeded = isValid
-    if isValid then @show() else @hide()
-
-  isUpdateNeeded: ->
-    return false unless @updateNeeded and @editor is @editorView.editor
-
-    oldScreenRange = @oldScreenRange
-    newScreenRange = @getScreenRange()
-    @oldScreenRange = newScreenRange
-    @intersectsRenderedScreenRows(oldScreenRange) or @intersectsRenderedScreenRows(newScreenRange)
-
-  intersectsRenderedScreenRows: (range) ->
-    range.intersectsRowRange(@editorView.firstRenderedScreenRow, @editorView.lastRenderedScreenRow)
-
-  hiddenDueToComment: ->
-    bufferRange = @getBufferRange()
-    scope = @editor.displayBuffer.scopesForBufferPosition(bufferRange.start).join(';')
-
-    atom.config.get('atom-color-highlight.hideMarkersInComments') and scope.match(/\bcomment\b/)
-
   updateDisplay: =>
     return unless @isUpdateNeeded()
 
@@ -66,7 +26,7 @@ class MarkerView
     range = @getScreenRange()
     return if range.isEmpty()
 
-    @hide() if @hiddenDueToComment()
+    @hide() if @hidden()
 
     rowSpan = range.end.row - range.start.row
 
@@ -107,9 +67,3 @@ class MarkerView
   clearRegions: ->
     region.remove() for region in @regions
     @regions = []
-
-  getColor: -> @marker.bufferMarker.properties.cssColor
-  getColorText: -> @marker.bufferMarker.properties.color
-  getColorTextColor: -> @marker.bufferMarker.properties.textColor
-  getScreenRange: -> @marker.getScreenRange()
-  getBufferRange: -> @marker.getBufferRange()

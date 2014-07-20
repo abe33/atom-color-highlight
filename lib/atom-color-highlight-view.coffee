@@ -25,6 +25,7 @@ class AtomColorHighlightView extends View
 
   observeConfig: ->
     atom.config.observe 'atom-color-highlight.hideMarkersInComments', @rebuildMarkers
+    atom.config.observe 'atom-color-highlight.hideMarkersInStrings', @rebuildMarkers
     atom.config.observe 'atom-color-highlight.markersAtEndOfLine', @rebuildMarkers
     atom.config.observe 'atom-color-highlight.dotMarkersSize', @rebuildMarkers
     atom.config.observe 'atom-color-highlight.dotMarkersSpading', @rebuildMarkers
