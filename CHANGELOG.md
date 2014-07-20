@@ -1,3 +1,10 @@
+<a name="v0.19.1"></a>
+# v0.19.1 (2014-07-20)
+
+## :bug: Bug Fixes
+
+- Fix creating markers for invalid colors ([dc204b98](https://github.com/abe33/atom-color-highlight/commit/dc204b981a42ee1404748c72f9e85227b4605275))
+
 <a name="v0.19.0"></a>
 # v0.19.0 (2014-07-20)
 
