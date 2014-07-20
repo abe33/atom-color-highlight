@@ -1,5 +1,5 @@
-<a name="v1.19.0"></a>
-# v1.19.0 (2014-07-20)
+<a name="v0.19.0"></a>
+# v0.19.0 (2014-07-20)
 
 ## :sparkles: Features
 
@@ -9,15 +9,15 @@
   - Any parameter can now be a variable
   - Any missing variable will mark the color as invalid
 
-<a name="v1.18.0"></a>
-# v1.18.0 (2014-07-18)
+<a name="v0.18.0"></a>
+# v0.18.0 (2014-07-18)
 
 ## :bug: Bug Fixes
 
 - Fix sass method parsed as css color function ([eced697f](https://github.com/abe33/atom-color-highlight/commit/eced697f8d3b8d6003e1959b7c306973d161aac7), [#21](https://github.com/abe33/atom-color-highlight/issues/21))
 
-<a name="v1.17.0"></a>
-# v1.17.0 (2014-07-16)
+<a name="v0.17.0"></a>
+# v0.17.0 (2014-07-16)
 
 ## :sparkles: Features
 
@@ -29,8 +29,8 @@
 - Fix z-index issues with popover lists ([ea13b1d1](https://github.com/abe33/atom-color-highlight/commit/ea13b1d1c473878708746ef020358914f7b5dd50), [#17](https://github.com/abe33/atom-color-highlight/issues/17))
 - Fix missing getBufferRange method on dot markers ([4d25639b](https://github.com/abe33/atom-color-highlight/commit/4d25639b97439ab6ffc54113ab8c89fbb25c967b), [#19](https://github.com/abe33/atom-color-highlight/issues/19))
 
-<a name="v1.16.0"></a>
-# v1.16.0 (2014-07-11)
+<a name="v0.16.0"></a>
+# v0.16.0 (2014-07-11)
 
 ## :sparkles: Features
 
