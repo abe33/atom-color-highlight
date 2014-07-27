@@ -1,9 +1,18 @@
+<a name="v0.19.3"></a>
+# v0.19.3 (2014-07-21)
+
+## :bug: Bug Fixes
+
+- Fix invalid lighten/darken operation for less/sass ([abe33/pigments@8ac0214d](https://github.com/abe33/pigments/commit/8ac0214dd67ea34b77be21ce03440f9de914f3fe), [abe33/atom-color-highlight#26](https://github.com/abe33/atom-color-highlight/issues/26))
+- Fix css color function raising exception when invalid ([abe33/pigments@a883ccad](https://github.com/abe33/pigments/commit/a883ccadb60a3498d01506ab821ed43e39992fe4), [abe33/atom-color-highlight#27](https://github.com/abe33/atom-color-highlight/issues/27))
+
+
 <a name="v0.19.2"></a>
 # v0.19.2 (2014-07-21)
 
 ## :bug: Bug Fixes
 
-- Fix broken variable handling at n+1 ([abe33/pigments/f34be5b0](https://github.com/abe33/pigments/commit/f34be5b082ce60a11ad3f710604e410b60d5a4e8), [#23](https://github.com/abe33/atom-color-highlight/issues/23))
+- Fix broken variable handling at n+1 ([abe33/pigments@f34be5b0](https://github.com/abe33/pigments/commit/f34be5b082ce60a11ad3f710604e410b60d5a4e8), [#23](https://github.com/abe33/atom-color-highlight/issues/23))
 
 <a name="v0.19.1"></a>
 # v0.19.1 (2014-07-20)
@@ -18,7 +27,7 @@
 ## :sparkles: Features
 
 - Implement masking markers present in strings ([7691338b](https://github.com/abe33/atom-color-highlight/commit/7691338bfec09c4887927b0aefd04f4512c22a8c))
-- Add support for variables in color functions ([abe33/pigments/ee67434a](https://github.com/abe33/pigments/commit/ee67434acc0ae8542e8cb02235247216561900fc))  
+- Add support for variables in color functions ([abe33/pigments@ee67434a](https://github.com/abe33/pigments/commit/ee67434acc0ae8542e8cb02235247216561900fc))  
   <br>Includes:
   - Any parameter can now be a variable
   - Any missing variable will mark the color as invalid
@@ -35,8 +44,8 @@
 
 ## :sparkles: Features
 
-- Add support for css 4 `gray` functional notation. ([abe33/pigments/f8f0d212](https://github.com/abe33/pigments/commit/f8f0d21223c24b4724c8e0638b4f3b52126160b1))
-- Add support for the `hwb` color model the corresponding css4 function. ([abe33/pigments/b64d9574](https://github.com/abe33/pigments/commit/b64d95749a348cb66e9434c5438eac6afbca0693), [abe33/atom-color-highlight#20](https://github.com/abe33/atom-color-highlight/issues/20))  
+- Add support for css 4 `gray` functional notation. ([abe33/pigments@f8f0d212](https://github.com/abe33/pigments/commit/f8f0d21223c24b4724c8e0638b4f3b52126160b1))
+- Add support for the `hwb` color model the corresponding css4 function. ([abe33/pigments@b64d9574](https://github.com/abe33/pigments/commit/b64d95749a348cb66e9434c5438eac6afbca0693), [abe33/atom-color-highlight#20](https://github.com/abe33/atom-color-highlight/issues/20))  
 
 ## :bug: Bug Fixes
 
