@@ -1,3 +1,10 @@
+<a name="v0.19.4"></a>
+# v0.19.4 (2014-07-30)
+
+## :bug: Bug Fixes
+
+- Fix missing match when a color is followed by a class selector ([8c482feb](https://github.com/abe33/atom-color-highlight/commit/8c482feb568db30829bffca96ace40bf7be0b386))
+
 <a name="v0.19.3"></a>
 # v0.19.3 (2014-07-21)
 
