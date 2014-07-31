@@ -15,6 +15,7 @@ class DotMarkerView
     @updateNeeded = @marker.isValid()
     @oldScreenRange = @getScreenRange()
     @buffer = @editor.buffer
+    @clearPosition = true
 
     @subscribeToMarker()
     @updateDisplay()
@@ -31,7 +32,11 @@ class DotMarkerView
     size = @getSize()
     spacing = @getSpacing()
     @markersByRows[range.start.row] ?= 0
-    @position ?= @markersByRows[range.start.row]
+
+    if @clearPosition
+      @position = @markersByRows[range.start.row]
+      @clearPosition = false
+
     @markersByRows[range.start.row]++
 
     color = @getColor()

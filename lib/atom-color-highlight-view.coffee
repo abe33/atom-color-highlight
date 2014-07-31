@@ -114,13 +114,18 @@ class AtomColorHighlightView extends View
   markersUpdated: (@markers) =>
     markerViewsToRemoveById = _.clone(@markerViews)
     markersByRows = {}
+    useDots = atom.config.get('atom-color-highlight.markersAtEndOfLine')
+    sortedMarkers = []
 
     for marker in @markers
       if @markerViews[marker.id]?
         delete markerViewsToRemoveById[marker.id]
+        if useDots
+          sortedMarkers.push @markerViews[marker.id]
       else
-        if atom.config.get('atom-color-highlight.markersAtEndOfLine')
+        if useDots
           markerView = new DotMarkerView({@editorView, marker, markersByRows})
+          sortedMarkers.push markerView
         else
           markerView = new MarkerView({@editorView, marker})
         @append(markerView.element)
@@ -129,6 +134,14 @@ class AtomColorHighlightView extends View
     for id, markerView of markerViewsToRemoveById
       delete @markerViews[id]
       markerView.remove()
+
+    if useDots
+      markersByRows = {}
+      for markerView in sortedMarkers
+        markerView.markersByRows = markersByRows
+        markerView.updateNeeded = true
+        markerView.clearPosition = true
+        markerView.updateDisplay()
 
   rebuildMarkers: =>
     return unless @markers
