@@ -16,8 +16,8 @@
     "q": "1.x",
     "emissary": "1.x",
     "underscore-plus": "1.x",
-    "pigments": "~1.11.3",
-    "oniguruma": "2.x",
+    "pigments": "2.x",
+    "oniguruma": "3.x",
     "mixto": "1.x"
   }
 }
