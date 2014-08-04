@@ -1,3 +1,10 @@
+<a name="v1.0.1"></a>
+# v1.0.1 (2014-08-04)
+
+## :bug: Bug Fixes
+
+- Fix warning due to deprecated prefixed function ([49bd8c6e](https://github.com/abe33/atom-color-highlight/commit/49bd8c6e8f3e6fcb48ba4876d9c2a1b89a810e9c))
+
 <a name="v1.0.0"></a>
 # v1.0.0 (2014-08-04)
 
