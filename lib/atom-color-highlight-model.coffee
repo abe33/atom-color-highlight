@@ -26,7 +26,7 @@ class AtomColorHighlightModel
     return if @frameRequested
 
     @frameRequested = true
-    webkitRequestAnimationFrame =>
+    requestAnimationFrame =>
       @frameRequested = false
       @updateMarkers()
 
