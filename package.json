@@ -1,7 +1,7 @@
 {
   "name": "atom-color-highlight",
   "main": "./lib/atom-color-highlight",
-  "version": "0.19.4",
+  "version": "1.0.0",
   "private": true,
   "description": "Highlights color in files",
   "repository": "https://github.com/abe33/atom-color-highlight",
