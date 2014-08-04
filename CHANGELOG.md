@@ -1,3 +1,14 @@
+<a name="v1.0.0"></a>
+# v1.0.0 (2014-08-04)
+
+## :sparkles: Features
+
+- Add support of pigments 2.0.0 and Atom 0.120.0 ([78d0db5f](https://github.com/abe33/atom-color-highlight/commit/78d0db5fc3665b26933340f89502b739de52b873))
+
+## :bug: Bug Fixes
+
+- Fix invalid layout when adding removing a color in a line ([a185707c](https://github.com/abe33/atom-color-highlight/commit/a185707c64a1c3a997785067a2fb6ea574c82ddb))
+
 <a name="v0.19.4"></a>
 # v0.19.4 (2014-07-30)
 
