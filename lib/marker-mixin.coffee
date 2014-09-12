@@ -1,4 +1,5 @@
 Mixin = require 'mixto'
+{CompositeDisposable} = require 'event-kit'
 
 module.exports =
 class MarkerMixin extends Mixin
@@ -7,6 +8,7 @@ class MarkerMixin extends Mixin
 
   remove: ->
     @unsubscribe()
+    @subscriptions.dispose()
     @marker = null
     @editorView = null
     @editor = null
@@ -19,8 +21,9 @@ class MarkerMixin extends Mixin
     @element.style.display = "none"
 
   subscribeToMarker: ->
-    @subscribe @marker, 'changed', (e) => @onMarkerChanged(e)
-    @subscribe @marker, 'destroyed', (e) => @remove(e)
+    @subscriptions ?= new CompositeDisposable
+    @subscriptions.add @marker.onDidChange (e) => @onMarkerChanged(e)
+    @subscriptions.add @marker.onDidDestroy (e) => @remove(e)
     @subscribe @editorView, 'editor:display-updated', (e) => @updateDisplay(e)
 
   onMarkerChanged: ({isValid}) ->
