@@ -1,6 +1,7 @@
 _ = require 'underscore-plus'
 {View, $} = require 'atom'
 {Subscriber} = require 'emissary'
+{CompositeDisposable} = require 'event-kit'
 
 MarkerView = require './marker-view'
 DotMarkerView = require './dot-marker-view'
@@ -16,6 +17,9 @@ class AtomColorHighlightView extends View
     super
     @selections = []
     @markerViews = {}
+
+    @editorSubscriptions = new CompositeDisposable
+    @selectionSubscriptions = new CompositeDisposable
 
     @observeConfig()
     @setEditorView(editorView)
@@ -51,40 +55,32 @@ class AtomColorHighlightView extends View
 
   subscribeToEditor: ->
     return unless @editor?
-    @subscribe @editor, 'selection-added', => setImmediate => @updateSelections
+    @editorSubscriptions.add @editor.onDidAddSelection => setImmediate => @updateSelections
 
   unsubscribeFromEditor: ->
     return unless @editor?
-    @unsubscribe @editor, 'selection-added'
+    @editorSubscriptions.dispose()
 
   updateSelections: =>
     selections = @editor.getSelections()
-    selectionsToBeRemoved = @selections.concat()
+    @unsubscribeFromSelections()
 
-    for selection in selections
-      if selection in @selections
-        _.remove selectionsToBeRemoved, selection
-      else
-        @subscribeToSelection selection
+    @subscribeToSelection selection for selection in selections
 
-    for selection in selectionsToBeRemoved
-      @unsubscribeFromSelection selection
     @selections = selections
     @selectionChanged()
 
   subscribeToSelection: (selection) ->
-    @subscribe selection, 'screen-range-changed', @selectionChanged
-    @subscribe selection, 'destroyed', @updateSelections
+    @selectionSubscriptions.add selection.onDidChangeRange @selectionChanged
+    @selectionSubscriptions.add selection.onDidDestroy @updateSelections
 
-  unsubscribeFromSelection: (selection) ->
-    @unsubscribe selection, 'screen-range-changed', @selectionChanged
-    @unsubscribe selection, 'destroyed'
+  unsubscribeFromSelections:->
+    @selectionSubscriptions.dispose()
 
   # Tear down any state and detach
   destroy: ->
-    @unsubscribe @editor, 'selection-added'
-    for selection in @editor.getSelections()
-      @unsubscribeFromSelection(selection)
+    @editorSubscriptions.dispose()
+    @unsubscribeFromSelections()
     @destroyAllViews()
     @detach()
 

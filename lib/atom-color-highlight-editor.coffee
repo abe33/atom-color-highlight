@@ -1,4 +1,5 @@
 {Subscriber} = require 'emissary'
+{CompositeDisposable} = require 'event-kit'
 
 AtomColorHighlightModel = require './atom-color-highlight-model'
 AtomColorHighlightView = require './atom-color-highlight-view'
@@ -10,14 +11,15 @@ class AtomColorHighlightEditor
   constructor: (@editorView) ->
     {@editor} = @editorView
 
+    @subscriptions = new CompositeDisposable
+
     @models = {}
     @views = {}
 
-    @subscribe @editorView, 'editor:path-changed', @subscribeToBuffer
+    @subscriptions.add @editorView.getModel().onDidChangePath @subscribeToBuffer
+    @subscriptions.add @editorView.getModel().getBuffer().onDidDestroy @destroy
 
     @subscribeToBuffer()
-
-    @subscribe @editorView, 'editor:will-be-removed', @destroy
 
   getActiveModel: ->
     path = @buffer.getPath()
