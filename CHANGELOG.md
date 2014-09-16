@@ -1,3 +1,11 @@
+<a name="v1.0.3"></a>
+# v1.0.3 (2014-09-16)
+
+## :bug: Bug Fixes
+
+- Fix deprecated method calls on markers ([040475c8](https://github.com/abe33/atom-color-highlight/commit/040475c8019d5f19bacc236d5710224098581328))
+- Fix deprecated method calls ([bfcc4a90](https://github.com/abe33/atom-color-highlight/commit/bfcc4a902e5d0c68a0a6aa74d17b7a308b817210))
+
 <a name="v1.0.1"></a>
 # v1.0.1 (2014-08-04)
 
