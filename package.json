@@ -16,7 +16,7 @@
     "q": "1.x",
     "emissary": "1.3.x",
     "underscore-plus": "1.x",
-    "pigments": "2.x",
+    "pigments": ">= 2.1.0",
     "oniguruma": "3.x",
     "mixto": "1.x",
     "event-kit": "0.7.x"
