@@ -89,6 +89,8 @@ class AtomColorHighlightView extends View
       return view if view.marker.bufferMarker.containsPoint(position)
 
   selectionChanged: =>
+    return if @markers?.length is 0
+
     viewsToBeDisplayed = _.clone(@markerViews)
 
     for id,view of @markerViews
