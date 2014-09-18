@@ -1,3 +1,14 @@
+<a name="v1.0.4"></a>
+# v1.0.4 (2014-09-18)
+
+## :bug: Bug Fixes
+
+- Fix aliased color at n+2 not detected ([6f446e79](https://github.com/abe33/atom-color-highlight/commit/6f446e790ec083b87f4dde38035844ea0755304b))
+
+## :racehorse: Performances
+
+- Prevent works when no markers was found ([352c9cf1](https://github.com/abe33/atom-color-highlight/commit/352c9cf1fe248e9f69e1c8dd5def404094f72952))
+
 <a name="v1.0.3"></a>
 # v1.0.3 (2014-09-16)
 
