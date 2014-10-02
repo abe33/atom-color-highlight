@@ -1,3 +1,10 @@
+<a name="v1.0.5"></a>
+# v1.0.5 (2014-10-03)
+
+## :bug: Bug Fixes
+
+- Fix broken dot marker update since API changes ([a9b97049](https://github.com/abe33/atom-color-highlight/commit/a9b97049b8fdbd7ae85e093076178f07f590f25f))
+
 <a name="v1.0.4"></a>
 # v1.0.4 (2014-09-18)
 
