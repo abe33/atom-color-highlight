@@ -18,8 +18,7 @@ class AtomColorHighlightView extends View
     @selections = []
     @markerViews = {}
 
-    @editorSubscriptions = new CompositeDisposable
-    @selectionSubscriptions = new CompositeDisposable
+    @subscriptions = new CompositeDisposable
 
     @observeConfig()
     @setEditorView(editorView)
@@ -55,48 +54,36 @@ class AtomColorHighlightView extends View
 
   subscribeToEditor: ->
     return unless @editor?
-    @editorSubscriptions.add @editor.onDidAddSelection => setImmediate => @updateSelections
+    @subscriptions.add @editor.onDidAddCursor @requestSelectionUpdate
+    @subscriptions.add @editor.onDidRemoveCursor @requestSelectionUpdate
+    @subscriptions.add @editor.onDidChangeCursorPosition @requestSelectionUpdate
+    @subscriptions.add @editor.onDidAddSelection @requestSelectionUpdate
+    @subscriptions.add @editor.onDidRemoveSelection @requestSelectionUpdate
+    @subscriptions.add @editor.onDidChangeSelectionRange @requestSelectionUpdate
+
+  requestSelectionUpdate: =>
+    return if @updateRequested
+
+    @updateRequested = true
+    requestAnimationFrame =>
+      @updateSelections()
+      @updateRequested = false
 
   unsubscribeFromEditor: ->
     return unless @editor?
     @editorSubscriptions.dispose()
 
   updateSelections: =>
-    selections = @editor.getSelections()
-    @unsubscribeFromSelections()
-
-    @subscribeToSelection selection for selection in selections
-
-    @selections = selections
-    @selectionChanged()
-
-  subscribeToSelection: (selection) ->
-    @selectionSubscriptions.add selection.onDidChangeRange @selectionChanged
-    @selectionSubscriptions.add selection.onDidDestroy @updateSelections
-
-  unsubscribeFromSelections:->
-    @selectionSubscriptions.dispose()
-
-  # Tear down any state and detach
-  destroy: ->
-    @editorSubscriptions.dispose()
-    @unsubscribeFromSelections()
-    @destroyAllViews()
-    @detach()
-
-  getMarkerAt: (position) ->
-    for id, view of @markerViews
-      return view if view.marker.bufferMarker.containsPoint(position)
-
-  selectionChanged: =>
     return if @markers?.length is 0
+
+    selections = @editor.getSelections()
 
     viewsToBeDisplayed = _.clone(@markerViews)
 
     for id,view of @markerViews
       view.removeClass('selected')
 
-      for selection in @selections
+      for selection in selections
         range = selection.getScreenRange()
         viewRange = view.getScreenRange()
         if viewRange.intersectsWith(range)
@@ -104,6 +91,16 @@ class AtomColorHighlightView extends View
           delete viewsToBeDisplayed[id]
 
     view.show() for id,view of viewsToBeDisplayed
+
+  # Tear down any state and detach
+  destroy: ->
+    @subscriptions.dispose()
+    @destroyAllViews()
+    @detach()
+
+  getMarkerAt: (position) ->
+    for id, view of @markerViews
+      return view if view.marker.bufferMarker.containsPoint(position)
 
   removeMarkers: ->
     markerView.remove() for id, markerView of @markerViews
