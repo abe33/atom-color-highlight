@@ -1,6 +1,5 @@
 _ = require 'underscore-plus'
 {Emitter, Subscriber} = require 'emissary'
-{OnigRegExp} = require 'oniguruma'
 {CompositeDisposable} = require 'event-kit'
 Color = require 'pigments'
 
