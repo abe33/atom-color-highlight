@@ -1,6 +1,6 @@
 ### SVG Colors (case insensitive)
 
-  * orangeRed
+  * orangered
   * YellowGreen
   * GOLD
 
@@ -43,9 +43,9 @@
 
 ### Basic Sass/Stylus color functions
 
-  * dark green: `darken(#00ff00, 50%)`
-  * light green: `lighten(#00ff00, 50%)`
-  * transparent dark green: `transparentize(darken(#00ff00, 50%), 0.5)`
+  * dark green: `darken(#00ff00, 20%)`
+  * light green: `lighten(#00ff00, 20%)`
+  * transparent dark green: `transparentize(darken(#00ff00, 20%), 0.5)`
 
 ### Hexadecimal integer colors
 
