@@ -5,12 +5,24 @@ AtomColorHighlightEditor = null
 class AtomColorHighlight
   Emitter.includeInto(this)
 
-  configDefaults:
-    markersAtEndOfLine: false
-    hideMarkersInComments: false
-    hideMarkersInStrings: false
-    dotMarkersSize: 16
-    dotMarkersSpacing: 4
+  config:
+    markersAtEndOfLine:
+      type: 'boolean'
+      default: false
+    hideMarkersInComments:
+      type: 'boolean'
+      default: false
+    hideMarkersInStrings:
+      type: 'boolean'
+      default: false
+    dotMarkersSize:
+      type: 'number'
+      default: 16
+      min: 2
+    dotMarkersSpacing:
+      type: 'number'
+      default: 4
+      min: 0
 
   editors: {}
   activate: (state) ->
