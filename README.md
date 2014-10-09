@@ -37,12 +37,11 @@ You can register a new color expression using the `Color.addExpression` method.
 atomColorHighlight = atom.packages.getLoadedPackage 'atom-color-highlight'
 Color = require(atomColorHighlight.path + '/lib/atom-color-highlight-model').Color
 
-Color.addExpression 'name', 'oniguruma regexp', (color, expression) ->
+Color.addExpression 'name', 'regexp', (color, expression) ->
   # modify color using data extracted from expression
 ```
 
-The first argument is a string that match the new expression using
-[Oniguruma](https://github.com/atom/node-oniguruma) regular expressions.
+The first argument is a string that match the new expression using regular expressions.
 This string will be used to match the expression both when scanning the
 buffer and when creating a `Color` object for the various matches.
 
