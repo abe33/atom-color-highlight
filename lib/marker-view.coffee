@@ -45,10 +45,10 @@ class MarkerView
     bufferRange = @editor.bufferRangeForScreenRange({start, end})
     text = @editor.getTextInRange(bufferRange)
 
-    css = @editorView.pixelPositionForScreenPosition(start)
+    css = @editor.pixelPositionForScreenPosition(start)
     css.height = lineHeight * rows
     if end
-      css.width = @editorView.pixelPositionForScreenPosition(end).left - css.left
+      css.width = @editor.pixelPositionForScreenPosition(end).left - css.left
     else
       css.right = 0
 

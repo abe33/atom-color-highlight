@@ -1,4 +1,3 @@
-{EditorView} = require 'atom'
 {Emitter} = require 'emissary'
 AtomColorHighlightEditor = null
 
