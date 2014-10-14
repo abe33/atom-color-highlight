@@ -1,3 +1,10 @@
+<a name="v2.0.1"></a>
+# v2.0.1 (2014-10-14)
+
+## :bug: Bug Fixes
+
+- Fix engine version ([52be0d14](https://github.com/abe33/atom-color-highlight/commit/52be0d145ee1ec610d5caaf365293bbf49942685))
+
 <a name="v2.0.0"></a>
 # v2.0.0 (2014-10-14)
 
