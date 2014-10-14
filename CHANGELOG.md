@@ -1,3 +1,16 @@
+<a name="v2.0.0"></a>
+# v2.0.0 (2014-10-14)
+
+## :sparkles: Features
+
+- Add a setting to exclude specified grammar from highlighting ([724ff88a](https://github.com/abe33/atom-color-highlight/commit/724ff88aeb0d6d891798e92cec295c91140e8415))  <br>By setting a list of grammar scopes in the `excludedGrammars` setting,
+  the corresponding files won’t display any color highlights.
+
+## :bug: Bug Fixes
+
+- Fix deprecations ([6a80af02](https://github.com/abe33/atom-color-highlight/commit/6a80af021e33dad4416854b183fa679a80f76ec7))
+- Fix atom freeze when canceling big multiple selections ([10fb9bfa](https://github.com/abe33/atom-color-highlight/commit/10fb9bfa6a1bd95ba0a25c5a3b5124f1e39b7b3a))
+
 <a name="v1.0.5"></a>
 # v1.0.5 (2014-10-03)
 
