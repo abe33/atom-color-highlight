@@ -22,10 +22,18 @@ class AtomColorHighlight
       type: 'number'
       default: 4
       min: 0
+    excludedGrammars:
+      type: 'array'
+      default: []
+      description: "Prevents files matching the specified grammars from having their colors highligted. Changing this setting may need a restart to take effect."
+      items:
+        type: 'string'
 
   editors: {}
   activate: (state) ->
     atom.workspaceView.eachEditorView (editor) =>
+      return if editor.editor.getGrammar().scopeName in atom.config.get('atom-color-highlight.excludedGrammars')
+
       AtomColorHighlightEditor ||= require './atom-color-highlight-editor'
 
       colorEditor = new AtomColorHighlightEditor(editor)
