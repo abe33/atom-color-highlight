@@ -7,7 +7,7 @@
   "repository": "https://github.com/abe33/atom-color-highlight",
   "license": "MIT",
   "engines": {
-    "atom": ">=0.126.0"
+    "atom": ">=0.136.0"
   },
   "devDependencies": {
     "qq": "*"
