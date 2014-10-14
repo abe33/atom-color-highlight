@@ -44,15 +44,21 @@ class MarkerMixin extends Mixin
   hidden: ->
     @hiddenDueToComment() or @hiddenDueToString()
 
+  getScope: (bufferRange) ->
+    if @editor.displayBuffer.scopesForBufferPosition?
+      @editor.displayBuffer.scopesForBufferPosition(bufferRange.start).join(';')
+    else
+      @editor.displayBuffer.scopeDescriptorForBufferPosition(bufferRange.start).join(';')
+
   hiddenDueToComment: ->
     bufferRange = @getBufferRange()
-    scope = @editor.displayBuffer.scopesForBufferPosition(bufferRange.start).join(';')
+    scope = @getScope(bufferRange)
 
     atom.config.get('atom-color-highlight.hideMarkersInComments') and scope.match(/comment/)?
 
   hiddenDueToString: ->
     bufferRange = @getBufferRange()
-    scope = @editor.displayBuffer.scopesForBufferPosition(bufferRange.start).join(';')
+    scope = @getScope(bufferRange)
     atom.config.get('atom-color-highlight.hideMarkersInStrings') and scope.match(/string/)?
 
   getColor: -> @marker.bufferMarker.properties.cssColor
