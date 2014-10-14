@@ -1,3 +1,10 @@
+<a name="v2.0.2"></a>
+# v2.0.2 (2014-10-14)
+
+## :bug: Bug Fixes
+
+- Fix access to a removed private method ([f12d0a2f](https://github.com/abe33/atom-color-highlight/commit/f12d0a2f55eae586fec825966d3764f64783c14c))
+
 <a name="v2.0.1"></a>
 # v2.0.1 (2014-10-14)
 
