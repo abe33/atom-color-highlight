@@ -1,3 +1,10 @@
+<a name="v2.0.3"></a>
+# v2.0.3 (2014-10-15)
+
+## :bug: Bug Fixes
+
+- Fix issue with variable names in pigments ([51e4a719](https://github.com/abe33/atom-color-highlight/commit/51e4a7191cab8d897cd29367d9029dff252dc071))
+
 <a name="v2.0.2"></a>
 # v2.0.2 (2014-10-14)
 
