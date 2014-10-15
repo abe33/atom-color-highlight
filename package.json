@@ -16,7 +16,7 @@
     "q": "1.x",
     "emissary": "1.3.x",
     "underscore-plus": "1.x",
-    "pigments": "3.x",
+    "pigments": ">= 3.0.1",
     "mixto": "1.x",
     "event-kit": "0.7.x"
   }
