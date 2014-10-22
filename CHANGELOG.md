@@ -1,3 +1,10 @@
+<a name="v2.0.4"></a>
+# v2.0.4 (2014-10-22)
+
+## :bug: Bug Fixes
+
+- Fix broken access to scope in latest Atom ([ffb4468d](https://github.com/abe33/atom-color-highlight/commit/ffb4468d196b93edf11cd0bcea21b26158aad1d0))
+
 <a name="v2.0.3"></a>
 # v2.0.3 (2014-10-15)
 
