@@ -48,7 +48,11 @@ class MarkerMixin extends Mixin
     if @editor.displayBuffer.scopesForBufferPosition?
       @editor.displayBuffer.scopesForBufferPosition(bufferRange.start).join(';')
     else
-      @editor.displayBuffer.scopeDescriptorForBufferPosition(bufferRange.start).join(';')
+      descriptor = @editor.displayBuffer.scopeDescriptorForBufferPosition(bufferRange.start)
+      if descriptor.join?
+        descriptor.join(';')
+      else
+        descriptor.scopes.join(';')
 
   hiddenDueToComment: ->
     bufferRange = @getBufferRange()
