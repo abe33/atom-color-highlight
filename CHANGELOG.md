@@ -1,3 +1,11 @@
+<a name="v2.0.5"></a>
+# v2.0.5 (2014-11-14)
+
+## :bug: Bug Fixes
+
+- Rebuild markers on editor config changes ([845b8d65](https://github.com/abe33/atom-color-highlight/commit/845b8d6537538fc9036eb7141bcfa19b3e4d6e9a), [#32](https://github.com/abe33/atom-color-highlight/issues/32))
+- Fix region styles when shadow DOM is enabled ([06c0f4e2](https://github.com/abe33/atom-color-highlight/commit/06c0f4e2aac3f466cecc56bc47ffa5929015568b))
+
 <a name="v2.0.4"></a>
 # v2.0.4 (2014-10-22)
 
