@@ -6,73 +6,76 @@
   z-index: 2 !important;
 }
 
-.atom-color-highlight {
-  z-index: 1;
-  position: relative;
+.editor, atom-text-editor, atom-text-editor::shadow, :host {
 
-  .dot-marker {
-    display: block;
-    position: absolute;
-    border-radius: 50%;
-    margin-top: 2px;
-    z-index: -2;
+  .atom-color-highlight {
+    z-index: 1;
+    position: relative;
 
-    &.selected {
-      .selector {
-        position: absolute;
-        height: 0;
-        width: 0;
-        border: 6px solid transparent;
-        border-bottom-color: @background-color-info;
-        left: 50%;
-        margin-left: -6px;
-        top: 100%;
+    .dot-marker {
+      display: block;
+      position: absolute;
+      border-radius: 50%;
+      margin-top: 2px;
+      z-index: -2;
+
+      &.selected {
+        .selector {
+          position: absolute;
+          height: 0;
+          width: 0;
+          border: 6px solid transparent;
+          border-bottom-color: @background-color-info;
+          left: 50%;
+          margin-left: -6px;
+          top: 100%;
+        }
       }
     }
-  }
 
-  .marker.selected {
-    display: none;
-  }
+    .marker.selected {
+      display: none;
+    }
 
-  .region {
-    -webkit-font-smoothing: antialiased;
-    position: absolute;
-    padding: 0px 2px;
-    margin-left: -1px;
-    display: inline-block;
-    line-height: inherit;
-    box-sizing: content-box;
-    border-radius: 2px;
-    z-index: -2;
-    white-space: pre;
-  }
+    .region {
+      -webkit-font-smoothing: antialiased;
+      position: absolute;
+      padding: 0px 2px;
+      margin-left: -1px;
+      display: inline-block;
+      line-height: inherit;
+      box-sizing: content-box;
+      border-radius: 2px;
+      z-index: -2;
+      white-space: pre;
+    }
 
-  .dot-marker:before,
-  .region:before {
-    content: '';
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: url(atom://atom-color-highlight/resources/transparent-background.png);
-    top: 0;
-    left: 0;
-    z-index: -1;
-    border-radius: inherit;
-  }
+    .dot-marker:before,
+    .region:before {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url(atom://atom-color-highlight/resources/transparent-background.png);
+      top: 0;
+      left: 0;
+      z-index: -1;
+      border-radius: inherit;
+    }
 
-  .dot-marker:after,
-  .region:after {
-    content: '';
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: inherit;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    border-radius: inherit;
+    .dot-marker:after,
+    .region:after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      border-radius: inherit;
+    }
   }
 }
