@@ -32,6 +32,8 @@ class AtomColorHighlightView extends View
     @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.markersAtEndOfLine', @rebuildMarkers
     @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.dotMarkersSize', @rebuildMarkers
     @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.dotMarkersSpading', @rebuildMarkers
+    @subscriptions.add @asDisposable atom.config.observe 'editor.lineHeight', @rebuildMarkers
+    @subscriptions.add @asDisposable atom.config.observe 'editor.fontSize', @rebuildMarkers
 
   setModel: (model) ->
     @unsubscribeFromModel()
