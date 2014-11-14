@@ -1,7 +1,7 @@
 _ = require 'underscore-plus'
 {View, $} = require 'atom'
 {Subscriber} = require 'emissary'
-{CompositeDisposable} = require 'event-kit'
+{CompositeDisposable, Disposable} = require 'event-kit'
 
 MarkerView = require './marker-view'
 DotMarkerView = require './dot-marker-view'
@@ -27,11 +27,11 @@ class AtomColorHighlightView extends View
     @updateSelections()
 
   observeConfig: ->
-    atom.config.observe 'atom-color-highlight.hideMarkersInComments', @rebuildMarkers
-    atom.config.observe 'atom-color-highlight.hideMarkersInStrings', @rebuildMarkers
-    atom.config.observe 'atom-color-highlight.markersAtEndOfLine', @rebuildMarkers
-    atom.config.observe 'atom-color-highlight.dotMarkersSize', @rebuildMarkers
-    atom.config.observe 'atom-color-highlight.dotMarkersSpading', @rebuildMarkers
+    @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.hideMarkersInComments', @rebuildMarkers
+    @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.hideMarkersInStrings', @rebuildMarkers
+    @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.markersAtEndOfLine', @rebuildMarkers
+    @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.dotMarkersSize', @rebuildMarkers
+    @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.dotMarkersSpading', @rebuildMarkers
 
   setModel: (model) ->
     @unsubscribeFromModel()
@@ -156,3 +156,5 @@ class AtomColorHighlightView extends View
   destroyAllViews: ->
     @empty()
     @markerViews = {}
+
+  asDisposable: (subscription) -> new Disposable -> subscription.off()
