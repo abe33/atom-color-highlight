@@ -52,6 +52,7 @@ class AtomColorHighlight
     @modelForEditor(editorView.getEditor()) if editorView?.hasClass('editor')
 
   modelForEditor: (editor) -> @editors[editor.id]?.getActiveModel()
+
   viewForEditor: (editor) -> @editors[editor.id]?.getactiveView()
 
   deactivate: ->
