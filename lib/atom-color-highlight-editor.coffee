@@ -13,21 +13,17 @@ class AtomColorHighlightEditor
 
     @subscriptions = new CompositeDisposable
 
-    @models = {}
-    @views = {}
+    @model = null
+    @view = null
 
     @subscriptions.add @editorView.getModel().onDidChangePath @subscribeToBuffer
     @subscriptions.add @editorView.getModel().getBuffer().onDidDestroy @destroy
 
     @subscribeToBuffer()
 
-  getActiveModel: ->
-    path = @buffer.getPath()
-    @models[path]
+  getActiveModel: -> @model
 
-  getActiveView: ->
-    path = @buffer.getPath()
-    @views[path]
+  getActiveView: -> @view
 
   destroy: =>
     @unsubscribe()
@@ -37,18 +33,15 @@ class AtomColorHighlightEditor
     @unsubscribeFromBuffer()
 
     if @buffer = @editor.getBuffer()
-      model = @models[@buffer.getPath()] =
-        new AtomColorHighlightModel(@editor, @buffer)
-
-      view = @views[@buffer.getPath()] =
-        new AtomColorHighlightView(model, @editorView)
+      @model = new AtomColorHighlightModel(@editor, @buffer)
+      @view = new AtomColorHighlightView(@model, @editorView)
 
       if atom.config.get('core.useReactEditor')
-        @editorView.find('.lines').append view
+        @editorView.find('.lines').append @view
       else
-        @editorView.overlayer.append view
+        @editorView.overlayer.append @view
 
-      model.init()
+      @model.init()
 
   unsubscribeFromBuffer: ->
     if @buffer?
@@ -56,12 +49,6 @@ class AtomColorHighlightEditor
       @removeView()
       @buffer = null
 
-  removeView: ->
-    path = @buffer.getPath()
-    @views[path]?.destroy()
-    delete @views[path]
+  removeView: -> @view?.destroy()
 
-  removeModel: ->
-    path = @buffer.getPath()
-    @models[path]?.dispose()
-    delete @models[path]
+  removeModel: -> @model?.dispose()
