@@ -1,3 +1,10 @@
+<a name="v2.0.6"></a>
+# v2.0.6 (2014-11-17)
+
+## :memo: Documentation
+
+- Add a more detailed description of the `excludedGrammars` setting.
+
 <a name="v2.0.5"></a>
 # v2.0.5 (2014-11-14)
 
