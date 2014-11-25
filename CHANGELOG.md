@@ -1,3 +1,10 @@
+<a name="v2.0.9"></a>
+# v2.0.9 (2014-11-26)
+
+## :bug: Bug Fixes
+
+- Prevent errors when accessing finder ([a0eba38d](https://github.com/abe33/atom-color-highlight/commit/a0eba38dd4592e35e5b63950c096ab9fb3ea1f67), [#57](https://github.com/abe33/atom-color-highlight/issues/57))
+
 <a name="v2.0.8"></a>
 # v2.0.8 (2014-11-25)
 
