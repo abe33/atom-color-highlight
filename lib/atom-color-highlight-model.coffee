@@ -15,7 +15,7 @@ class AtomColorHighlightModel
 
   constructor: (@editor, @buffer) ->
     @subscriptions = new CompositeDisposable
-    atom.packages.activatePackage('project-palette-finder').then (pack) =>
+    try atom.packages.activatePackage('project-palette-finder').then (pack) =>
       finder = pack.mainModule
       @constructor.Color = Color = finder.Color if finder?
       @subscribe finder, 'palette:ready', @update
