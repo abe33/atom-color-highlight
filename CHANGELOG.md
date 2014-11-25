@@ -1,3 +1,10 @@
+<a name="v2.0.8"></a>
+# v2.0.8 (2014-11-25)
+
+## :bug: Bug Fixes
+
+- Change how finder package is required in models ([147647a2](https://github.com/abe33/atom-color-highlight/commit/147647a250a9aed6a39a04813af210dc73142199))
+
 <a name="v2.0.7"></a>
 # v2.0.7 (2014-11-25)
 
