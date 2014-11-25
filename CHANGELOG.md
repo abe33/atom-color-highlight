@@ -1,3 +1,10 @@
+<a name="v2.0.7"></a>
+# v2.0.7 (2014-11-25)
+
+## :package: Dependencies
+
+- Upgrade to pigments v3.0.0.
+
 <a name="v2.0.6"></a>
 # v2.0.6 (2014-11-17)
 
