@@ -14,12 +14,11 @@ class AtomColorHighlightModel
   @bufferRange: [[0,0], [Infinity,Infinity]]
 
   constructor: (@editor, @buffer) ->
-    finder = atom.packages.getLoadedPackage('project-palette-finder')
     @subscriptions = new CompositeDisposable
-    if finder?
-      module = require(finder.path)
-      Color = module.constructor.Color
-      @subscribe module, 'palette:ready', @update
+    atom.packages.activatePackage('project-palette-finder').then (pack) =>
+      finder = pack.mainModule
+      @constructor.Color = Color = finder.Color if finder?
+      @subscribe finder, 'palette:ready', @update
 
     @constructor.Color = Color
 
