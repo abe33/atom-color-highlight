@@ -44,7 +44,6 @@ class DotMarkerView
     line = @editor.lineTextForScreenRow(range.start.row)
     lineLength = line.length
     position = row: range.start.row, column: lineLength
-    console.log range.start.row, range.end.row, lineLength, line
     {top, left} = @editorView.pixelPositionForScreenPosition(position)
     @element.style.top = top + 'px'
     @element.style.width = size + 'px'
