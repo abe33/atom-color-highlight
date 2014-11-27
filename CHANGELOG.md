@@ -1,3 +1,11 @@
+<a name="v2.0.11"></a>
+# v2.0.11 (2014-11-27)
+
+## :bug: Bug Fixes
+
+- Remove remaining logs ([73544811](https://github.com/abe33/atom-color-highlight/commit/73544811e7a4669d24ebafc359e9d7558936b4ab), [#58](https://github.com/abe33/atom-color-highlight/issues/58))
+
+
 <a name="v2.0.10"></a>
 # v2.0.10 (2014-11-26)
 
