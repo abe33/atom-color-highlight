@@ -27,13 +27,13 @@ class AtomColorHighlightView extends View
     @updateSelections()
 
   observeConfig: ->
-    @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.hideMarkersInComments', @rebuildMarkers
-    @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.hideMarkersInStrings', @rebuildMarkers
-    @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.markersAtEndOfLine', @rebuildMarkers
-    @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.dotMarkersSize', @rebuildMarkers
-    @subscriptions.add @asDisposable atom.config.observe 'atom-color-highlight.dotMarkersSpading', @rebuildMarkers
-    @subscriptions.add @asDisposable atom.config.observe 'editor.lineHeight', @rebuildMarkers
-    @subscriptions.add @asDisposable atom.config.observe 'editor.fontSize', @rebuildMarkers
+    @subscriptions.add atom.config.observe 'atom-color-highlight.hideMarkersInComments', @rebuildMarkers
+    @subscriptions.add atom.config.observe 'atom-color-highlight.hideMarkersInStrings', @rebuildMarkers
+    @subscriptions.add atom.config.observe 'atom-color-highlight.markersAtEndOfLine', @rebuildMarkers
+    @subscriptions.add atom.config.observe 'atom-color-highlight.dotMarkersSize', @rebuildMarkers
+    @subscriptions.add atom.config.observe 'atom-color-highlight.dotMarkersSpading', @rebuildMarkers
+    @subscriptions.add atom.config.observe 'editor.lineHeight', @rebuildMarkers
+    @subscriptions.add atom.config.observe 'editor.fontSize', @rebuildMarkers
 
   setModel: (model) ->
     @unsubscribeFromModel()
@@ -41,7 +41,6 @@ class AtomColorHighlightView extends View
     @subscribeToModel()
 
   setEditorView: (editorView) ->
-    @unsubscribeFromEditor()
     @editorView = editorView
     {@editor} = @editorView
     @subscribeToEditor()
@@ -56,12 +55,15 @@ class AtomColorHighlightView extends View
 
   subscribeToEditor: ->
     return unless @editor?
+    @subscriptions.add @editor.onDidDestroy @editorDestroyed
     @subscriptions.add @editor.onDidAddCursor @requestSelectionUpdate
     @subscriptions.add @editor.onDidRemoveCursor @requestSelectionUpdate
     @subscriptions.add @editor.onDidChangeCursorPosition @requestSelectionUpdate
     @subscriptions.add @editor.onDidAddSelection @requestSelectionUpdate
     @subscriptions.add @editor.onDidRemoveSelection @requestSelectionUpdate
     @subscriptions.add @editor.onDidChangeSelectionRange @requestSelectionUpdate
+
+  editorDestroyed: -> @destroy()
 
   requestSelectionUpdate: =>
     return if @updateRequested
@@ -70,10 +72,6 @@ class AtomColorHighlightView extends View
     requestAnimationFrame =>
       @updateSelections()
       @updateRequested = false
-
-  unsubscribeFromEditor: ->
-    return unless @editor?
-    @editorSubscriptions.dispose()
 
   updateSelections: =>
     return if @markers?.length is 0
@@ -96,6 +94,7 @@ class AtomColorHighlightView extends View
 
   # Tear down any state and detach
   destroy: ->
+    @unsubscribeFromModel()
     @subscriptions.dispose()
     @destroyAllViews()
     @detach()
@@ -158,5 +157,3 @@ class AtomColorHighlightView extends View
   destroyAllViews: ->
     @empty()
     @markerViews = {}
-
-  asDisposable: (subscription) -> new Disposable -> subscription.off()
