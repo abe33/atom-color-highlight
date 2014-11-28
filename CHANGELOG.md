@@ -1,3 +1,11 @@
+<a name="v2.0.12"></a>
+# v2.0.12 (2014-11-28)
+
+## :bug: Bug Fixes
+
+- Fix error raised when closing the last editor of a pane ([8ee359eb](https://github.com/abe33/atom-color-highlight/commit/8ee359ebb17b96cfae8dc2174d22f2d2c102198d))
+
+
 <a name="v2.0.11"></a>
 # v2.0.11 (2014-11-27)
 
