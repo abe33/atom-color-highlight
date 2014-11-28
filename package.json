@@ -18,6 +18,7 @@
     "underscore-plus": "1.x",
     "pigments": ">= 3.0.4",
     "mixto": "1.x",
-    "event-kit": "0.7.x"
+    "event-kit": "0.7.x",
+    "space-pen": "^4"
   }
 }

@@ -1,5 +1,5 @@
 _ = require 'underscore-plus'
-{View, $} = require 'atom'
+{View, $} = require 'space-pen'
 {Subscriber} = require 'emissary'
 {CompositeDisposable, Disposable} = require 'event-kit'
 
