@@ -1,3 +1,10 @@
+<a name="v2.0.13"></a>
+# v2.0.13 (2014-11-30)
+
+## :bug: Bug Fixes
+
+- Fix error raised on view destruction ([58ab0830](https://github.com/abe33/atom-color-highlight/commit/58ab0830f71f18d0c7946868eb8da2a1b5b82d4c), [#60](https://github.com/abe33/atom-color-highlight/issues/60))
+
 <a name="v2.0.12"></a>
 # v2.0.12 (2014-11-28)
 
