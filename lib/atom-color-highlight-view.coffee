@@ -63,15 +63,16 @@ class AtomColorHighlightView extends View
     @subscriptions.add @editor.onDidRemoveSelection @requestSelectionUpdate
     @subscriptions.add @editor.onDidChangeSelectionRange @requestSelectionUpdate
 
-  editorDestroyed: -> @destroy()
+  editorDestroyed: => @destroy()
 
   requestSelectionUpdate: =>
     return if @updateRequested
 
     @updateRequested = true
     requestAnimationFrame =>
-      @updateSelections()
       @updateRequested = false
+      return if @editor.getBuffer().isDestroyed()
+      @updateSelections()
 
   updateSelections: =>
     return if @markers?.length is 0
