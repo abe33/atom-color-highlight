@@ -35,10 +35,6 @@ describe "AtomColorHighlightEditor", ->
     waitsForPromise ->
       atom.packages.activatePackage('atom-color-highlight')
 
-    runs ->
-      atomPackage = require atom.packages.getLoadedPackage('atom-color-highlight').path
-      highlight = atomPackage.editors[editor.id]
-
   describe 'once the package is toggled', ->
     it 'retrieves the editor content', ->
       markers = null
