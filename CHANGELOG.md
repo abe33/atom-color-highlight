@@ -1,3 +1,10 @@
+<a name="v2.0.14"></a>
+# v2.0.14 (2014-12-02)
+
+## :bug: Bug Fixes
+
+- Fix palette event deprecation ([7e905df5](https://github.com/abe33/atom-color-highlight/commit/7e905df5947a3278d9ad19e3f4b768d9f237f869))
+
 <a name="v2.0.13"></a>
 # v2.0.13 (2014-11-30)
 
