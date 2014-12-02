@@ -1,12 +1,11 @@
 _ = require 'underscore-plus'
-{Emitter, Subscriber} = require 'emissary'
+{Emitter} = require 'emissary'
 {CompositeDisposable} = require 'event-kit'
 Color = require 'pigments'
 
 module.exports =
 class AtomColorHighlightModel
   Emitter.includeInto(this)
-  Subscriber.includeInto(this)
 
   @Color: Color
 
@@ -18,7 +17,7 @@ class AtomColorHighlightModel
     try atom.packages.activatePackage('project-palette-finder').then (pack) =>
       finder = pack.mainModule
       @constructor.Color = Color = finder.Color if finder?
-      @subscribe finder, 'palette:ready', @update
+      @subscriptions.add finder.onDidUpdatePalette @update
 
     @constructor.Color = Color
 
@@ -44,7 +43,6 @@ class AtomColorHighlightModel
       @update()
 
   dispose: ->
-    @unsubscribe()
     @unsubscribeFromBuffer() if @buffer?
 
   eachColor: (block) ->
