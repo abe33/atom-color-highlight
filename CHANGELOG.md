@@ -1,3 +1,10 @@
+<a name="2.0.15"></a>
+# 2.0.15 (2014-12-30)
+
+## :bug: Bug Fixes
+
+- Fix remaining deprecations ([c186b932](https://github.com/abe33/atom-color-highlight/commit/c186b93207d5a516cd7d425e8abbf306385e3135))
+
 <a name="v2.0.14"></a>
 # v2.0.14 (2014-12-02)
 
