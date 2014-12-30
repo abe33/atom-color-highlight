@@ -48,12 +48,12 @@ describe "AtomColorHighlightEditor", ->
       runs ->
         expect(markers.length).toEqual(10)
 
-    describe 'when content is removed from the editor', ->
-      beforeEach ->
-        editor.setText('')
+  describe 'when content is removed from the editor', ->
+    beforeEach ->
+      editor.setText('')
 
-        waitsFor ->
-          (markers = editorElement.shadowRoot.querySelectorAll('.marker')).length isnt 9
+      waitsFor ->
+        (markers = editorElement.shadowRoot.querySelectorAll('.marker')).length isnt 9
 
-      it 'removes all the markers in the view', ->
-        expect(markers.length).toEqual(0)
+    it 'removes all the markers in the view', ->
+      expect(markers.length).toEqual(0)
