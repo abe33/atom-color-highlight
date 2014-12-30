@@ -3,6 +3,7 @@
 
 ## :bug: Bug Fixes
 
+- Fix broken update check method ([f1f9c992](https://github.com/abe33/atom-color-highlight/commit/f1f9c992197a081cb7489fdef93293d4a8fc8df8))
 - Fix remaining deprecations ([c186b932](https://github.com/abe33/atom-color-highlight/commit/c186b93207d5a516cd7d425e8abbf306385e3135))
 
 <a name="v2.0.14"></a>
