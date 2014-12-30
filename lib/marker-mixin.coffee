@@ -24,7 +24,7 @@ class MarkerMixin extends Mixin
     @subscriptions ?= new CompositeDisposable
     @subscriptions.add @marker.onDidChange (e) => @onMarkerChanged(e)
     @subscriptions.add @marker.onDidDestroy (e) => @remove(e)
-    @subscribe @editor, 'editor:display-updated', (e) => @updateDisplay(e)
+    @subscriptions.add @editor.onDidChange (e) => @updateDisplay(e)
 
   onMarkerChanged: ({isValid}) ->
     @updateNeeded = isValid
@@ -35,11 +35,12 @@ class MarkerMixin extends Mixin
 
     oldScreenRange = @oldScreenRange
     newScreenRange = @getScreenRange()
+
     @oldScreenRange = newScreenRange
     @intersectsRenderedScreenRows(oldScreenRange) or @intersectsRenderedScreenRows(newScreenRange)
 
   intersectsRenderedScreenRows: (range) ->
-    range.intersectsRowRange(@editor.firstRenderedScreenRow, @editor.lastRenderedScreenRow)
+    range.intersectsRowRange(@editor.getFirstVisibleScreenRow(), @editor.getLastVisibleScreenRow())
 
   hidden: ->
     @hiddenDueToComment() or @hiddenDueToString()

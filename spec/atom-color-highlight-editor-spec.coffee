@@ -40,7 +40,7 @@ describe "AtomColorHighlightEditor", ->
     beforeEach ->
       editor.moveToBottom()
       editor.insertText(' red')
-      
+
     it 'updates the markers in the view', ->
       waitsFor ->
         (markers = editorElement.shadowRoot.querySelectorAll('.region')).length > 9
