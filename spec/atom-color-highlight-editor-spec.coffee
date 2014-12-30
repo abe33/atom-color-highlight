@@ -1,24 +1,22 @@
-{WorkspaceView} = require 'atom'
-
-editorView = null
-editor = null
-buffer = null
-highlight = null
-atomPackage = null
 
 describe "AtomColorHighlightEditor", ->
+  [workspaceElement, editor, editorElement, buffer, markers] = []
+
   beforeEach ->
+    waitsForPromise -> atom.workspace.open('sample.js')
+
     waitsForPromise ->
-      atom.workspaceView = new WorkspaceView
-      atom.workspaceView.open('sample.js')
+      atom.packages.activatePackage('atom-color-highlight')
 
     runs ->
-      atom.workspaceView.attachToDom()
-      editorView = atom.workspaceView.getActiveView()
-      editor = editorView.getEditor()
+      workspaceElement = atom.views.getView(atom.workspace)
+      jasmine.attachToDOM(workspaceElement)
+
+      editor = atom.workspace.getActiveTextEditor()
+      editorElement = atom.views.getView(editor)
       buffer = editor.getBuffer()
 
-      editorView.setText("""
+      editor.setText("""
       $color: #f0f
       $other_color: #ff0
 
@@ -31,15 +29,31 @@ describe "AtomColorHighlightEditor", ->
       $color_red_dark: darken($color_red, 10%)
       $color_red_darker: darken($color_red, 20%)
       """)
+    waitsFor ->
+      (markers = editorElement.shadowRoot.querySelectorAll('.marker')).length > 0
 
-    waitsForPromise ->
-      atom.packages.activatePackage('atom-color-highlight')
+  it 'retrieves the editor content', ->
+    runs ->
+      expect(markers.length).toEqual(9)
 
-  describe 'once the package is toggled', ->
-    it 'retrieves the editor content', ->
-      markers = null
+  describe 'when content is added to the editor', ->
+    beforeEach ->
+      editor.moveToBottom()
+      editor.insertText(' red')
+
+    it 'updates the markers in the view', ->
       waitsFor ->
-        (markers = atom.workspaceView.find('.marker')).length > 0
+        (markers = editorElement.shadowRoot.querySelectorAll('.marker')).length > 9
 
       runs ->
-        expect(markers.length).toEqual(9)
+        expect(markers.length).toEqual(10)
+
+    describe 'when content is removed from the editor', ->
+      beforeEach ->
+        editor.setText('')
+
+        waitsFor ->
+          (markers = editorElement.shadowRoot.querySelectorAll('.marker')).length isnt 9
+
+      it 'removes all the markers in the view', ->
+        expect(markers.length).toEqual(0)

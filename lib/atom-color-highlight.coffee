@@ -31,14 +31,15 @@ class AtomColorHighlight
 
   editors: {}
   activate: (state) ->
-    atom.workspaceView.eachEditorView (editor) =>
-      return if editor.editor.getGrammar().scopeName in atom.config.get('atom-color-highlight.excludedGrammars')
+    atom.workspace.observeTextEditors (editor) =>
+
+      return if editor.getGrammar().scopeName in atom.config.get('atom-color-highlight.excludedGrammars')
 
       AtomColorHighlightEditor ||= require './atom-color-highlight-editor'
 
       colorEditor = new AtomColorHighlightEditor(editor)
 
-      @editors[editor.editor.id] = colorEditor
+      @editors[editor.id] = colorEditor
       @emit 'color-highlight:editor-created', colorEditor
 
   eachColorHighlightEditor: (callback) ->

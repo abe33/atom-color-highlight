@@ -30,7 +30,7 @@ class AtomColorHighlightModel
       @updateMarkers()
 
   subscribeToBuffer: ->
-    @subscriptions.add @buffer.onDidStopChanging @update
+    @subscriptions.add @editor.onDidChange @update
 
   unsubscribeFromBuffer: ->
     @subscriptions.dispose()

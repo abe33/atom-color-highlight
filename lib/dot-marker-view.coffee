@@ -1,4 +1,4 @@
-{View, $} = require 'atom'
+{View, $} = require 'space-pen'
 {Subscriber} = require 'emissary'
 MarkerMixin = require './marker-mixin'
 
@@ -7,8 +7,7 @@ class DotMarkerView
   Subscriber.includeInto(this)
   MarkerMixin.includeInto(this)
 
-  constructor: ({@editorView, @marker, @markersByRows}) ->
-    @editor = @editorView.editor
+  constructor: ({@editorElement, @editor, @marker, @markersByRows}) ->
     @element = document.createElement('div')
     @element.innerHTML = '<div class="selector"/>'
     @element.className = 'dot-marker color-highlight'
@@ -44,7 +43,7 @@ class DotMarkerView
     line = @editor.lineTextForScreenRow(range.start.row)
     lineLength = line.length
     position = row: range.start.row, column: lineLength
-    {top, left} = @editorView.pixelPositionForScreenPosition(position)
+    {top, left} = @editor.pixelPositionForScreenPosition(position)
     @element.style.top = top + 'px'
     @element.style.width = size + 'px'
     @element.style.height = size + 'px'

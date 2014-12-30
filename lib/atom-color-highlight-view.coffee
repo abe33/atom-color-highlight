@@ -13,7 +13,7 @@ class AtomColorHighlightView extends View
   @content: ->
     @div class: 'atom-color-highlight'
 
-  constructor: (model, editorView) ->
+  constructor: (model, @editor, editorElement) ->
     super
     @selections = []
     @markerViews = {}
@@ -21,7 +21,7 @@ class AtomColorHighlightView extends View
     @subscriptions = new CompositeDisposable
 
     @observeConfig()
-    @setEditorView(editorView)
+    @setEditorView(editorElement)
     @setModel(model)
 
     @updateSelections()
@@ -40,9 +40,8 @@ class AtomColorHighlightView extends View
     @model = model
     @subscribeToModel()
 
-  setEditorView: (editorView) ->
-    @editorView = editorView
-    {@editor} = @editorView
+  setEditorView: (editorElement) ->
+    @editorElement = editorElement
     @subscribeToEditor()
 
   subscribeToModel: ->
@@ -121,10 +120,10 @@ class AtomColorHighlightView extends View
           sortedMarkers.push @markerViews[marker.id]
       else
         if useDots
-          markerView = new DotMarkerView({@editorView, marker, markersByRows})
+          markerView = new DotMarkerView({@editorElement, @editor, marker, markersByRows})
           sortedMarkers.push markerView
         else
-          markerView = new MarkerView({@editorView, marker})
+          markerView = new MarkerView({@editorElement, @editor, marker})
         @append(markerView.element)
         @markerViews[marker.id] = markerView
 
@@ -148,9 +147,9 @@ class AtomColorHighlightView extends View
       @markerViews[marker.id].remove() if @markerViews[marker.id]?
 
       if atom.config.get('atom-color-highlight.markersAtEndOfLine')
-        markerView = new DotMarkerView({@editorView, marker, markersByRows})
+        markerView = new DotMarkerView({@editorElement, marker, markersByRows})
       else
-        markerView = new MarkerView({@editorView, marker})
+        markerView = new MarkerView({@editorElement, marker})
 
       @append(markerView.element)
       @markerViews[marker.id] = markerView

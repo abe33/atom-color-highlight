@@ -8,16 +8,15 @@ module.exports =
 class AtomColorHighlightEditor
   Subscriber.includeInto(this)
 
-  constructor: (@editorView) ->
-    {@editor} = @editorView
-
+  constructor: (@editor) ->
     @subscriptions = new CompositeDisposable
+    @editorElement = atom.views.getView(@editor)
 
     @model = null
     @view = null
 
-    @subscriptions.add @editorView.getModel().onDidChangePath @subscribeToBuffer
-    @subscriptions.add @editorView.getModel().getBuffer().onDidDestroy @destroy
+    @subscriptions.add @editor.onDidChangePath @subscribeToBuffer
+    @subscriptions.add @editor.getBuffer().onDidDestroy @destroy
 
     @subscribeToBuffer()
 
@@ -34,12 +33,9 @@ class AtomColorHighlightEditor
 
     if @buffer = @editor.getBuffer()
       @model = new AtomColorHighlightModel(@editor, @buffer)
-      @view = new AtomColorHighlightView(@model, @editorView)
+      @view = new AtomColorHighlightView(@model, @editor, @editorElement)
 
-      if atom.config.get('core.useReactEditor')
-        @editorView.find('.lines').append @view
-      else
-        @editorView.overlayer.append @view
+      (@editorElement.shadowRoot ? @editorElement).querySelector('.lines').appendChild @view.element
 
       @model.init()
 

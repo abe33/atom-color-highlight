@@ -1,4 +1,4 @@
-{View, $} = require 'atom'
+{View, $} = require 'space-pen'
 {Subscriber} = require 'emissary'
 MarkerMixin = require './marker-mixin'
 
@@ -7,9 +7,8 @@ class MarkerView
   Subscriber.includeInto(this)
   MarkerMixin.includeInto(this)
 
-  constructor: ({@editorView, @marker}) ->
+  constructor: ({@editorElement, @editor, @marker}) ->
     @regions = []
-    @editor = @editorView.editor
     @element = document.createElement('div')
     @element.className = 'marker color-highlight'
     @updateNeeded = @marker.isValid()
@@ -39,7 +38,7 @@ class MarkerView
       @appendRegion(1, { row: range.end.row, column: 0 }, range.end)
 
   appendRegion: (rows, start, end) ->
-    { lineHeight, charWidth } = @editorView
+    { lineHeight, charWidth } = @editorElement
     color = @getColor()
     colorText = @getColorTextColor()
     bufferRange = @editor.bufferRangeForScreenRange({start, end})
