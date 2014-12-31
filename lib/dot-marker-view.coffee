@@ -13,7 +13,7 @@ class DotMarkerView
     @element.className = 'dot-marker color-highlight'
     @updateNeeded = @marker.isValid()
     @oldScreenRange = @getScreenRange()
-    @buffer = @editor.buffer
+    @buffer = @editor.getBuffer()
     @clearPosition = true
 
     @subscribeToMarker()
