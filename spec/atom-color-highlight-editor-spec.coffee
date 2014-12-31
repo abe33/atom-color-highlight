@@ -1,6 +1,6 @@
 
 describe "AtomColorHighlightEditor", ->
-  [workspaceElement, editor, editorElement, buffer, markers, atomColorHighlight, model] = []
+  [workspaceElement, editor, editorElement, buffer, markers, atomColorHighlight, model, charWidth] = []
 
   beforeEach ->
     atom.config.set 'editor.fontSize', 10
@@ -16,15 +16,26 @@ describe "AtomColorHighlightEditor", ->
       workspaceElement = atom.views.getView(atom.workspace)
       jasmine.attachToDOM(workspaceElement)
 
+      styleNode = document.createElement('style')
+      styleNode.textContent = """
+        atom-text-editor atom-color-highlight .region,
+        atom-text-editor::shadow atom-color-highlight .region {
+          margin-left: 0 !important;
+        }
+      """
+
+      jasmine.attachToDOM(styleNode)
+
       editor = atom.workspace.getActiveTextEditor()
       editorElement = atom.views.getView(editor)
       buffer = editor.getBuffer()
       model = atomColorHighlight.modelForEditor(editor)
+      charWidth = editor.getDefaultCharWidth()
 
       editor.setText("""
       $color: #f0f
       $other_color: #ff0
-
+      
       $light_color: lighten($color, 50%)
 
       $transparent_color: $color - rgba(0,0,0,0.5)
@@ -45,7 +56,22 @@ describe "AtomColorHighlightEditor", ->
 
   it 'positions the regions properly', ->
     expect(markers[0].offsetTop).toEqual(0)
+    expect(markers[0].offsetLeft).toEqual(8 * charWidth)
+
     expect(markers[1].offsetTop).toEqual(10)
+    expect(markers[1].offsetLeft).toEqual(14 * charWidth)
+
+    expect(markers[2].offsetTop).toEqual(30)
+    expect(markers[2].offsetLeft).toEqual(14 * charWidth)
+
+    expect(markers[3].offsetTop).toEqual(50)
+    expect(markers[3].offsetLeft).toEqual(20 * charWidth)
+
+    expect(markers[4].offsetTop).toEqual(50)
+    expect(markers[4].offsetLeft).toEqual(29 * charWidth)
+
+    expect(markers[5].offsetTop).toEqual(70)
+    expect(markers[5].offsetLeft).toEqual(12 * charWidth)
 
   describe 'when content is added to the editor', ->
     beforeEach ->
@@ -58,10 +84,21 @@ describe "AtomColorHighlightEditor", ->
       markers = editorElement.shadowRoot.querySelectorAll('.region')
       expect(markers.length).toEqual(10)
 
-  xdescribe 'when core:backspace is triggered', ->
+  describe 'when core:backspace is triggered', ->
     beforeEach ->
       editor.setCursorBufferPosition [5,0]
       atom.commands.dispatch(editorElement, 'core:backspace')
+
+      waitsFor -> not model.dirty
+
+    it 'adjusts the position of the markers in the view', ->
+      markers = editorElement.shadowRoot.querySelectorAll('.region')
+
+      expect(markers[4].offsetTop).toEqual(40)
+      expect(markers[4].offsetLeft).toEqual(29 * charWidth)
+
+      expect(markers[5].offsetTop).toEqual(60)
+      expect(markers[5].offsetLeft).toEqual(12 * charWidth)
 
   describe 'when content is removed from the editor', ->
     beforeEach ->

@@ -20,26 +20,31 @@ class MarkerMixin extends Mixin
   hide: ->
     @element.style.display = "none"
 
-  subscribeToMarker: ->
-    @subscriptions ?= new CompositeDisposable
-    @subscriptions.add @marker.onDidChange (e) => @onMarkerChanged(e)
-    @subscriptions.add @marker.onDidDestroy (e) => @remove(e)
-
-    @subscriptions.add @editor.onDidChange (e) => @updateDisplay(e)
-    @subscriptions.add @editor.onDidChangeScrollTop (e) => @updateDisplay(e)
-
-  onMarkerChanged: ({isValid}) ->
-    @updateNeeded = isValid
-    if isValid then @show() else @hide()
-
-  isUpdateNeeded: ->
-    return false unless @updateNeeded
-
+  isVisible: ->
     oldScreenRange = @oldScreenRange
     newScreenRange = @getScreenRange()
 
     @oldScreenRange = newScreenRange
     @intersectsRenderedScreenRows(oldScreenRange) or @intersectsRenderedScreenRows(newScreenRange)
+
+  subscribeToMarker: ->
+    @subscriptions ?= new CompositeDisposable
+    @subscriptions.add @marker.onDidChange (e) => @onMarkerChanged(e)
+    @subscriptions.add @marker.onDidDestroy (e) => @remove()
+
+    @subscriptions.add @editor.onDidChangeScrollTop (e) => @updateVisibility()
+
+  onMarkerChanged: ({isValid}) ->
+    @updateNeeded = isValid
+    @updateDisplay()
+    @updateVisibility()
+
+  updateVisibility: ->
+    if @isVisible() then @show() else @hide()
+
+  isUpdateNeeded: ->
+    return false unless @updateNeeded
+    @isVisible()
 
   intersectsRenderedScreenRows: (range) ->
     range.intersectsRowRange(@editor.getFirstVisibleScreenRow(), @editor.getLastVisibleScreenRow())
