@@ -1,11 +1,9 @@
 _ = require 'underscore-plus'
-{Emitter} = require 'emissary'
-{CompositeDisposable} = require 'event-kit'
+{CompositeDisposable, Emitter} = require 'event-kit'
 Color = require 'pigments'
 
 module.exports =
 class AtomColorHighlightModel
-  Emitter.includeInto(this)
 
   @Color: Color
 
@@ -13,6 +11,7 @@ class AtomColorHighlightModel
   @bufferRange: [[0,0], [Infinity,Infinity]]
 
   constructor: (@editor, @buffer) ->
+    @emitter = new Emitter
     @subscriptions = new CompositeDisposable
     try atom.packages.activatePackage('project-palette-finder').then (pack) =>
       finder = pack.mainModule
@@ -20,6 +19,9 @@ class AtomColorHighlightModel
       @subscriptions.add finder.onDidUpdatePalette @update
 
     @constructor.Color = Color
+
+  onDidUpdateMarkers: (callback) ->
+    @emitter.on 'did-update-markers', callback
 
   update: =>
     return if @frameRequested
@@ -83,7 +85,7 @@ class AtomColorHighlightModel
         marker.destroy() for id, marker of markersToRemoveById
 
         @markers = updatedMarkers
-        @emit 'updated', _.clone(@markers)
+        @emitter.emit 'did-update-markers', _.clone(@markers)
       .fail (e) ->
         console.log e
 
@@ -103,7 +105,7 @@ class AtomColorHighlightModel
   destroyAllMarkers: ->
     marker.destroy() for marker in @markers ? []
     @markers = []
-    @emit 'updated', _.clone(@markers)
+    @emitter.emit 'did-update-markers', _.clone(@markers)
 
   createMarker: (color, colorObject, range) ->
     l = colorObject.luma()
