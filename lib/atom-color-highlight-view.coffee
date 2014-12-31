@@ -1,6 +1,5 @@
 _ = require 'underscore-plus'
 {View, $} = require 'space-pen'
-{Subscriber} = require 'emissary'
 {CompositeDisposable, Disposable} = require 'event-kit'
 
 MarkerView = require './marker-view'
@@ -8,25 +7,26 @@ DotMarkerView = require './dot-marker-view'
 
 module.exports =
 class AtomColorHighlightView extends View
-  Subscriber.includeInto(this)
-
   @content: ->
     @div class: 'atom-color-highlight'
 
-  constructor: (model, @editor, editorElement) ->
+  constructor: (@model, @editor, @editorElement) ->
     super
     @selections = []
     @markerViews = {}
 
     @subscriptions = new CompositeDisposable
 
-    @observeConfig()
-    @setEditorView(editorElement)
-    @setModel(model)
+    @subscriptions.add @model.onDidUpdateMarkers @markersUpdated
 
-    @updateSelections()
+    @subscriptions.add @editor.onDidDestroy @editorDestroyed
+    @subscriptions.add @editor.onDidAddCursor @requestSelectionUpdate
+    @subscriptions.add @editor.onDidRemoveCursor @requestSelectionUpdate
+    @subscriptions.add @editor.onDidChangeCursorPosition @requestSelectionUpdate
+    @subscriptions.add @editor.onDidAddSelection @requestSelectionUpdate
+    @subscriptions.add @editor.onDidRemoveSelection @requestSelectionUpdate
+    @subscriptions.add @editor.onDidChangeSelectionRange @requestSelectionUpdate
 
-  observeConfig: ->
     @subscriptions.add atom.config.observe 'atom-color-highlight.hideMarkersInComments', @rebuildMarkers
     @subscriptions.add atom.config.observe 'atom-color-highlight.hideMarkersInStrings', @rebuildMarkers
     @subscriptions.add atom.config.observe 'atom-color-highlight.markersAtEndOfLine', @rebuildMarkers
@@ -35,32 +35,7 @@ class AtomColorHighlightView extends View
     @subscriptions.add atom.config.observe 'editor.lineHeight', @rebuildMarkers
     @subscriptions.add atom.config.observe 'editor.fontSize', @rebuildMarkers
 
-  setModel: (model) ->
-    @unsubscribeFromModel()
-    @model = model
-    @subscribeToModel()
-
-  setEditorView: (editorElement) ->
-    @editorElement = editorElement
-    @subscribeToEditor()
-
-  subscribeToModel: ->
-    return unless @model?
-    @subscribe @model, 'updated', @markersUpdated
-
-  unsubscribeFromModel: ->
-    return unless @model?
-    @unsubscribe @model, 'updated'
-
-  subscribeToEditor: ->
-    return unless @editor?
-    @subscriptions.add @editor.onDidDestroy @editorDestroyed
-    @subscriptions.add @editor.onDidAddCursor @requestSelectionUpdate
-    @subscriptions.add @editor.onDidRemoveCursor @requestSelectionUpdate
-    @subscriptions.add @editor.onDidChangeCursorPosition @requestSelectionUpdate
-    @subscriptions.add @editor.onDidAddSelection @requestSelectionUpdate
-    @subscriptions.add @editor.onDidRemoveSelection @requestSelectionUpdate
-    @subscriptions.add @editor.onDidChangeSelectionRange @requestSelectionUpdate
+    @updateSelections()
 
   editorDestroyed: => @destroy()
 
@@ -94,7 +69,6 @@ class AtomColorHighlightView extends View
 
   # Tear down any state and detach
   destroy: ->
-    @unsubscribeFromModel()
     @subscriptions.dispose()
     @destroyAllViews()
     @detach()
