@@ -1,5 +1,5 @@
 
-describe "AtomColorHighlightEditor", ->
+describe "AtomColorHighlight", ->
   [workspaceElement, editor, editorElement, buffer, markers, atomColorHighlight, model, charWidth] = []
 
   beforeEach ->
@@ -35,7 +35,7 @@ describe "AtomColorHighlightEditor", ->
       editor.setText("""
       $color: #f0f
       $other_color: #ff0
-      
+
       $light_color: lighten($color, 50%)
 
       $transparent_color: $color - rgba(0,0,0,0.5)
