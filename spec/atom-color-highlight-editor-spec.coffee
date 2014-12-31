@@ -3,6 +3,9 @@ describe "AtomColorHighlightEditor", ->
   [workspaceElement, editor, editorElement, buffer, markers] = []
 
   beforeEach ->
+    atom.config.set 'editor.fontSize', 10
+    atom.config.set 'editor.lineHeight', 1
+
     waitsForPromise -> atom.workspace.open('sample.js')
 
     waitsForPromise ->
@@ -36,6 +39,10 @@ describe "AtomColorHighlightEditor", ->
     runs ->
       expect(markers.length).toEqual(9)
 
+  it 'positions the regions properly', ->
+    expect(markers[0].offsetTop).toEqual(0)
+    expect(markers[1].offsetTop).toEqual(10)
+
   describe 'when content is added to the editor', ->
     beforeEach ->
       editor.moveToBottom()
@@ -47,6 +54,11 @@ describe "AtomColorHighlightEditor", ->
 
       runs ->
         expect(markers.length).toEqual(10)
+
+  xdescribe 'when core:backspace is triggered', ->
+    beforeEach ->
+      editor.setCursorBufferPosition [5,0]
+      atom.commands.dispatch(editorElement, 'core:backspace')
 
   describe 'when content is removed from the editor', ->
     beforeEach ->
