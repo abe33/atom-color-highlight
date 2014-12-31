@@ -1,6 +1,6 @@
 
 describe "AtomColorHighlightEditor", ->
-  [workspaceElement, editor, editorElement, buffer, markers] = []
+  [workspaceElement, editor, editorElement, buffer, markers, atomColorHighlight, model] = []
 
   beforeEach ->
     atom.config.set 'editor.fontSize', 10
@@ -9,7 +9,8 @@ describe "AtomColorHighlightEditor", ->
     waitsForPromise -> atom.workspace.open('sample.js')
 
     waitsForPromise ->
-      atom.packages.activatePackage('atom-color-highlight')
+      atom.packages.activatePackage('atom-color-highlight').then (pkg) ->
+        atomColorHighlight = pkg.mainModule
 
     runs ->
       workspaceElement = atom.views.getView(atom.workspace)
@@ -18,6 +19,7 @@ describe "AtomColorHighlightEditor", ->
       editor = atom.workspace.getActiveTextEditor()
       editorElement = atom.views.getView(editor)
       buffer = editor.getBuffer()
+      model = atomColorHighlight.modelForEditor(editor)
 
       editor.setText("""
       $color: #f0f
@@ -32,12 +34,14 @@ describe "AtomColorHighlightEditor", ->
       $color_red_dark: darken($color_red, 10%)
       $color_red_darker: darken($color_red, 20%)
       """)
-    waitsFor ->
-      (markers = editorElement.shadowRoot.querySelectorAll('.region')).length > 0
+
+    waitsFor -> not model.dirty
+
+    runs ->
+      markers = editorElement.shadowRoot.querySelectorAll('.region')
 
   it 'retrieves the editor content', ->
-    runs ->
-      expect(markers.length).toEqual(9)
+    expect(markers.length).toEqual(9)
 
   it 'positions the regions properly', ->
     expect(markers[0].offsetTop).toEqual(0)
@@ -48,12 +52,11 @@ describe "AtomColorHighlightEditor", ->
       editor.moveToBottom()
       editor.insertText(' red')
 
-    it 'updates the markers in the view', ->
-      waitsFor ->
-        (markers = editorElement.shadowRoot.querySelectorAll('.region')).length > 9
+      waitsFor -> not model.dirty
 
-      runs ->
-        expect(markers.length).toEqual(10)
+    it 'updates the markers in the view', ->
+      markers = editorElement.shadowRoot.querySelectorAll('.region')
+      expect(markers.length).toEqual(10)
 
   xdescribe 'when core:backspace is triggered', ->
     beforeEach ->
@@ -64,8 +67,8 @@ describe "AtomColorHighlightEditor", ->
     beforeEach ->
       editor.setText('')
 
-      waitsFor ->
-        (markers = editorElement.shadowRoot.querySelectorAll('.region')).length isnt 9
+      waitsFor -> not model.dirty
 
     it 'removes all the markers in the view', ->
+      markers = editorElement.shadowRoot.querySelectorAll('.region')
       expect(markers.length).toEqual(0)

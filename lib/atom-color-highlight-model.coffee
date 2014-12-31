@@ -11,6 +11,7 @@ class AtomColorHighlightModel
   @bufferRange: [[0,0], [Infinity,Infinity]]
 
   constructor: (@editor, @buffer) ->
+    @dirty = false
     @emitter = new Emitter
     @subscriptions = new CompositeDisposable
     try atom.packages.activatePackage('project-palette-finder').then (pack) =>
@@ -32,6 +33,7 @@ class AtomColorHighlightModel
       @updateMarkers()
 
   subscribeToBuffer: ->
+    @subscriptions.add @editor.onDidChange => @dirty = true
     @subscriptions.add @editor.onDidStopChanging @update
 
   unsubscribeFromBuffer: ->
@@ -86,7 +88,9 @@ class AtomColorHighlightModel
 
         @markers = updatedMarkers
         @emitter.emit 'did-update-markers', _.clone(@markers)
+        @dirty = false
       .fail (e) ->
+        @dirty = false
         console.log e
 
     catch e
