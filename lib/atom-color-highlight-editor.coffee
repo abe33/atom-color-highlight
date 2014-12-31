@@ -2,7 +2,9 @@
 {CompositeDisposable} = require 'event-kit'
 
 AtomColorHighlightModel = require './atom-color-highlight-model'
-AtomColorHighlightView = require './atom-color-highlight-view'
+AtomColorHighlightElement = require './atom-color-highlight-element'
+
+AtomColorHighlightElement.registerViewProvider()
 
 module.exports =
 class AtomColorHighlightEditor
@@ -33,9 +35,9 @@ class AtomColorHighlightEditor
 
     if @buffer = @editor.getBuffer()
       @model = new AtomColorHighlightModel(@editor, @buffer)
-      @view = new AtomColorHighlightView(@model, @editor, @editorElement)
+      @view = atom.views.getView(@model)
 
-      (@editorElement.shadowRoot ? @editorElement).querySelector('.lines').appendChild @view.element
+      (@editorElement.shadowRoot ? @editorElement).querySelector('.lines').appendChild @view
 
       @model.init()
 

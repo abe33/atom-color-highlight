@@ -1,45 +1,45 @@
 _ = require 'underscore-plus'
-{View, $} = require 'space-pen'
 {CompositeDisposable, Disposable} = require 'event-kit'
 
 MarkerView = require './marker-view'
 DotMarkerView = require './dot-marker-view'
 
-module.exports =
-class AtomColorHighlightView extends View
-  @content: ->
-    @div class: 'atom-color-highlight'
+class AtomColorHighlightElement extends HTMLElement
 
-  constructor: (@model, @editor, @editorElement) ->
-    super
+  createdCallback: ->
     @selections = []
     @markerViews = {}
-
     @subscriptions = new CompositeDisposable
 
-    @subscriptions.add @model.onDidUpdateMarkers @markersUpdated
+  setModel: (@model) ->
+    console.log model
+    {@editor} = @model
+    @editorElement = atom.views.getView(@editor)
 
-    @subscriptions.add @editor.onDidDestroy @editorDestroyed
-    @subscriptions.add @editor.onDidAddCursor @requestSelectionUpdate
-    @subscriptions.add @editor.onDidRemoveCursor @requestSelectionUpdate
-    @subscriptions.add @editor.onDidChangeCursorPosition @requestSelectionUpdate
-    @subscriptions.add @editor.onDidAddSelection @requestSelectionUpdate
-    @subscriptions.add @editor.onDidRemoveSelection @requestSelectionUpdate
-    @subscriptions.add @editor.onDidChangeSelectionRange @requestSelectionUpdate
+    @subscriptions.add @model.onDidUpdateMarkers (markers) =>
+      @markersUpdated(markers)
 
-    @subscriptions.add atom.config.observe 'atom-color-highlight.hideMarkersInComments', @rebuildMarkers
-    @subscriptions.add atom.config.observe 'atom-color-highlight.hideMarkersInStrings', @rebuildMarkers
-    @subscriptions.add atom.config.observe 'atom-color-highlight.markersAtEndOfLine', @rebuildMarkers
-    @subscriptions.add atom.config.observe 'atom-color-highlight.dotMarkersSize', @rebuildMarkers
-    @subscriptions.add atom.config.observe 'atom-color-highlight.dotMarkersSpading', @rebuildMarkers
-    @subscriptions.add atom.config.observe 'editor.lineHeight', @rebuildMarkers
-    @subscriptions.add atom.config.observe 'editor.fontSize', @rebuildMarkers
+    @subscriptions.add @editor.onDidDestroy => @editorDestroyed()
+    @subscriptions.add @editor.onDidAddCursor => @requestSelectionUpdate()
+    @subscriptions.add @editor.onDidRemoveCursor => @requestSelectionUpdate()
+    @subscriptions.add @editor.onDidChangeCursorPosition => @requestSelectionUpdate()
+    @subscriptions.add @editor.onDidAddSelection => @requestSelectionUpdate()
+    @subscriptions.add @editor.onDidRemoveSelection => @requestSelectionUpdate()
+    @subscriptions.add @editor.onDidChangeSelectionRange => @requestSelectionUpdate()
+
+    @subscriptions.add atom.config.observe 'atom-color-highlight.hideMarkersInComments', => @rebuildMarkers()
+    @subscriptions.add atom.config.observe 'atom-color-highlight.hideMarkersInStrings', => @rebuildMarkers()
+    @subscriptions.add atom.config.observe 'atom-color-highlight.markersAtEndOfLine', => @rebuildMarkers()
+    @subscriptions.add atom.config.observe 'atom-color-highlight.dotMarkersSize', => @rebuildMarkers()
+    @subscriptions.add atom.config.observe 'atom-color-highlight.dotMarkersSpading', => @rebuildMarkers()
+    @subscriptions.add atom.config.observe 'editor.lineHeight', => @rebuildMarkers()
+    @subscriptions.add atom.config.observe 'editor.fontSize', => @rebuildMarkers()
 
     @updateSelections()
 
-  editorDestroyed: => @destroy()
+  editorDestroyed: -> @destroy()
 
-  requestSelectionUpdate: =>
+  requestSelectionUpdate: ->
     return if @updateRequested
 
     @updateRequested = true
@@ -48,7 +48,7 @@ class AtomColorHighlightView extends View
       return if @editor.getBuffer().isDestroyed()
       @updateSelections()
 
-  updateSelections: =>
+  updateSelections: ->
     return if @markers?.length is 0
 
     selections = @editor.getSelections()
@@ -71,7 +71,7 @@ class AtomColorHighlightView extends View
   destroy: ->
     @subscriptions.dispose()
     @destroyAllViews()
-    @detach()
+    @parentNode?.removeChild(this)
 
   getMarkerAt: (position) ->
     for id, view of @markerViews
@@ -81,7 +81,7 @@ class AtomColorHighlightView extends View
     markerView.remove() for id, markerView of @markerViews
     @markerViews = {}
 
-  markersUpdated: (@markers) =>
+  markersUpdated: (@markers) ->
     markerViewsToRemoveById = _.clone(@markerViews)
     markersByRows = {}
     useDots = atom.config.get('atom-color-highlight.markersAtEndOfLine')
@@ -98,7 +98,7 @@ class AtomColorHighlightView extends View
           sortedMarkers.push markerView
         else
           markerView = new MarkerView({@editorElement, @editor, marker})
-        @append(markerView.element)
+        @appendChild(markerView.element)
         @markerViews[marker.id] = markerView
 
     for id, markerView of markerViewsToRemoveById
@@ -113,7 +113,7 @@ class AtomColorHighlightView extends View
         markerView.clearPosition = true
         markerView.updateDisplay()
 
-  rebuildMarkers: =>
+  rebuildMarkers: ->
     return unless @markers
     markersByRows = {}
 
@@ -125,9 +125,25 @@ class AtomColorHighlightView extends View
       else
         markerView = new MarkerView({@editorElement, marker})
 
-      @append(markerView.element)
+      @appendChild(markerView.element)
       @markerViews[marker.id] = markerView
 
   destroyAllViews: ->
-    @empty()
+    @removeChild(@firstChild) while @firstChild
     @markerViews = {}
+
+#    ######## ##       ######## ##     ## ######## ##    ## ########
+#    ##       ##       ##       ###   ### ##       ###   ##    ##
+#    ##       ##       ##       #### #### ##       ####  ##    ##
+#    ######   ##       ######   ## ### ## ######   ## ## ##    ##
+#    ##       ##       ##       ##     ## ##       ##  ####    ##
+#    ##       ##       ##       ##     ## ##       ##   ###    ##
+#    ######## ######## ######## ##     ## ######## ##    ##    ##
+
+module.exports = AtomColorHighlightElement = document.registerElement 'atom-color-highlight', prototype: AtomColorHighlightElement.prototype
+
+AtomColorHighlightElement.registerViewProvider = ->
+  atom.views.addViewProvider require('./atom-color-highlight-model'), (model) ->
+    element = new AtomColorHighlightElement
+    element.setModel(model)
+    element
