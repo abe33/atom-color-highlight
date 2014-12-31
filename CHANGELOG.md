@@ -1,5 +1,12 @@
-<a name="2.0.15"></a>
-# 2.0.15 (2014-12-30)
+<a name="v2.0.16"></a>
+# v2.0.16 (2014-12-31)
+
+## :bug: Bug Fixes
+
+- Fix marker display issue when scrolling ([01aba50e](https://github.com/abe33/atom-color-highlight/commit/01aba50e0fd89262275895c4274f74115db27242))
+
+<a name="v2.0.15"></a>
+# v2.0.15 (2014-12-30)
 
 ## :bug: Bug Fixes
 
