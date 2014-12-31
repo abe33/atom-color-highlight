@@ -25,6 +25,7 @@ class MarkerMixin extends Mixin
     @subscriptions.add @marker.onDidChange (e) => @onMarkerChanged(e)
     @subscriptions.add @marker.onDidDestroy (e) => @remove(e)
     @subscriptions.add @editor.onDidChange (e) => @updateDisplay(e)
+    @subscriptions.add @editor.onDidChangeScrollTop (e) => @updateDisplay(e)
 
   onMarkerChanged: ({isValid}) ->
     @updateNeeded = isValid
