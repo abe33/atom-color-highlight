@@ -12,7 +12,6 @@ class AtomColorHighlightElement extends HTMLElement
     @subscriptions = new CompositeDisposable
 
   setModel: (@model) ->
-    console.log model
     {@editor} = @model
     @editorElement = atom.views.getView(@editor)
 
