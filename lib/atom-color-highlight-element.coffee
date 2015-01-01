@@ -120,9 +120,9 @@ class AtomColorHighlightElement extends HTMLElement
       @markerViews[marker.id].remove() if @markerViews[marker.id]?
 
       if atom.config.get('atom-color-highlight.markersAtEndOfLine')
-        markerView = new DotMarkerView({@editorElement, marker, markersByRows})
+        markerView = new DotMarkerView({@editorElement, @editor, marker, markersByRows})
       else
-        markerView = new MarkerView({@editorElement, marker})
+        markerView = new MarkerView({@editorElement, @editor, marker})
 
       @appendChild(markerView.element)
       @markerViews[marker.id] = markerView
