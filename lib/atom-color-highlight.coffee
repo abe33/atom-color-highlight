@@ -33,8 +33,16 @@ class AtomColorHighlight
   activate: (state) ->
     AtomColorHighlightModel ||= require './atom-color-highlight-model'
     AtomColorHighlightElement ||= require './atom-color-highlight-element'
+    @Color ||= require 'pigments'
 
     AtomColorHighlightElement.registerViewProvider()
+    AtomColorHighlightModel.Color = @Color
+
+    unless atom.inSpecMode()
+      try atom.packages.activatePackage('project-palette-finder').then (pack) =>
+        finder = pack.mainModule
+        AtomColorHighlightModel.Color = @Color = finder.Color if finder?
+        @subscriptions.add finder.onDidUpdatePalette @update
 
     @emitter = new Emitter
     atom.workspace.observeTextEditors (editor) =>

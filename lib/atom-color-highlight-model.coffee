@@ -1,12 +1,9 @@
 _ = require 'underscore-plus'
 {CompositeDisposable, Emitter} = require 'event-kit'
-Color = require 'pigments'
 
 module.exports =
 class AtomColorHighlightModel
   @idCouter: 0
-
-  @Color: Color
 
   @markerClass: 'color-highlight'
   @bufferRange: [[0,0], [Infinity,Infinity]]
@@ -17,14 +14,6 @@ class AtomColorHighlightModel
     @dirty = false
     @emitter = new Emitter
     @subscriptions = new CompositeDisposable
-
-    unless atom.inSpecMode()
-      try atom.packages.activatePackage('project-palette-finder').then (pack) =>
-        finder = pack.mainModule
-        @constructor.Color = Color = finder.Color if finder?
-        @subscriptions.add finder.onDidUpdatePalette @update
-
-    @constructor.Color = Color
 
   onDidUpdateMarkers: (callback) ->
     @emitter.on 'did-update-markers', callback
@@ -59,7 +48,7 @@ class AtomColorHighlightModel
     @unsubscribeFromBuffer() if @buffer?
 
   eachColor: (block) ->
-    return Color.scanBufferForColors(@buffer, block) if @buffer?
+    return @constructor.Color.scanBufferForColors(@buffer, block) if @buffer?
 
   updateMarkers: ->
     return @destroyAllMarkers() unless @buffer?
