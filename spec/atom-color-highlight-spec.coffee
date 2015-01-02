@@ -22,6 +22,11 @@ describe "AtomColorHighlight", ->
         atom-text-editor::shadow atom-color-highlight .region {
           margin-left: 0 !important;
         }
+
+        atom-text-editor atom-color-highlight .dot-marker,
+        atom-text-editor::shadow atom-color-highlight .dot-marker {
+          margin-top: 0 !important;
+        }
       """
 
       jasmine.attachToDOM(styleNode)
@@ -114,3 +119,33 @@ describe "AtomColorHighlight", ->
     it 'removes all the markers in the view', ->
       markers = editorElement.shadowRoot.querySelectorAll('.region')
       expect(markers.length).toEqual(0)
+
+  describe 'when the markers at end of line setting is enabled', ->
+    beforeEach ->
+      atom.config.set 'atom-color-highlight.markersAtEndOfLine', true
+      markers = editorElement.shadowRoot.querySelectorAll('.dot-marker')
+
+    it 'replaces the markers with dot markers', ->
+      expect(markers.length).toEqual(9)
+
+    it 'positions the dot markers at the end of line', ->
+      spacing = atom.config.get('atom-color-highlight.dotMarkersSpacing')
+      size = atom.config.get('atom-color-highlight.dotMarkersSize')
+
+      expect(markers[0].offsetLeft).toEqual(12 * charWidth + spacing)
+      expect(markers[0].offsetTop).toEqual(0)
+
+      expect(markers[1].offsetLeft).toEqual(18 * charWidth + spacing)
+      expect(markers[1].offsetTop).toEqual(10)
+
+      expect(markers[2].offsetLeft).toEqual(34 * charWidth + spacing)
+      expect(markers[2].offsetTop).toEqual(30)
+
+      expect(markers[3].offsetLeft).toEqual(44 * charWidth + spacing)
+      expect(markers[3].offsetTop).toEqual(50)
+
+      expect(markers[4].offsetLeft).toEqual(44 * charWidth + spacing * 2 + size)
+      expect(markers[4].offsetTop).toEqual(50)
+
+      expect(markers[5].offsetLeft).toEqual(19 * charWidth + spacing)
+      expect(markers[5].offsetTop).toEqual(70)
