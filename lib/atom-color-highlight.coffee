@@ -59,7 +59,7 @@ class AtomColorHighlight
 
   observeColorHighlightModels: (callback) ->
     callback?(editor) for id,editor of @models if callback?
-    @onDidCreateHighlights(callback)
+    @onDidCreateModel(callback)
 
   onDidCreateModel: (callback) ->
     @emitter.on 'did-create-model', callback
