@@ -149,8 +149,8 @@ class AtomColorHighlightElement extends HTMLElement
 
 module.exports = AtomColorHighlightElement = document.registerElement 'atom-color-highlight', prototype: AtomColorHighlightElement.prototype
 
-AtomColorHighlightElement.registerViewProvider = ->
-  atom.views.addViewProvider require('./atom-color-highlight-model'), (model) ->
+AtomColorHighlightElement.registerViewProvider = (modelClass) ->
+  atom.views.addViewProvider modelClass, (model) ->
     element = new AtomColorHighlightElement
     element.setModel(model)
     element

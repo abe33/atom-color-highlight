@@ -35,7 +35,7 @@ class AtomColorHighlight
     AtomColorHighlightElement ||= require './atom-color-highlight-element'
     @Color ||= require 'pigments'
 
-    AtomColorHighlightElement.registerViewProvider()
+    AtomColorHighlightElement.registerViewProvider(AtomColorHighlightModel)
     AtomColorHighlightModel.Color = @Color
 
     unless atom.inSpecMode()
