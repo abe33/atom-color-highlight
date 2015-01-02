@@ -20,5 +20,6 @@
     "mixto": "1.x",
     "event-kit": "0.7.x",
     "space-pen": "^4"
+    "grim": "^1"
   }
 }

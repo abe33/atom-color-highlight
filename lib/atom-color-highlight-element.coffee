@@ -17,8 +17,8 @@ class AtomColorHighlightElement extends HTMLElement
 
     @subscriptions.add @model.onDidUpdateMarkers (markers) =>
       @markersUpdated(markers)
+    @subscriptions.add @model.onDidDestroy => @destroy()
 
-    @subscriptions.add @editor.onDidDestroy => @editorDestroyed()
     @subscriptions.add @editor.onDidAddCursor => @requestSelectionUpdate()
     @subscriptions.add @editor.onDidRemoveCursor => @requestSelectionUpdate()
     @subscriptions.add @editor.onDidChangeCursorPosition => @requestSelectionUpdate()
@@ -35,8 +35,6 @@ class AtomColorHighlightElement extends HTMLElement
     @subscriptions.add atom.config.observe 'editor.fontSize', => @rebuildMarkers()
 
     @updateSelections()
-
-  editorDestroyed: -> @destroy()
 
   requestSelectionUpdate: ->
     return if @updateRequested

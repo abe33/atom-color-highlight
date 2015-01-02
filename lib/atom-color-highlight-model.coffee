@@ -4,13 +4,16 @@ Color = require 'pigments'
 
 module.exports =
 class AtomColorHighlightModel
+  @idCouter: 0
 
   @Color: Color
 
   @markerClass: 'color-highlight'
   @bufferRange: [[0,0], [Infinity,Infinity]]
 
-  constructor: (@editor, @buffer) ->
+  constructor: (@editor) ->
+    @buffer = @editor.getBuffer()
+    @id = AtomColorHighlightModel.idCouter++
     @dirty = false
     @emitter = new Emitter
     @subscriptions = new CompositeDisposable
@@ -26,6 +29,9 @@ class AtomColorHighlightModel
   onDidUpdateMarkers: (callback) ->
     @emitter.on 'did-update-markers', callback
 
+  onDidDestroy: (callback) ->
+    @emitter.on 'did-destroy', callback
+
   update: =>
     return if @frameRequested
 
@@ -37,6 +43,7 @@ class AtomColorHighlightModel
   subscribeToBuffer: ->
     @subscriptions.add @editor.onDidChange => @dirty = true
     @subscriptions.add @editor.onDidStopChanging @update
+    @subscriptions.add @editor.getBuffer().onDidDestroy => @destroy()
 
   unsubscribeFromBuffer: ->
     @subscriptions.dispose()
@@ -47,7 +54,8 @@ class AtomColorHighlightModel
     @destroyAllMarkers()
     @update()
 
-  dispose: ->
+  destroy: ->
+    @emitter.emit('did-destroy')
     @unsubscribeFromBuffer() if @buffer?
 
   eachColor: (block) ->
