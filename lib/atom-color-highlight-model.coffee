@@ -14,10 +14,12 @@ class AtomColorHighlightModel
     @dirty = false
     @emitter = new Emitter
     @subscriptions = new CompositeDisposable
-    try atom.packages.activatePackage('project-palette-finder').then (pack) =>
-      finder = pack.mainModule
-      @constructor.Color = Color = finder.Color if finder?
-      @subscriptions.add finder.onDidUpdatePalette @update
+
+    unless atom.inSpecMode()
+      try atom.packages.activatePackage('project-palette-finder').then (pack) =>
+        finder = pack.mainModule
+        @constructor.Color = Color = finder.Color if finder?
+        @subscriptions.add finder.onDidUpdatePalette @update
 
     @constructor.Color = Color
 
@@ -41,10 +43,9 @@ class AtomColorHighlightModel
     @buffer = null
 
   init: ->
-    if @buffer?
-      @subscribeToBuffer()
-      @destroyAllMarkers()
-      @update()
+    @subscribeToBuffer()
+    @destroyAllMarkers()
+    @update()
 
   dispose: ->
     @unsubscribeFromBuffer() if @buffer?

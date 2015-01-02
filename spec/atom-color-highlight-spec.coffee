@@ -46,6 +46,8 @@ describe "AtomColorHighlight", ->
       $color_red_darker: darken($color_red, 20%)
       """)
 
+      editor.getBuffer().emitter.emit('did-stop-changing')
+
     waitsFor -> not model.dirty
 
     runs ->
@@ -77,6 +79,7 @@ describe "AtomColorHighlight", ->
     beforeEach ->
       editor.moveToBottom()
       editor.insertText(' red')
+      editor.getBuffer().emitter.emit('did-stop-changing')
 
       waitsFor -> not model.dirty
 
@@ -88,6 +91,7 @@ describe "AtomColorHighlight", ->
     beforeEach ->
       editor.setCursorBufferPosition [5,0]
       atom.commands.dispatch(editorElement, 'core:backspace')
+      editor.getBuffer().emitter.emit('did-stop-changing')
 
       waitsFor -> not model.dirty
 
@@ -103,6 +107,7 @@ describe "AtomColorHighlight", ->
   describe 'when content is removed from the editor', ->
     beforeEach ->
       editor.setText('')
+      editor.getBuffer().emitter.emit('did-stop-changing')
 
       waitsFor -> not model.dirty
 
