@@ -12,7 +12,7 @@ atom-text-editor, atom-text-editor::shadow {
     z-index: 1;
     position: relative;
 
-    .dot-marker {
+    dot-color-marker {
       display: block;
       position: absolute;
       border-radius: 50%;
@@ -33,7 +33,7 @@ atom-text-editor, atom-text-editor::shadow {
       }
     }
 
-    .marker.selected {
+    color-marker.selected {
       display: none;
     }
 
@@ -49,7 +49,7 @@ atom-text-editor, atom-text-editor::shadow {
       white-space: pre;
     }
 
-    .dot-marker:before,
+    dot-color-marker:before,
     .region:before {
       content: '';
       display: block;
@@ -63,7 +63,7 @@ atom-text-editor, atom-text-editor::shadow {
       border-radius: inherit;
     }
 
-    .dot-marker:after,
+    dot-color-marker:after,
     .region:after {
       content: '';
       display: block;

@@ -1,8 +1,8 @@
 _ = require 'underscore-plus'
 {CompositeDisposable, Disposable} = require 'event-kit'
 
-MarkerView = require './marker-view'
-DotMarkerView = require './dot-marker-view'
+MarkerElement = require './marker-element'
+DotMarkerElement = require './dot-marker-element'
 
 class AtomColorHighlightElement extends HTMLElement
 
@@ -93,11 +93,11 @@ class AtomColorHighlightElement extends HTMLElement
           sortedMarkers.push @markerViews[marker.id]
       else
         if useDots
-          markerView = new DotMarkerView({@editorElement, @editor, marker, markersByRows})
+          markerView = @createDotMarkerElement(marker, markersByRows)
           sortedMarkers.push markerView
         else
-          markerView = new MarkerView({@editorElement, @editor, marker})
-        @appendChild(markerView.element)
+          markerView = @createMarkerElement(marker)
+        @appendChild(markerView)
         @markerViews[marker.id] = markerView
 
     for id, markerView of markerViewsToRemoveById
@@ -120,16 +120,26 @@ class AtomColorHighlightElement extends HTMLElement
       @markerViews[marker.id].remove() if @markerViews[marker.id]?
 
       if atom.config.get('atom-color-highlight.markersAtEndOfLine')
-        markerView = new DotMarkerView({@editorElement, @editor, marker, markersByRows})
+        markerView = @createDotMarkerElement(marker, markersByRows)
       else
-        markerView = new MarkerView({@editorElement, @editor, marker})
+        markerView = @createMarkerElement(marker)
 
-      @appendChild(markerView.element)
+      @appendChild(markerView)
       @markerViews[marker.id] = markerView
 
   destroyAllViews: ->
     @removeChild(@firstChild) while @firstChild
     @markerViews = {}
+
+  createMarkerElement: (marker) ->
+    element = new MarkerElement
+    element.init({@editorElement, @editor, marker})
+    element
+
+  createDotMarkerElement: (marker, markersByRows) ->
+    element = new DotMarkerElement
+    element.init({@editorElement, @editor, marker, markersByRows})
+    element
 
 #    ######## ##       ######## ##     ## ######## ##    ## ########
 #    ##       ##       ##       ###   ### ##       ###   ##    ##

@@ -23,8 +23,8 @@ describe "AtomColorHighlight", ->
           margin-left: 0 !important;
         }
 
-        atom-text-editor atom-color-highlight .dot-marker,
-        atom-text-editor::shadow atom-color-highlight .dot-marker {
+        atom-text-editor atom-color-highlight dot-color-marker,
+        atom-text-editor::shadow atom-color-highlight dot-color-marker {
           margin-top: 0 !important;
         }
       """
@@ -123,7 +123,7 @@ describe "AtomColorHighlight", ->
   describe 'when the markers at end of line setting is enabled', ->
     beforeEach ->
       atom.config.set 'atom-color-highlight.markersAtEndOfLine', true
-      markers = editorElement.shadowRoot.querySelectorAll('.dot-marker')
+      markers = editorElement.shadowRoot.querySelectorAll('dot-color-marker')
 
     it 'replaces the markers with dot markers', ->
       expect(markers.length).toEqual(9)

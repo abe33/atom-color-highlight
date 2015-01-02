@@ -3,22 +3,22 @@ Mixin = require 'mixto'
 
 module.exports =
 class MarkerMixin extends Mixin
-  addClass: (cls) -> @element.classList.add(cls)
-  removeClass: (cls) -> @element.classList.remove(cls)
+  addClass: (cls) -> @classList.add(cls)
+  removeClass: (cls) -> @classList.remove(cls)
 
   remove: ->
-    @unsubscribe()
     @subscriptions.dispose()
     @marker = null
     @editor = null
     @editor = null
-    @element.remove()
+
+    @parentNode?.removeChild(this)
 
   show: ->
-    @element.style.display = "" unless @hidden()
+    @style.display = "" unless @isHidden()
 
   hide: ->
-    @element.style.display = "none"
+    @style.display = "none"
 
   isVisible: ->
     oldScreenRange = @oldScreenRange
@@ -49,7 +49,7 @@ class MarkerMixin extends Mixin
   intersectsRenderedScreenRows: (range) ->
     range.intersectsRowRange(@editor.getFirstVisibleScreenRow(), @editor.getLastVisibleScreenRow())
 
-  hidden: ->
+  isHidden: ->
     @hiddenDueToComment() or @hiddenDueToString()
 
   getScope: (bufferRange) ->

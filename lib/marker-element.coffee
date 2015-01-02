@@ -1,16 +1,14 @@
-{View, $} = require 'space-pen'
-{Subscriber} = require 'emissary'
+{CompositeDisposable} = require 'event-kit'
 MarkerMixin = require './marker-mixin'
 
 module.exports =
-class MarkerView
-  Subscriber.includeInto(this)
+class MarkerElement extends HTMLElement
   MarkerMixin.includeInto(this)
 
-  constructor: ({@editorElement, @editor, @marker}) ->
+  createdCallback: ->
     @regions = []
-    @element = document.createElement('div')
-    @element.className = 'marker color-highlight'
+
+  init: ({@editorElement, @editor, @marker}) ->
     @updateNeeded = @marker.isValid()
     @oldScreenRange = @getScreenRange()
 
@@ -25,7 +23,7 @@ class MarkerView
     range = @getScreenRange()
     return if range.isEmpty()
 
-    @hide() if @hidden()
+    @hide() if @isHidden()
 
     rowSpan = range.end.row - range.start.row
 
@@ -60,9 +58,11 @@ class MarkerView
     region.style.backgroundColor = color
     region.style.color = colorText
 
-    @element.appendChild(region)
+    @appendChild(region)
     @regions.push(region)
 
   clearRegions: ->
     region.remove() for region in @regions
     @regions = []
+
+module.exports = MarkerElement = document.registerElement 'color-marker', prototype: MarkerElement.prototype
