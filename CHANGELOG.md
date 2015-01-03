@@ -1,3 +1,13 @@
+<a name="v3.0.1"></a>
+# v3.0.1 (2015-01-03)
+
+- Add missing CHANGELOG entries for v3.0.0.
+
+<a name="v3.0.0"></a>
+# v3.0.0 (2015-01-03)
+
+- The major changes in v3.0.0 concerns the view appended to the DOM. Now views are handled through custom elements instead of `space-pen` views.
+
 <a name="v2.0.16"></a>
 # v2.0.16 (2014-12-31)
 
