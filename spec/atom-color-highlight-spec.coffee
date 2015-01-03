@@ -6,7 +6,7 @@ describe "AtomColorHighlight", ->
     atom.config.set 'editor.fontSize', 10
     atom.config.set 'editor.lineHeight', 1
 
-    waitsForPromise -> atom.workspace.open('sample.js')
+    waitsForPromise -> atom.workspace.open('sample.sass')
 
     waitsForPromise ->
       atom.packages.activatePackage('atom-color-highlight').then (pkg) ->
@@ -149,3 +149,21 @@ describe "AtomColorHighlight", ->
 
       expect(markers[5].offsetLeft).toEqual(19 * charWidth + spacing)
       expect(markers[5].offsetTop).toEqual(70)
+
+  describe 'when an exclusion scope is defined in settings', ->
+    beforeEach ->
+      atom.config.set 'atom-color-highlight.excludedGrammars', ['source.css']
+
+      waitsForPromise -> atom.packages.activatePackage('language-css')
+      waitsForPromise -> atom.workspace.open('source.css')
+
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+        editorElement = atom.views.getView(editor)
+        model = atomColorHighlight.modelForEditor(editor)
+
+    it 'does not create a model for the editor', ->
+      expect(model).toBeUndefined()
+
+    it 'does not render markers in the editor', ->
+      expect(editorElement.shadowRoot.querySelectorAll('color-marker').length).toEqual(0)
