@@ -48,6 +48,28 @@ The `markers` array contains the display buffer markers for all the colors found
 * `marker.bufferMarker.properties.cssColor`: The CSS representation of the color as a `String`.
 * `marker.bufferMarker.properties.textColor`: The text color, based on the original color luminance, computed beforehand.
 
+### Modifying Markers Styles
+
+To target the classical markers, use the following rule:
+
+```less
+atom-text-edidor, atom-text-editor::shadow {
+  atom-color-highlight color-marker .region {
+    // ...
+  }
+}
+```
+
+And to target the dot marker at end of lines, use the following rule:
+
+```less
+atom-text-edidor, atom-text-editor::shadow {
+  atom-color-highlight dot-color-marker {
+    // ...
+  }
+}
+```
+
 ### Extending Color Parsing
 
 You can register a new color expression using the `Color.addExpression` method.
