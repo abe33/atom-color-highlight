@@ -59,6 +59,8 @@ class AtomColorHighlight
 
       model.init()
 
+      model.onDidDestroy => delete @models[editor.id]
+
       @models[editor.id] = model
       @emitter.emit 'did-create-model', model
 
