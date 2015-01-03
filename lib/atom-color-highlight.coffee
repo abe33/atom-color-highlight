@@ -54,7 +54,8 @@ class AtomColorHighlight
       editorElement = atom.views.getView(editor)
       view = atom.views.getView(model)
 
-      (editorElement.shadowRoot ? editorElement).querySelector('.lines').appendChild view
+      editorRoot = editorElement.shadowRoot ? editorElement
+      editorRoot.querySelector('.lines').appendChild view
 
       model.init()
 
