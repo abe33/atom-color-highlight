@@ -12,7 +12,43 @@ If you have the [project-palette-finder package](https://atom.io/packages/projec
 
 ![AtomColorHighlight And Project Palette Screenshot](https://raw.github.com/abe33/atom-color-highlight/master/atom-color-highlight-palette.jpg)
 
-### Extending AtomColorHighlight
+### API
+
+This package provides some API so that you can access the models it creates for the text editors:
+
+#### Observing Models Creation
+
+```coffeescript
+atom.packages.activatePackage('atom-color-highlight').then (pkg) ->
+  atomColorHighlight = pkg.mainModule
+
+  atomColorHighlight.observeColorHighlightModels (model) ->
+    # Model is an instance of AtomColorHighlightModel
+```
+
+#### Retrieving Models For Text Editors
+
+```coffeescript
+atom.packages.activatePackage('atom-color-highlight').then (pkg) ->
+  atomColorHighlight = pkg.mainModule
+
+  model = atomColorHighlight.modelForEditor(editor)
+```
+
+#### Listening To A Model's Markers Update
+
+```coffeescript
+model.onDidUpdateMarkers (markers) ->
+  # Do something with markers
+```
+
+The `markers` array contains the display buffer markers for all the colors found in the corresponding text editor. Those markers contains extra properties with color data:
+
+* `marker.bufferMarker.properties.color`: The color `String` that was matched by the model.
+* `marker.bufferMarker.properties.cssColor`: The CSS representation of the color as a `String`.
+* `marker.bufferMarker.properties.textColor`: The text color, based on the original color luminance, computed beforehand.
+
+### Extending Color Parsing
 
 You can register a new color expression using the `Color.addExpression` method.
 
