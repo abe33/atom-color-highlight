@@ -167,3 +167,10 @@ describe "AtomColorHighlight", ->
 
     it 'does not render markers in the editor', ->
       expect(editorElement.shadowRoot.querySelectorAll('color-marker').length).toEqual(0)
+
+  describe 'when the package is deactivated', ->
+    beforeEach ->
+      atom.packages.deactivatePackage('atom-color-highlight')
+
+    it 'removes the view from the text editor', ->
+      expect(editorElement.shadowRoot.querySelector('atom-color-highlight')).not.toExist()
