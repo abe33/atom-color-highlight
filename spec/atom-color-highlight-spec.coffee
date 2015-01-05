@@ -39,9 +39,9 @@ describe "AtomColorHighlight", ->
 
       editor.setText("""
       $color: #f0f
-      $other_color: #ff0
+      $other_color: '#ff0'
 
-      $light_color: lighten($color, 50%)
+      // $light_color: lighten($color, 50%)
 
       $transparent_color: $color - rgba(0,0,0,0.5)
 
@@ -66,10 +66,10 @@ describe "AtomColorHighlight", ->
     expect(markers[0].offsetLeft).toEqual(8 * charWidth)
 
     expect(markers[1].offsetTop).toEqual(10)
-    expect(markers[1].offsetLeft).toEqual(14 * charWidth)
+    expect(markers[1].offsetLeft).toEqual(15 * charWidth)
 
     expect(markers[2].offsetTop).toEqual(30)
-    expect(markers[2].offsetLeft).toEqual(14 * charWidth)
+    expect(markers[2].offsetLeft).toEqual(17 * charWidth)
 
     expect(markers[3].offsetTop).toEqual(50)
     expect(markers[3].offsetLeft).toEqual(20 * charWidth)
@@ -135,10 +135,10 @@ describe "AtomColorHighlight", ->
       expect(markers[0].offsetLeft).toEqual(12 * charWidth + spacing)
       expect(markers[0].offsetTop).toEqual(0)
 
-      expect(markers[1].offsetLeft).toEqual(18 * charWidth + spacing)
+      expect(markers[1].offsetLeft).toEqual(20 * charWidth + spacing)
       expect(markers[1].offsetTop).toEqual(10)
 
-      expect(markers[2].offsetLeft).toEqual(34 * charWidth + spacing)
+      expect(markers[2].offsetLeft).toEqual(37 * charWidth + spacing)
       expect(markers[2].offsetTop).toEqual(30)
 
       expect(markers[3].offsetLeft).toEqual(44 * charWidth + spacing)
