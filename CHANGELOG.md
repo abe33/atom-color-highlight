@@ -1,3 +1,10 @@
+<a name="v3.0.2"></a>
+# v3.0.2 (2015-01-05)
+
+## :bug: Bug Fixes
+
+- Fix colors marker not rendered when editor is not active when opened ([5f291f66](https://github.com/abe33/atom-color-highlight/commit/5f291f6620273ad120cbcb265f6d9d8698b7a930))
+
 <a name="v3.0.1"></a>
 # v3.0.1 (2015-01-03)
 

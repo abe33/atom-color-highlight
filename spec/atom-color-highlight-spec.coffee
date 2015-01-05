@@ -6,6 +6,7 @@ describe "AtomColorHighlight", ->
     atom.config.set 'editor.fontSize', 10
     atom.config.set 'editor.lineHeight', 1
 
+    waitsForPromise -> atom.packages.activatePackage('language-sass')
     waitsForPromise -> atom.workspace.open('sample.sass')
 
     waitsForPromise ->
@@ -39,9 +40,9 @@ describe "AtomColorHighlight", ->
 
       editor.setText("""
       $color: #f0f
-      $other_color: #ff0
+      $other_color: '#ff0'
 
-      $light_color: lighten($color, 50%)
+      // $light_color: lighten($color, 50%)
 
       $transparent_color: $color - rgba(0,0,0,0.5)
 
@@ -66,10 +67,10 @@ describe "AtomColorHighlight", ->
     expect(markers[0].offsetLeft).toEqual(8 * charWidth)
 
     expect(markers[1].offsetTop).toEqual(10)
-    expect(markers[1].offsetLeft).toEqual(14 * charWidth)
+    expect(markers[1].offsetLeft).toEqual(15 * charWidth)
 
     expect(markers[2].offsetTop).toEqual(30)
-    expect(markers[2].offsetLeft).toEqual(14 * charWidth)
+    expect(markers[2].offsetLeft).toEqual(17 * charWidth)
 
     expect(markers[3].offsetTop).toEqual(50)
     expect(markers[3].offsetLeft).toEqual(20 * charWidth)
@@ -135,10 +136,10 @@ describe "AtomColorHighlight", ->
       expect(markers[0].offsetLeft).toEqual(12 * charWidth + spacing)
       expect(markers[0].offsetTop).toEqual(0)
 
-      expect(markers[1].offsetLeft).toEqual(18 * charWidth + spacing)
+      expect(markers[1].offsetLeft).toEqual(20 * charWidth + spacing)
       expect(markers[1].offsetTop).toEqual(10)
 
-      expect(markers[2].offsetLeft).toEqual(34 * charWidth + spacing)
+      expect(markers[2].offsetLeft).toEqual(37 * charWidth + spacing)
       expect(markers[2].offsetTop).toEqual(30)
 
       expect(markers[3].offsetLeft).toEqual(44 * charWidth + spacing)
@@ -149,6 +150,22 @@ describe "AtomColorHighlight", ->
 
       expect(markers[5].offsetLeft).toEqual(19 * charWidth + spacing)
       expect(markers[5].offsetTop).toEqual(70)
+
+  describe 'when hide markers in comments is enabled', ->
+    beforeEach ->
+      atom.config.set 'atom-color-highlight.hideMarkersInComments', true
+
+    it 'hides the corresponding markers', ->
+      markers = editorElement.shadowRoot.querySelectorAll('color-marker:not([style*="display: none"])')
+      expect(markers.length).toEqual(8)
+
+  describe 'when hide markers in strings is enabled', ->
+    beforeEach ->
+      atom.config.set 'atom-color-highlight.hideMarkersInStrings', true
+
+    it 'hides the corresponding markers', ->
+      markers = editorElement.shadowRoot.querySelectorAll('color-marker:not([style*="display: none"])')
+      expect(markers.length).toEqual(8)
 
   describe 'when an exclusion scope is defined in settings', ->
     beforeEach ->
