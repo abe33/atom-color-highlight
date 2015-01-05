@@ -6,6 +6,7 @@ describe "AtomColorHighlight", ->
     atom.config.set 'editor.fontSize', 10
     atom.config.set 'editor.lineHeight', 1
 
+    waitsForPromise -> atom.packages.activatePackage('language-sass')
     waitsForPromise -> atom.workspace.open('sample.sass')
 
     waitsForPromise ->
@@ -149,6 +150,22 @@ describe "AtomColorHighlight", ->
 
       expect(markers[5].offsetLeft).toEqual(19 * charWidth + spacing)
       expect(markers[5].offsetTop).toEqual(70)
+
+  describe 'when hide markers in comments is enabled', ->
+    beforeEach ->
+      atom.config.set 'atom-color-highlight.hideMarkersInComments', true
+
+    it 'hides the corresponding markers', ->
+      markers = editorElement.shadowRoot.querySelectorAll('color-marker:not([style*="display: none"])')
+      expect(markers.length).toEqual(8)
+
+  describe 'when hide markers in strings is enabled', ->
+    beforeEach ->
+      atom.config.set 'atom-color-highlight.hideMarkersInStrings', true
+
+    it 'hides the corresponding markers', ->
+      markers = editorElement.shadowRoot.querySelectorAll('color-marker:not([style*="display: none"])')
+      expect(markers.length).toEqual(8)
 
   describe 'when an exclusion scope is defined in settings', ->
     beforeEach ->
