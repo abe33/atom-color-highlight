@@ -26,6 +26,10 @@ class AtomColorHighlightElement extends HTMLElement
     @subscriptions.add @editor.onDidRemoveSelection => @requestSelectionUpdate()
     @subscriptions.add @editor.onDidChangeSelectionRange => @requestSelectionUpdate()
 
+    @subscriptions.add @editorElement.onDidAttach =>
+      @updateSelections()
+      @updateMarkers()
+
     @subscriptions.add atom.config.observe 'atom-color-highlight.hideMarkersInComments', => @rebuildMarkers()
     @subscriptions.add atom.config.observe 'atom-color-highlight.hideMarkersInStrings', => @rebuildMarkers()
     @subscriptions.add atom.config.observe 'atom-color-highlight.markersAtEndOfLine', => @rebuildMarkers()
@@ -125,6 +129,9 @@ class AtomColorHighlightElement extends HTMLElement
 
       @appendChild(markerView)
       @markerViews[marker.id] = markerView
+
+  updateMarkers: ->
+    markerView.updateDisplay() for id,markerView of @markerViews
 
   destroyAllViews: ->
     @removeChild(@firstChild) while @firstChild
