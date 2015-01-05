@@ -46,6 +46,7 @@ class AtomColorHighlightElement extends HTMLElement
       @updateSelections()
 
   updateSelections: ->
+    return if @editor.displayBuffer.isDestroyed()
     return if @markers?.length is 0
 
     selections = @editor.getSelections()
