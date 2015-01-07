@@ -49,10 +49,7 @@ class AtomColorHighlight
 
       return if editor.getGrammar().scopeName in atom.config.get('atom-color-highlight.excludedGrammars')
 
-
       model = new AtomColorHighlightModel(editor)
-      console.log editor, model
-
       view = atom.views.getView(model)
 
       model.init()
