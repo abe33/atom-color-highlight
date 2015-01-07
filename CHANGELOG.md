@@ -1,3 +1,10 @@
+<a name="v3.0.3"></a>
+# v3.0.3 (2015-01-07)
+
+## :bug: Bug Fixes
+
+- Fix error raised when closing an editor ([f9914482](https://github.com/abe33/atom-color-highlight/commit/f991448225d1d1dd0c33efd9db8bce087d12b4b2))
+
 <a name="v3.0.2"></a>
 # v3.0.2 (2015-01-05)
 
