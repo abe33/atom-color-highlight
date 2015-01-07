@@ -49,15 +49,14 @@ class AtomColorHighlight
 
       return if editor.getGrammar().scopeName in atom.config.get('atom-color-highlight.excludedGrammars')
 
-      model = new AtomColorHighlightModel(editor)
 
-      editorElement = atom.views.getView(editor)
+      model = new AtomColorHighlightModel(editor)
+      console.log editor, model
+
       view = atom.views.getView(model)
 
-      editorRoot = editorElement.shadowRoot ? editorElement
-      editorRoot.querySelector('.lines').appendChild view
-
       model.init()
+      view.attach()
 
       model.onDidDestroy => delete @models[editor.id]
 
