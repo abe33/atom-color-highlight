@@ -43,7 +43,6 @@ class AtomColorHighlightModel
     @destroyAllMarkers()
     @update()
 
-
   destroy: ->
     @destroyed = true
     @emitter.emit('did-destroy')

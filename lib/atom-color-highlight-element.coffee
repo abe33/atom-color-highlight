@@ -14,11 +14,10 @@ class AtomColorHighlightElement extends HTMLElement
   attach: ->
     editorElement = atom.views.getView(@model.editor)
     editorRoot = editorElement.shadowRoot ? editorElement
-    editorRoot.querySelector('.lines').appendChild this
+    editorRoot.querySelector('.lines')?.appendChild this
 
   detachedCallback: ->
-    editorElement = atom.views.getView(@model.editor)
-    requestAnimationFrame(=> @attach()) if editorElement?
+    requestAnimationFrame(=> @attach()) unless @model.isDestroyed()
 
   setModel: (@model) ->
     {@editor} = @model
