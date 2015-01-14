@@ -42,10 +42,10 @@ class MarkerElement extends HTMLElement
     bufferRange = @editor.bufferRangeForScreenRange({start, end})
     text = @editor.getTextInRange(bufferRange)
 
-    css = @editor.pixelPositionForScreenPosition(start)
+    css = @editorElement.pixelPositionForScreenPosition(start)
     css.height = lineHeight * rows
     if end
-      css.width = @editor.pixelPositionForScreenPosition(end).left - css.left
+      css.width = @editorElement.pixelPositionForScreenPosition(end).left - css.left
     else
       css.right = 0
 

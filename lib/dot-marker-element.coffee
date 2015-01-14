@@ -43,7 +43,7 @@ class DotMarkerElement extends HTMLElement
     line = @editor.lineTextForScreenRow(range.start.row)
     lineLength = line.length
     position = row: range.start.row, column: lineLength
-    {top, left} = @editor.pixelPositionForScreenPosition(position)
+    {top, left} = @editorElement.pixelPositionForScreenPosition(position)
     @style.top = top + 'px'
     @style.width = size + 'px'
     @style.height = size + 'px'
