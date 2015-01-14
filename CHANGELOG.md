@@ -1,3 +1,12 @@
+<a name="v3.0.4"></a>
+# v3.0.4 (2015-01-14)
+
+## :bug: Bug Fixes
+
+- Fix missing color search for restored text editors ([f189b73d](https://github.com/abe33/atom-color-highlight/commit/f189b73dc2a316e9754909ca1b9fd679146d90bb))
+- Prevent errors in markers update when res is null ([cfe9dbfa](https://github.com/abe33/atom-color-highlight/commit/cfe9dbfa93e3760c28b313959b93e46ba724426e))
+- Fix remaining deprecations ([36179390](https://github.com/abe33/atom-color-highlight/commit/36179390fe1e20d3118532cd2e93107f3a8c9c99))
+
 <a name="v3.0.3"></a>
 # v3.0.3 (2015-01-07)
 
