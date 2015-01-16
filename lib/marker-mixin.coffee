@@ -47,7 +47,7 @@ class MarkerMixin extends Mixin
     @isVisible()
 
   intersectsRenderedScreenRows: (range) ->
-    range.intersectsRowRange(@editor.getFirstVisibleScreenRow(), @editor.getLastVisibleScreenRow())
+    range.intersectsRowRange(@editorElement.getFirstVisibleScreenRow(), @editorElement.getLastVisibleScreenRow())
 
   isHidden: ->
     @hiddenDueToComment() or @hiddenDueToString()
