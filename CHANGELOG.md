@@ -1,3 +1,11 @@
+
+<a name="v3.0.5"></a>
+# v3.0.5 (2015-01-16)
+
+## :bug: Bug Fixes
+
+- Fix deprecations on editor methods ([8386e01e](https://github.com/abe33/atom-color-highlight/commit/8386e01e72cee23be975d61984dcd23f3ec4b484))
+
 <a name="v3.0.4"></a>
 # v3.0.4 (2015-01-14)
 
