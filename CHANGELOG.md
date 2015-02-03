@@ -1,4 +1,9 @@
 
+<a name="v3.0.6"></a>
+# v3.0.6 (2015-02-03)
+
+- Upgrade pigments version. Includes fixes for [#74](https://github.com/abe33/atom-color-highlight/issues/74))
+
 <a name="v3.0.5"></a>
 # v3.0.5 (2015-01-16)
 
