@@ -73,8 +73,8 @@ class MarkerMixin extends Mixin
     scope = @getScope(bufferRange)
     atom.config.get('atom-color-highlight.hideMarkersInStrings') and scope.match(/string/)?
 
-  getColor: -> @marker.bufferMarker.properties.cssColor
-  getColorText: -> @marker.bufferMarker.properties.color
-  getColorTextColor: -> @marker.bufferMarker.properties.textColor
-  getScreenRange: -> @marker.getScreenRange()
-  getBufferRange: -> @marker.getBufferRange()
+  getColor: -> @marker?.bufferMarker.properties.cssColor
+  getColorText: -> @marker?.bufferMarker.properties.color
+  getColorTextColor: -> @marker?.bufferMarker.properties.textColor
+  getScreenRange: -> @marker?.getScreenRange()
+  getBufferRange: -> @marker?.getBufferRange()

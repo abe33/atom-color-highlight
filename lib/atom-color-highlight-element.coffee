@@ -72,6 +72,9 @@ class AtomColorHighlightElement extends HTMLElement
       for selection in selections
         range = selection.getScreenRange()
         viewRange = view.getScreenRange()
+
+        continue unless viewRange? and range?
+
         if viewRange.intersectsWith(range)
           view.addClass('selected')
           delete viewsToBeDisplayed[id]
@@ -99,6 +102,7 @@ class AtomColorHighlightElement extends HTMLElement
     sortedMarkers = []
 
     for marker in @markers
+      continue unless marker?
       if @markerViews[marker.id]?
         delete markerViewsToRemoveById[marker.id]
         if useDots
@@ -129,6 +133,7 @@ class AtomColorHighlightElement extends HTMLElement
     markersByRows = {}
 
     for marker in @markers
+      continue unless marker?
       @markerViews[marker.id].remove() if @markerViews[marker.id]?
 
       if atom.config.get('atom-color-highlight.markersAtEndOfLine')
