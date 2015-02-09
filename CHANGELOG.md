@@ -1,3 +1,9 @@
+<a name="v3.0.7"></a>
+# v3.0.7 (2015-02-09)
+
+## :bug: Bug Fixes
+
+- Fix calling method on undefined marker ([d58c511b](https://github.com/abe33/atom-color-highlight/commit/d58c511b89525a5d147a66f386e2cbc8c6fe3708), [#64](https://github.com/abe33/atom-color-highlight/issues/64))
 
 <a name="v3.0.6"></a>
 # v3.0.6 (2015-02-03)
