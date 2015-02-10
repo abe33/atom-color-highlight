@@ -1,3 +1,10 @@
+<a name="v3.0.8"></a>
+# v3.0.8 (2015-02-10)
+
+## :arrow_up: Dependencies Update
+
+- Update pigments to version 3.2.0 ([99697994](https://github.com/abe33/atom-color-highlight/commit/99697994d62123e4cdaf66edfce85d6b17f869c9), [#75](https://github.com/abe33/atom-color-highlight/issues/75))
+
 <a name="v3.0.7"></a>
 # v3.0.7 (2015-02-09)
 
