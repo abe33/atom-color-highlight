@@ -121,6 +121,25 @@ describe "AtomColorHighlight", ->
       markers = editorElement.shadowRoot.querySelectorAll('.region')
       expect(markers.length).toEqual(0)
 
+  describe 'when a rgba() expression is followed by parentheses', ->
+    beforeEach ->
+      editor.setText('''
+      .information
+        background rgba(#ffffff, 0.93)
+        transform translate(0, 0)
+        color #000000
+
+        .status, .name
+          transform translate(0, 0)
+      ''')
+      editor.getBuffer().emitter.emit('did-stop-changing')
+
+      waitsFor -> not model.dirty
+
+    it 'stops at the end of the rgba() declaration', ->
+      markers = editorElement.shadowRoot.querySelectorAll('color-marker')
+      expect(markers.length).toEqual(2)
+
   describe 'when the markers at end of line setting is enabled', ->
     beforeEach ->
       atom.config.set 'atom-color-highlight.markersAtEndOfLine', true
