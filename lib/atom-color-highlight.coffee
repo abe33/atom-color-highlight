@@ -1,6 +1,6 @@
 {Emitter} = require 'event-kit'
 {deprecate} = require 'grim'
-[AtomColorHighlightModel, AtomColorHighlightElement] = []
+[AtomColorHighlightModel, AtomColorHighlightElement, CanvasColorsElement] = []
 
 class AtomColorHighlight
   config:
@@ -27,15 +27,24 @@ class AtomColorHighlight
       description: "Prevents files matching the specified grammars scopes from having their colors highligted. Changing this setting may need a restart to take effect. This setting takes a list of scope strings separated with commas. Scope for a grammar can be found in the corresponding package description in the settings view."
       items:
         type: 'string'
+    useCanvasRender:
+      type: 'boolean'
+      default: true
+      description: 'Turning this option on will change the way color markers are displayed by using a canvas instead of the DOM. Need a restart to be effective'
 
   models: {}
 
   activate: (state) ->
     AtomColorHighlightModel ||= require './atom-color-highlight-model'
-    AtomColorHighlightElement ||= require './atom-color-highlight-element'
     @Color ||= require 'pigments'
 
-    AtomColorHighlightElement.registerViewProvider(AtomColorHighlightModel)
+    if atom.config.get('atom-color-highlight.useCanvasRender')
+      CanvasColorsElement ||= require './canvas-colors-element'
+      CanvasColorsElement.registerViewProvider(AtomColorHighlightModel)
+    else
+      AtomColorHighlightElement ||= require './atom-color-highlight-element'
+      AtomColorHighlightElement.registerViewProvider(AtomColorHighlightModel)
+
     AtomColorHighlightModel.Color = @Color
 
     unless atom.inSpecMode()
