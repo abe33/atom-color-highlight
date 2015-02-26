@@ -18,6 +18,7 @@
     "pigments": ">= 3.2.0",
     "mixto": "1.x",
     "event-kit": "0.7.x",
-    "grim": "^1"
+    "grim": "^1",
+    "atom-utils": "0.5.0"
   }
 }
