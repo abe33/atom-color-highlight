@@ -1,4 +1,4 @@
-{Emitter} = require 'event-kit'
+{Emitter, CompositeDisposable} = require 'event-kit'
 {deprecate} = require 'grim'
 [AtomColorHighlightModel, AtomColorHighlightElement] = []
 
@@ -31,6 +31,8 @@ class AtomColorHighlight
   models: {}
 
   activate: (state) ->
+    @subscriptions = new CompositeDisposable
+
     AtomColorHighlightModel ||= require './atom-color-highlight-model'
     AtomColorHighlightElement ||= require './atom-color-highlight-element'
     @Color ||= require 'pigments'
@@ -45,7 +47,7 @@ class AtomColorHighlight
         @subscriptions.add finder.onDidUpdatePalette @update
 
     @emitter = new Emitter
-    atom.workspace.observeTextEditors (editor) =>
+    @subscriptions.add atom.workspace.observeTextEditors (editor) =>
 
       return if editor.getGrammar().scopeName in atom.config.get('atom-color-highlight.excludedGrammars')
 
@@ -55,10 +57,17 @@ class AtomColorHighlight
       model.init()
       view.attach()
 
-      model.onDidDestroy => delete @models[editor.id]
+      @subscriptions.add sub = model.onDidDestroy =>
+        @subscriptions.remove(sub)
+        sub.dispose()
+        delete @models[editor.id]
 
       @models[editor.id] = model
       @emitter.emit 'did-create-model', model
+
+    # If pigments is running then we deactivate this package
+    try atom.packages.activatePackage('pigments').then =>
+      @deactivate()
 
   eachColorHighlightEditor: (callback) ->
     deprecate 'Use ::observeColorHighlightModels instead'
@@ -75,6 +84,7 @@ class AtomColorHighlight
 
   deactivate: ->
     model.destroy() for id,model of @models
+    @subscriptions.dispose()
     @models = {}
 
 module.exports = new AtomColorHighlight
