@@ -53,7 +53,7 @@ The `markers` array contains the display buffer markers for all the colors found
 To target the classical markers, use the following rule:
 
 ```less
-atom-text-edidor, atom-text-editor::shadow {
+atom-text-editor, atom-text-editor::shadow {
   atom-color-highlight color-marker .region {
     // ...
   }
@@ -63,7 +63,7 @@ atom-text-edidor, atom-text-editor::shadow {
 And to target the dot marker at end of lines, use the following rule:
 
 ```less
-atom-text-edidor, atom-text-editor::shadow {
+atom-text-editor, atom-text-editor::shadow {
   atom-color-highlight dot-color-marker {
     // ...
   }
