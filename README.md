@@ -1,3 +1,8 @@
+<div class='alert alert-danger'>
+This package is no longer maintained as it is now replaced by the [pigments package](https://atom.io/packages/pigments).
+<br/>If both packages are installed this package will not activate.
+</div>
+
 # Atom Color Highlight [![Build Status](https://travis-ci.org/abe33/atom-color-highlight.svg?branch=master)](https://travis-ci.org/abe33/atom-color-highlight)
 
 Highlights colors in files.
